@@ -1,26 +1,34 @@
-export type BhCarouselControls = 'buttons' | 'tabs';
+export type BhCarouselControls = "buttons" | "tabs";
 
-export type BhCarouselDestination = number | 'next' | 'previous';
+export type BhCarouselDestination = number | "next" | "previous";
 
-// TODO: *constrain* this number to something reasonable (e.g. 10-15k).
 export type BhCarouselInterval = number;
 
 export type BhCarouselSettings = {
-  autoEnable: boolean,
-  automatic: boolean,
-  controlType: BhCarouselControls,
-  interval: BhCarouselInterval,
+  autoEnable: boolean;
+  automatic: boolean;
+  controlType: BhCarouselControls;
+  interval: BhCarouselInterval;
 };
 
+/**
+ * Creates responsive instance of WAI-ARIA's ("with buttons") Carousel pattern.
+ *
+ * Uses data attributes for functionality, making it independent of/usable with
+ * any given design system. Only aria-* attributes are required, but they are
+ * REQUIRED.
+ *
+ * @class
+ * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
+ */
 export default class BhCarousel {
-
   private $el: HTMLElement;
   private current: number;
   private defaults: BhCarouselSettings = {
     autoEnable: true,
     automatic: true,
-    controlType: 'buttons',
-    interval: 2500,
+    controlType: "buttons",
+    interval: 4000,
   };
   private firstIndex: number;
   private intervalId: string | number | NodeJS.Timeout | undefined;
@@ -33,123 +41,168 @@ export default class BhCarousel {
   private settings: BhCarouselSettings;
   private slides: Element[];
 
-  constructor(element: HTMLElement, settings = {}) {
+  /**
+   * Constructs a new BhCarousel instance.
+   *
+   * @param {HTMLElement} element
+   *   The overall containing element of the carousel.
+   * @param {BhCarouselSettings}
+   *   Settings object to override class defaults.
+   * @constructor
+   */
+  constructor(element: HTMLElement, settings?: BhCarouselSettings) {
     this.$el = element;
     this.settings = { ...this.defaults, ...settings };
-    this.slides = [...this.$el.querySelectorAll('[aria-roledescription="slide"]')];
-    this.playPause = this.$el.querySelector('[data-bhc-play-pause]') as HTMLButtonElement;
-    this.next = this.$el.querySelector('[data-bhc-next]') as HTMLButtonElement;
-    this.previous = this.$el.querySelector('[data-bhc-previous]') as HTMLButtonElement;
+    this.slides = [
+      ...this.$el.querySelectorAll('[aria-roledescription="slide"]'),
+    ];
+    this.playPause = this.$el.querySelector(
+      "[data-bhc-play-pause]",
+    ) as HTMLButtonElement;
+    this.next = this.$el.querySelector("[data-bhc-next]") as HTMLButtonElement;
+    this.previous = this.$el.querySelector(
+      "[data-bhc-previous]",
+    ) as HTMLButtonElement;
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
-    this.current = this.slides.findIndex((slide) => (slide as HTMLElement).hidden === false);
+    this.current = this.slides.findIndex(
+      (slide) => (slide as HTMLElement).getAttribute("aria-hidden") === "false",
+    );
     this.playing = false;
-    this.prefersReducedMotion = window.matchMedia('(prefers-reduced-motion)').matches;
+    this.prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion)",
+    ).matches;
 
-    this.disable = this.disable.bind(this);
-    this.enable = this.enable.bind(this);
-    this.goto = this.goto.bind(this);
-    this.handleKeydown = this.handleKeydown.bind(this);
-    this.handleNextClick = this.handleNextClick.bind(this);
-    this.handlePlayPauseClick = this.handlePlayPauseClick.bind(this);
-    this.handlePreviousClick = this.handlePreviousClick.bind(this);
-    this.init = this.init.bind(this);
-    this.pause = this.pause.bind(this);
-    this.play = this.play.bind(this);
-
-    this.init();
+    if (this.settings.autoEnable) {
+      this.enable();
+    }
   }
 
-  protected disable() {
+  /**
+   * Disables carousel interactivity.
+   *
+   * @method
+   * @public
+   */
+  public disable = () => {
     this.next.disabled = true;
-    this.next.removeEventListener('click', this.handleNextClick);
+    this.next.removeEventListener("click", this.handleNextClick);
     this.previous.disabled = true;
-    this.previous.removeEventListener('click', this.handlePreviousClick);
+    this.previous.removeEventListener("click", this.handlePreviousClick);
     this.playPause.disabled = true;
-    this.playPause.removeEventListener('click', this.handlePlayPauseClick);
+    this.playPause.removeEventListener("click", this.handlePlayPauseClick);
     if (this.playPause.dataset.playing) {
       this.playPause.click();
     }
-    window.removeEventListener('keydown', this.handleKeydown);
+    window.removeEventListener("keydown", this.handleKeydown);
   };
 
-  protected enable() {
+  /**
+   * Enables carousel interactivity.
+   *
+   * @method
+   * @public
+   */
+  public enable = () => {
     // Next button.
     this.next.disabled = false;
-    this.next.addEventListener('click', this.handleNextClick);
+    this.next.addEventListener("click", this.handleNextClick);
     // Previous button.
     this.previous.disabled = false;
-    this.previous.addEventListener('click', this.handlePreviousClick);
+    this.previous.addEventListener("click", this.handlePreviousClick);
     // Play/Pause button.
     if (this.prefersReducedMotion) {
       this.playPause.disabled = true;
     } else {
       this.playPause.disabled = false;
-      this.playPause.dataset.playing = false.toString();
-      this.playPause.addEventListener('click', this.handlePlayPauseClick);
+      this.playPause.dataset.bhcPlaying = this.playing.toString();
+      this.playPause.addEventListener("click", this.handlePlayPauseClick);
       // Start if configured to do so.
       if (this.settings.automatic) {
         this.playPause.click();
       }
     }
-    window.addEventListener('keydown', this.handleKeydown);
+    window.addEventListener("keydown", this.handleKeydown);
   };
 
-  public goto(destination: BhCarouselDestination) {
+  /**
+   * Navigates to another slide.
+   *
+   * @param {BhCarouselDestination} destination
+   *   'next', 'previous', or the numberic index of the slide to go to.
+   * @method
+   * @public
+   */
+  public goto = (destination: BhCarouselDestination) => {
     let index;
 
     switch (destination) {
-      case 'next':
-        index = this.current === this.lastIndex ? this.firstIndex : this.current + 1;
+      case "next":
+        index =
+          this.current === this.lastIndex ? this.firstIndex : this.current + 1;
         break;
 
-      case 'previous':
-        index = this.current === this.firstIndex ? this.lastIndex : this.current - 1;
+      case "previous":
+        index =
+          this.current === this.firstIndex ? this.lastIndex : this.current - 1;
         break;
 
       default:
         index = destination;
     }
 
-    (this.slides[this.current] as HTMLElement).hidden = true;
-    (this.slides[index] as HTMLElement).hidden = false;
+    (this.slides[this.current] as HTMLElement).setAttribute(
+      "aria-hidden",
+      true.toString(),
+    );
+    (this.slides[index] as HTMLElement).setAttribute(
+      "aria-hidden",
+      false.toString(),
+    );
+
     this.current = index;
   };
 
-  protected handleKeydown(event: KeyboardEvent) {
-    const {key} = event;
+  protected handleKeydown = (event: KeyboardEvent) => {
+    const { key } = event;
+
     switch (key) {
-      case 'ArrowRight':
+      case "ArrowRight":
         if (!this.next.disabled) {
           this.next.click();
         }
         break;
-      case 'ArrowLeft':
+
+      case "ArrowLeft":
         if (!this.previous.disabled) {
           this.previous.click();
         }
         break;
-      case 'p':
-      case 'P':
+
+      case "p":
+      case "P":
         if (!this.prefersReducedMotion) {
           this.playPause.click();
         }
         break;
+
       default:
     }
-  }
+  };
 
-  protected handleNextClick(event: Event) {
+  protected handleNextClick = (event: Event) => {
     if (event.currentTarget !== this.next) {
       return;
     }
-    this.goto('next');
+
+    this.goto("next");
   };
 
-  protected handlePlayPauseClick(event: Event) {
+  protected handlePlayPauseClick = (event: Event) => {
     if (event.currentTarget !== this.playPause) {
       return;
     }
+
     if (this.playing) {
       this.pause();
     } else {
@@ -157,35 +210,29 @@ export default class BhCarousel {
     }
   };
 
-  protected handlePreviousClick(event: Event) {
+  protected handlePreviousClick = (event: Event) => {
     if (event.currentTarget !== this.previous) {
       return;
     }
-    this.goto('previous');
+
+    this.goto("previous");
   };
 
-  protected init() {
-    if (this.settings.autoEnable) {
-      this.enable();
-    }
-  };
-
-  public pause() {
+  public pause = () => {
     window.clearInterval(this.intervalId);
     this.playing = false;
     this.playPause.dataset.bhcPlaying = this.playing.toString();
     this.next.disabled = false;
     this.previous.disabled = false;
-  }
+  };
 
-  public play() {
+  public play = () => {
     this.intervalId = window.setInterval(() => {
-      this.goto('next');
+      this.goto("next");
     }, this.settings.interval);
     this.playing = true;
     this.playPause.dataset.bhcPlaying = this.playing.toString();
     this.next.disabled = true;
     this.previous.disabled = true;
-  }
-
+  };
 }
