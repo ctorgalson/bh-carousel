@@ -1,5 +1,48 @@
 {
+  "name": "bh-carousel",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
+  "homepage": "https://github.com/ctorgalson/bh-carousel",
+  "license": "GPL-2.0-or-later",
+  "main": "dist/bh-carousel.js",
+  "module": "dist/bh-carousel.esm.js",
+  "types": "dist/bh-carousel.d.ts",
+  "exports": {
+    ".": {
+      "import": "dist/bh-carousel.esm.js",
+      "browser": "dist/bh-carousel.js",
+      "require": "dist/bh-carousel.cjs",
+      "types": "dist/bh-carousel.d.ts"
+    },
+    "./*": "./*"
+  },
+  "keywords": [
+    "carousel",
+    "accessibility",
+    "a11y",
+    "ARIA"
+  ],
+  "author": "Christopher Torgalson",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ctorgalson/bh-carousel"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "serve": "serve demo -p 3000"
+  },
   "devDependencies": {
-    "cypress": "^13.16.1"
+    "@rollup/plugin-node-resolve": "^15.3.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.1",
+    "cypress": "^13.16.1",
+    "rollup": "^4.28.1",
+    "rollup-plugin-copy": "^3.5.0",
+    "serve": "^14.2.4",
+    "typescript": "^5.7.2"
   }
 }
