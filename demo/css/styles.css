@@ -1,0 +1,124 @@
+:root {
+  --bhc-control-size: 50px;
+  --bhc-background-color: #fff;
+  --bhc-focus-background-color: #000;
+  --bhc-focus-color: #fff;
+  --bhc-focus-outline-color: #f90;
+}
+
+body {
+  background: #dedede;
+}
+
+[aria-roledescription="carousel"] {
+}
+
+.bhc__inner {
+  position: relative;
+}
+
+button:where([data-bhc-play-pause], [data-bhc-next], [data-bhc-previous]) {
+  aspect-ratio: 1 / 1;
+  background: var(--bhc-background-color);
+  border: none;
+  border-radius: calc(var(--bhc-control-size) / 2);
+  left: calc(var(--bhc-control-size) / 2);
+  position: absolute;
+  padding: 0;
+  top: calc(var(--bhc-control-size) / 2);
+  width: var(--bhc-control-size);
+  z-index: 3;
+
+  & svg {
+    display: block;
+  }
+}
+
+[data-bhc-next] {
+  top: calc(var(--bhc-control-size) * 2);
+}
+
+[data-bhc-previous] {
+  top: calc(var(--bhc-control-size) * 3.5);
+}
+
+[data-bhc-playing="false"] .play {
+  display: block;
+}
+
+[data-bhc-playing="false"] .pause {
+  display: none;
+}
+
+[data-bhc-playing="true"] .pause {
+  display: block;
+}
+
+[data-bhc-playing="true"] .play {
+  display: none;
+}
+
+button:where(
+    [data-bhc-play-pause],
+    [data-bhc-next],
+    [data-bhc-previous]
+  ):focus-visible {
+  background: var(--bhc-focus-background-color);
+  color: var(--bhc-focus-color);
+  outline: 3px solid var(--bhc-focus-outline-color);
+}
+
+[aria-live="off"]:has([aria-roledescription="slide"]) {
+  position: relative;
+}
+
+[aria-roledescription="slide"] {
+  position: absolute;
+  top: 0;
+}
+
+[aria-roledescription="slide"][aria-hidden="true"] {
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.5s ease-out;
+  visibility: hidden;
+  z-index: 3;
+}
+
+[aria-roledescription="slide"][aria-hidden="false"] {
+  max-height: 900px;
+  opacity: 1;
+  transition: all 1s ease-in;
+  visibility: visible;
+  z-index: 0;
+}
+
+.bhc__image a {
+  display: block;
+}
+
+.bhc__image img {
+  display: block;
+  object-fit: cover;
+  max-width: 100%;
+}
+
+@media screen and (min-width: 640px) {
+  [aria-roledescription="carousel"] {
+    height: 480px;
+    margin-inline: auto;
+    width: 640px;
+  }
+
+  [data-bhc-next] {
+    left: unset;
+    top: calc(var(--bhc-control-size) / 2);
+    right: calc(var(--bhc-control-size) / 2);
+  }
+
+  [data-bhc-previous] {
+    left: unset;
+    top: calc(var(--bhc-control-size) / 2);
+    right: calc(var(--bhc-control-size) * 1.75);
+  }
+}

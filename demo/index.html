@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Demo | BH Carousel</title>
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+
+  <body>
+    <main>
+      <div
+        aria-label="Test carousel"
+        aria-roledescription="carousel"
+        class="bhc"
+      >
+        <div class="bhc__inner">
+          <div class="bhc__controls">
+            <button
+              aria-label="Stop automatic slide show"
+              class="bhc__control"
+              data-bhc-play-pause
+              disabled
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  class="play"
+                  fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z"
+                />
+                <path
+                  class="pause"
+                  fill="currentColor"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
+                />
+              </svg>
+            </button>
+
+            <button
+              aria-controls="test-carousel"
+              aria-label="Previous slide"
+              class="bhc__control bhc__control--previous"
+              data-bhc-previous
+              disabled
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2S2 6.48 2 12zm10-1h4v2h-4v3l-4-4l4-4v3z"
+                />
+              </svg>
+            </button>
+
+            <button
+              aria-controls="test-carousel"
+              aria-label="Next slide"
+              class="bhc__control bhc__control--next"
+              data-bhc-next
+              disabled
+              type="button"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="50"
+                height="50"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill="currentColor"
+                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z"
+                />
+              </svg>
+            </button>
+          </div>
+          <div aria-live="off" class="bhc__items" id="test-carousel">
+            <div
+              aria-hidden="false"
+              aria-label="1 of 5"
+              aria-roledescription="slide"
+              class="bhc__item"
+              role="group"
+            >
+              <div class="bhc__image">
+                <a href="https://example.com/slide-1">
+                  <img
+                    src="./img/slide-1.webp"
+                    alt="Bare trees and dead leaves alongside a creek in an autumn forest"
+                  />
+                </a>
+              </div>
+              <div class="bhc__caption">
+                <h2>Slide 1</h2>
+                <p>
+                  Ullus investigandi veri, nisi inveneris, et quaerendi
+                  defatigatio turpis est, cum esset accusata et vituperata ab
+                  Hortensio.
+                </p>
+              </div>
+            </div>
+
+            <div
+              aria-hidden="true"
+              aria-label="2 of 5"
+              aria-roledescription="slide"
+              class="bhc__item"
+              role="group"
+            >
+              <div class="bhc__image">
+                <a href="https://example.com/slide-2">
+                  <img
+                    src="./img/slide-2.webp"
+                    alt="Path through a hollow rimmed with bare and yellowing trees on a sunny day in autumn"
+                  />
+                </a>
+              </div>
+              <div class="bhc__caption">
+                <h2>Slide 2</h2>
+                <p>
+                  Qui liber cum et mortem contemnit, qua qui est imbutus quietus
+                  esse numquam potest.
+                </p>
+              </div>
+            </div>
+
+            <div
+              aria-hidden="true"
+              aria-label="3 of 5"
+              aria-roledescription="slide"
+              class="bhc__item"
+              role="group"
+            >
+              <div class="bhc__image">
+                <a href="https://example.com/slide-3">
+                  <img
+                    src="./img/slide-3.webp"
+                    alt="Bare trees on the banks of a small creek in autumn"
+                  />
+                </a>
+              </div>
+              <div class="bhc__caption">
+                <h2>Slide 3</h2>
+                <p>
+                  Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
+                  permagna accessio potest, si aliquod aeternum et infinitum
+                  impendere malum nobis opinemur. Quod.
+                </p>
+              </div>
+            </div>
+
+            <div
+              aria-hidden="true"
+              aria-label="4 of 5"
+              aria-roledescription="slide"
+              class="bhc__item"
+              role="group"
+            >
+              <div class="bhc__image">
+                <a href="https://example.com/slide-4">
+                  <img
+                    src="./img/slide-4.webp"
+                    alt="Wooden boardwalk on the banks of a creek lined with bare trees in the fall"
+                  />
+                </a>
+              </div>
+              <div class="bhc__caption">
+                <h2>Slide 4</h2>
+                <p>
+                  Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
+                  permagna accessio potest, si aliquod aeternum et infinitum
+                  impendere malum nobis opinemur. Quod.
+                </p>
+              </div>
+            </div>
+
+            <div
+              aria-hidden="true"
+              aria-label="5 of 5"
+              aria-roledescription="slide"
+              class="bhc__item"
+              role="group"
+            >
+              <div class="bhc__image">
+                <a href="https://example.com/slide-5">
+                  <img
+                    src="./img/slide-5.webp"
+                    alt="Bare and yellow trees on the leaf-strewn banks of a small creek"
+                  />
+                </a>
+              </div>
+              <div class="bhc__caption">
+                <h2>Slide 5</h2>
+                <p>
+                  Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
+                  permagna accessio potest, si aliquod aeternum et infinitum
+                  impendere malum nobis opinemur. Quod.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="./js/bh-carousel.js"></script>
+    <script>
+      window.carousels = window.carousels || [];
+      const element = document.querySelector(
+        '[aria-roledescription="carousel"]',
+      );
+      const carousel = new BhCarousel(element);
+      window.carousels.push(carousel);
+    </script>
+  </body>
+</html>
