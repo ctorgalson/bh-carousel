@@ -132,6 +132,12 @@
             this.slides[index].setAttribute("aria-hidden", false.toString());
             this.current = index;
         };
+        /**
+         * Handles keydown events for Carousel.
+         *
+         * @param {KeyboardEvent} event
+         *   The event passed in by the listener.
+         */
         handleKeydown = (event) => {
             const { key } = event;
             switch (key) {
@@ -153,12 +159,24 @@
                     break;
             }
         };
+        /**
+         * Handles click events for Next button.
+         *
+         * @param {Event} event
+         *   The event passed in by the listener.
+         */
         handleNextClick = (event) => {
             if (event.currentTarget !== this.next) {
                 return;
             }
             this.goto("next");
         };
+        /**
+         * Handles click events for Play/Pause button.
+         *
+         * @param {Event} event
+         *   The event passed in by the listener.
+         */
         handlePlayPauseClick = (event) => {
             if (event.currentTarget !== this.playPause) {
                 return;
@@ -170,12 +188,21 @@
                 this.play();
             }
         };
+        /**
+         * Handles click events for Previous button.
+         *
+         * @param {Event} event
+         *   The event passed in by the listener.
+         */
         handlePreviousClick = (event) => {
             if (event.currentTarget !== this.previous) {
                 return;
             }
             this.goto("previous");
         };
+        /**
+         * Pauses carousel.
+         */
         pause = () => {
             window.clearInterval(this.intervalId);
             this.playing = false;
@@ -183,6 +210,9 @@
             this.next.disabled = false;
             this.previous.disabled = false;
         };
+        /**
+         * Plays carousel.
+         */
         play = () => {
             this.intervalId = window.setInterval(() => {
                 this.goto("next");

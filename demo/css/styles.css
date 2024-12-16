@@ -8,6 +8,7 @@
 
 body {
   background: #dedede;
+  margin: 0.5rem;
 }
 
 [aria-roledescription="carousel"] {
@@ -68,48 +69,46 @@ button:where(
   outline: 3px solid var(--bhc-focus-outline-color);
 }
 
-[aria-live="off"]:has([aria-roledescription="slide"]) {
-  position: relative;
-}
-
-[aria-roledescription="slide"] {
+.bhc__item {
+  background: #ccc;
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  height: calc(100vh - 1rem);
+  opacity: 1;
   position: absolute;
   top: 0;
+  z-index: 2;
 }
 
-[aria-roledescription="slide"][aria-hidden="true"] {
-  max-height: 0;
+.bhc__item[aria-hidden="true"] {
   opacity: 0;
-  transition: all 0.5s ease-out;
-  visibility: hidden;
-  z-index: 3;
+  z-index: 1;
 }
 
-[aria-roledescription="slide"][aria-hidden="false"] {
-  max-height: 900px;
-  opacity: 1;
-  transition: all 1s ease-in;
-  visibility: visible;
-  z-index: 0;
+.bhc__image {
+  height: 100%;
 }
 
 .bhc__image a {
   display: block;
+  height: 100%;
+  width: 100%;
 }
 
 .bhc__image img {
   display: block;
+  height: 100%;
   object-fit: cover;
-  max-width: 100%;
+  width: 100%;
+}
+
+.bhc__caption {
+  padding-block: 1rem;
+  padding-inline: 1rem;
+  height: 100%;
 }
 
 @media screen and (min-width: 640px) {
-  [aria-roledescription="carousel"] {
-    height: 480px;
-    margin-inline: auto;
-    width: 640px;
-  }
-
   [data-bhc-next] {
     left: unset;
     top: calc(var(--bhc-control-size) / 2);
@@ -120,5 +119,25 @@ button:where(
     left: unset;
     top: calc(var(--bhc-control-size) / 2);
     right: calc(var(--bhc-control-size) * 1.75);
+  }
+}
+
+@media screen and (min-width: 768px) {
+  h1 {
+    margin-inline: auto;
+    width: 768px;
+  }
+
+  .bhc__item {
+    grid-template-rows: 480px auto;
+  }
+
+  .bhc__caption {
+    overflow-y: scroll;
+  }
+
+  .bhc__caption > * {
+    margin-inline: auto;
+    width: 768px;
   }
 }
