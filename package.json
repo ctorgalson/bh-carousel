@@ -32,7 +32,8 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "rollup -c",
+    "build": "npm run format ; rollup -c ; cp -R demo/* cypress/fixtures",
+    "format": "npx prettier -w src/bh-carousel.ts",
     "serve": "serve demo -p 3000"
   },
   "devDependencies": {
@@ -41,7 +42,6 @@
     "@rollup/plugin-typescript": "^12.1.1",
     "cypress": "^13.16.1",
     "rollup": "^4.28.1",
-    "rollup-plugin-copy": "^3.5.0",
     "serve": "^14.2.4",
     "typescript": "^5.7.2"
   }
