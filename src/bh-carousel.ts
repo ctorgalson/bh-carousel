@@ -163,6 +163,12 @@ export default class BhCarousel {
     this.current = index;
   };
 
+  /**
+   * Handles keydown events for Carousel.
+   *
+   * @param {KeyboardEvent} event
+   *   The event passed in by the listener.
+   */
   protected handleKeydown = (event: KeyboardEvent) => {
     const { key } = event;
 
@@ -190,6 +196,12 @@ export default class BhCarousel {
     }
   };
 
+  /**
+   * Handles click events for Next button.
+   *
+   * @param {Event} event
+   *   The event passed in by the listener.
+   */
   protected handleNextClick = (event: Event) => {
     if (event.currentTarget !== this.next) {
       return;
@@ -198,6 +210,12 @@ export default class BhCarousel {
     this.goto("next");
   };
 
+  /**
+   * Handles click events for Play/Pause button.
+   *
+   * @param {Event} event
+   *   The event passed in by the listener.
+   */
   protected handlePlayPauseClick = (event: Event) => {
     if (event.currentTarget !== this.playPause) {
       return;
@@ -210,6 +228,12 @@ export default class BhCarousel {
     }
   };
 
+  /**
+   * Handles click events for Previous button.
+   *
+   * @param {Event} event
+   *   The event passed in by the listener.
+   */
   protected handlePreviousClick = (event: Event) => {
     if (event.currentTarget !== this.previous) {
       return;
@@ -218,6 +242,9 @@ export default class BhCarousel {
     this.goto("previous");
   };
 
+  /**
+   * Pauses carousel.
+   */
   public pause = () => {
     window.clearInterval(this.intervalId);
     this.playing = false;
@@ -226,6 +253,9 @@ export default class BhCarousel {
     this.previous.disabled = false;
   };
 
+  /**
+   * Plays carousel.
+   */
   public play = () => {
     this.intervalId = window.setInterval(() => {
       this.goto("next");
