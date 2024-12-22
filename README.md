@@ -11,3 +11,15 @@ to BYOCSS.
 - Find complete typedoc documentation at `./docs`.
 
 The project will provide npm packages once it reaches a more stable condition.
+Until then, you can generate package files with the following commands:
+
+```bash
+# Clone the repository
+git clone https://github.com/ctorgalson/bh-carousel.git
+# Change directories
+cd bh-carousel/
+# Install npm dev packages
+npm ci
+# Build dist files
+npm run build
+```
