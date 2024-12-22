@@ -32,4 +32,4 @@
 
 ## Defined in
 
-[bh-carousel.ts:7](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L7)
+[bh-carousel.ts:7](https://github.com/ctorgalson/bh-carousel/blob/281ae882d6b0a1ff7c9e4f86a4b9630a89598289/src/bh-carousel.ts#L7)

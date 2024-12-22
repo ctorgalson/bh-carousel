@@ -13,6 +13,7 @@
     *
     * @example
     *
+    * ```html
     * <div
     *   aria-label="Test carousel"
     *   aria-roledescription="carousel"
@@ -99,6 +100,9 @@
     * <script>
       * new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
     * </script>
+    * ```
+    *
+    * </code></pre>
     *
     * @class
     * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
