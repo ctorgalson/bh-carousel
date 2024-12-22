@@ -17,29 +17,30 @@ const umdCfg = {
   exports: "default",
 };
 
-export default [
-  {
-    input: "src/bh-carousel.ts",
-    plugins: plugins,
-    output: [
-      // UMD
-      { file: "dist/js/bh-carousel.js", ...umdCfg },
-      {
-        file: "dist/js/bh-carousel.min.js",
-        ...umdCfg,
-        plugins: [minifyPlugin],
-      },
-      // ESM
-      { file: "dist/js/bh-carousel.esm.js", format: "esm" },
-      {
-        file: "dist/js/bh-carousel.esm.min.js",
-        format: "esm",
-        plugins: [minifyPlugin],
-      },
-      // CJS
-      { file: "dist/js/bh-carousel.cjs", format: "cjs" },
-      // Demo
-      { file: "demo/js/bh-carousel.js", ...umdCfg },
-    ],
-  },
-];
+export default {
+  input: "src/bh-carousel.ts",
+  plugins: plugins,
+  output: [
+    // UMD
+    { file: "dist/js/bh-carousel.js", ...umdCfg },
+    {
+      file: "dist/js/bh-carousel.min.js",
+      ...umdCfg,
+      plugins: [minifyPlugin],
+    },
+    // ESM
+    { file: "dist/js/bh-carousel.esm.js", format: "esm" },
+    {
+      file: "dist/js/bh-carousel.esm.min.js",
+      format: "esm",
+      plugins: [minifyPlugin],
+    },
+    // CJS
+    { file: "dist/js/bh-carousel.cjs", format: "cjs" },
+    // Demo
+    { file: "demo/js/bh-carousel.js", ...umdCfg },
+  ],
+  watch: {
+		exclude: "node_modules/**",
+	},
+};
