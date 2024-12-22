@@ -39,9 +39,9 @@
          *
          * @param {HTMLElement} element
          *   The overall containing element of the carousel.
-         * @param {BhCarouselSettings}
+         * @param {BhCarouselSettings} settings
          *   Settings object to override class defaults.
-         * @constructor
+         * @defaultValue BhCarousel
          */
         constructor(element, settings) {
             this.$el = element;
@@ -64,7 +64,6 @@
         /**
          * Disables carousel interactivity.
          *
-         * @method
          * @public
          */
         disable = () => {
@@ -82,7 +81,6 @@
         /**
          * Enables carousel interactivity.
          *
-         * @method
          * @public
          */
         enable = () => {
@@ -123,7 +121,6 @@
          *
          * @param {BhCarouselDestination} destination
          *   'next', 'previous', or the numberic index of the slide to go to.
-         * @method
          * @public
          */
         goto = (destination) => {
@@ -149,7 +146,6 @@
          *
          * @param {KeyboardEvent} event
          *   The event passed in by the listener.
-         * @method
          * @protected
          */
         handleKeydown = (event) => {
@@ -178,7 +174,6 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
-         * @method
          * @protected
          */
         handleNextClick = (event) => {
@@ -192,7 +187,6 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
-         * @method
          * @protected
          */
         handlePlayPauseClick = (event) => {
@@ -211,7 +205,6 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
-         * @method
          * @protected
          */
         handlePreviousClick = (event) => {
@@ -223,7 +216,6 @@
         /**
          * Pauses carousel.
          *
-         * @method
          * @public
          */
         pause = () => {
@@ -236,7 +228,6 @@
         /**
          * Plays carousel.
          *
-         * @method
          * @public
          */
         play = () => {
