@@ -32,20 +32,22 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "concurrently --raw npm:build:* ; concurrently --raw npm:copy:*",
+    "build": "concurrently --raw npm:build:*",
     "build:css": "postcss src/bh-carousel.css > dist/css/bh-carousel.min.css && npm run copy:css",
     "build:ts": "rollup --config && npm run copy:js",
     "copy:css": "for d in ./dist/css/ ./cypress/fixtures/css/ ; do cp -v src/bh-carousel.css \"$d\" ; done",
     "copy:js": "cp -v ./dist/js/bh-carousel.js ./cypress/fixtures/js",
+    "build:docs": "typedoc",
     "format": "concurrently --raw npm:format:*",
-    "format:ts": "npx prettier -w src/bh-carousel.ts",
-    "format:css": "npx prettier -w src/bh-carousel.css",
-    "format:html": "npx prettier -w cypress/fixtures/index.html",
+    "format:ts": "prettier -w src/bh-carousel.ts",
+    "format:css": "prettier -w src/bh-carousel.css",
+    "format:html": "prettier -w cypress/fixtures/index.html",
     "start": "npm run build ; npm run watch",
     "serve": "serve cypress/fixtures -p 3000",
     "watch": "concurrently --raw npm:watch:* npm:serve",
-    "watch:css": "onchange -v 'src/**/*.css' -- npm run build:css",
-    "watch:ts": "onchange 'src/**/*.ts' -- npm run build:ts"
+    "watch:css": "onchange 'src/**/*.css' -- npm run build:css",
+    "watch:md": "onchange 'README.md' -- npm run build:docs",
+    "watch:ts": "onchange 'src/**/*.ts' -- concurrently --raw npm:build:ts npm:build:docs"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.0",
@@ -57,8 +59,14 @@
     "onchange": "^7.1.0",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
+    "prettier": "^3.4.2",
     "rollup": "^4.28.1",
     "serve": "^14.2.4",
+    "typedoc": "^0.27.5",
+    "typedoc-plugin-coverage": "^3.4.0",
+    "typedoc-plugin-markdown": "^4.3.3",
+    "typedoc-plugin-mdn-links": "^4.0.6",
+    "typedoc-plugin-rename-defaults": "^0.7.2",
     "typescript": "^5.7.2"
   }
 }
