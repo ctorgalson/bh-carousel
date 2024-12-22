@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[bh-carousel.ts:3](https://github.com/ctorgalson/bh-carousel/blob/281ae882d6b0a1ff7c9e4f86a4b9630a89598289/src/bh-carousel.ts#L3)
+[bh-carousel.ts:3](https://github.com/ctorgalson/bh-carousel/blob/e4d6aeb4262f7c3fd4b7e5ce0440529a5ce9183a/src/bh-carousel.ts#L3)

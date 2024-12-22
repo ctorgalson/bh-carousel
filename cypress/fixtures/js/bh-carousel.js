@@ -22,7 +22,7 @@
     *   <div class="bhc__inner">
     *     <div class="bhc__controls">
     *       <button
-    *         aria-label="Stop automatic slide show"
+    *         aria-label="Start / stop automatic slide show"
     *         class="bhc__control"
     *         data-bhc-play-pause
     *         hidden
