@@ -48,9 +48,9 @@ export default class BhCarousel {
    *
    * @param {HTMLElement} element
    *   The overall containing element of the carousel.
-   * @param {BhCarouselSettings}
+   * @param {BhCarouselSettings} settings
    *   Settings object to override class defaults.
-   * @constructor
+   * @defaultValue BhCarousel
    */
   constructor(element: HTMLElement, settings?: BhCarouselSettings) {
     this.$el = element;
@@ -81,7 +81,6 @@ export default class BhCarousel {
   /**
    * Disables carousel interactivity.
    *
-   * @method
    * @public
    */
   public disable = (): void => {
@@ -100,7 +99,6 @@ export default class BhCarousel {
   /**
    * Enables carousel interactivity.
    *
-   * @method
    * @public
    */
   public enable = (): void => {
@@ -147,7 +145,6 @@ export default class BhCarousel {
    *
    * @param {BhCarouselDestination} destination
    *   'next', 'previous', or the numberic index of the slide to go to.
-   * @method
    * @public
    */
   public goto = (destination: BhCarouselDestination): void => {
@@ -185,7 +182,6 @@ export default class BhCarousel {
    *
    * @param {KeyboardEvent} event
    *   The event passed in by the listener.
-   * @method
    * @protected
    */
   protected handleKeydown = (event: KeyboardEvent): void => {
@@ -220,7 +216,6 @@ export default class BhCarousel {
    *
    * @param {Event} event
    *   The event passed in by the listener.
-   * @method
    * @protected
    */
   protected handleNextClick = (event: Event): void => {
@@ -236,7 +231,6 @@ export default class BhCarousel {
    *
    * @param {Event} event
    *   The event passed in by the listener.
-   * @method
    * @protected
    */
   protected handlePlayPauseClick = (event: Event): void => {
@@ -256,7 +250,6 @@ export default class BhCarousel {
    *
    * @param {Event} event
    *   The event passed in by the listener.
-   * @method
    * @protected
    */
   protected handlePreviousClick = (event: Event): void => {
@@ -270,7 +263,6 @@ export default class BhCarousel {
   /**
    * Pauses carousel.
    *
-   * @method
    * @public
    */
   public pause = (): void => {
@@ -284,7 +276,6 @@ export default class BhCarousel {
   /**
    * Plays carousel.
    *
-   * @method
    * @public
    */
   public play = (): void => {
