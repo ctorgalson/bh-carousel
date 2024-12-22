@@ -12,6 +12,99 @@ Uses data attributes for functionality, making it independent of/usable with
 any given design system. Only aria-\* attributes are required, but they are
 REQUIRED.
 
+## Example
+
+```ts
+<div
+  aria-label="Test carousel"
+  aria-roledescription="carousel"
+  class="bhc"
+>
+  <div class="bhc__inner">
+    <div class="bhc__controls">
+      <button
+        aria-label="Stop automatic slide show"
+        class="bhc__control"
+        data-bhc-play-pause
+        hidden
+        type="button"
+      ></button>
+
+      <button
+        aria-controls="test-carousel"
+        aria-label="Previous slide"
+        class="bhc__control bhc__control--previous"
+        data-bhc-previous
+        hidden
+        type="button"
+      ></button>
+
+      <button
+        aria-controls="test-carousel"
+        aria-label="Next slide"
+        class="bhc__control bhc__control--next"
+        data-bhc-next
+        hidden
+        type="button"
+      ></button>
+    </div>
+    <div aria-live="off" class="bhc__items" id="test-carousel">
+      <div
+        aria-label="1 of 5"
+        aria-roledescription="slide"
+        class="bhc__item"
+        role="group"
+      >
+        <div class="bhc__image">
+          <a href="https://example.com/slide-1">
+            <img
+              src="./img/slide-1.webp"
+              alt="Bare trees and dead leaves alongside a creek in an autumn forest"
+            />
+          </a>
+        </div>
+        <div class="bhc__caption">
+          <h2>Slide 1</h2>
+          <p>
+            Ullus investigandi veri, nisi inveneris, et quaerendi
+            defatigatio turpis est, cum esset accusata et vituperata ab
+            Hortensio.
+          </p>
+        </div>
+      </div>
+
+      <div
+        aria-label="2 of 5"
+        aria-roledescription="slide"
+        class="bhc__item"
+        role="group"
+      >
+        <div class="bhc__image">
+          <a href="https://example.com/slide-2">
+            <img
+              src="./img/slide-2.webp"
+              alt="Path through a hollow rimmed with bare and yellowing trees on a sunny day in autumn"
+            />
+          </a>
+        </div>
+        <div class="bhc__caption">
+          <h2>Slide 2</h2>
+          <p>
+            Qui liber cum et mortem contemnit, qua qui est imbutus
+            quietus esse numquam potest.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  * new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
+</script>
+
+@class
+```
+
 ## See
 
 https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
@@ -50,7 +143,7 @@ BhCarousel;
 
 #### Defined in
 
-[bh-carousel.ts:55](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L55)
+[bh-carousel.ts:144](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L144)
 
 ## Methods
 
@@ -66,7 +159,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:86](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L86)
+[bh-carousel.ts:175](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L175)
 
 ---
 
@@ -82,7 +175,7 @@ Enables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:104](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L104)
+[bh-carousel.ts:193](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L193)
 
 ---
 
@@ -98,7 +191,7 @@ Retrieves first slide index; prefers aria-hidden, falls back to settings.
 
 #### Defined in
 
-[bh-carousel.ts:134](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L134)
+[bh-carousel.ts:223](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L223)
 
 ---
 
@@ -122,7 +215,7 @@ Navigates to another slide.
 
 #### Defined in
 
-[bh-carousel.ts:150](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L150)
+[bh-carousel.ts:239](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L239)
 
 ---
 
@@ -146,7 +239,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:187](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L187)
+[bh-carousel.ts:276](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L276)
 
 ---
 
@@ -170,7 +263,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:221](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L221)
+[bh-carousel.ts:310](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L310)
 
 ---
 
@@ -194,7 +287,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:236](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L236)
+[bh-carousel.ts:325](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L325)
 
 ---
 
@@ -218,7 +311,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:255](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L255)
+[bh-carousel.ts:344](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L344)
 
 ---
 
@@ -234,7 +327,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:268](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L268)
+[bh-carousel.ts:357](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L357)
 
 ---
 
@@ -250,4 +343,4 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:281](https://github.com/ctorgalson/bh-carousel/blob/3774010298a55b7c4858449801ab7248feb9290d/src/bh-carousel.ts#L281)
+[bh-carousel.ts:370](https://github.com/ctorgalson/bh-carousel/blob/84d61bbd9f21460538f5c7557fe08b05b800881b/src/bh-carousel.ts#L370)
