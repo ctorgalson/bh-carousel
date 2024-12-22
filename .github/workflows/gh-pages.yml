@@ -11,10 +11,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Build static files
-        id: build
-        run:
-          cp -R cypress/fixtures _site
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            cypress/fixtures
 
       - name: Upload static files as artifact
         id: deployment
