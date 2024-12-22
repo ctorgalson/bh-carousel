@@ -4,6 +4,9 @@ export type BhCarouselDestination = number | "next" | "previous";
 
 export type BhCarouselInterval = number;
 
+/**
+ * A type used to set the acceptable settings parameters for BhCarousel objects.
+ */
 export type BhCarouselSettings = {
   autoEnable: boolean;
   automatic: boolean;
