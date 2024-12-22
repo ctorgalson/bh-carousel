@@ -37,8 +37,6 @@ export default {
     },
     // CJS
     { file: "dist/js/bh-carousel.cjs", format: "cjs" },
-    // Demo
-    { file: "demo/js/bh-carousel.js", ...umdCfg },
   ],
   watch: {
 		exclude: "node_modules/**",
