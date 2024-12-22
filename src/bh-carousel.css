@@ -1,0 +1,150 @@
+/**
+ * Carousel
+ *
+ * @note: these BEM classes are completely arbitrary: the script relies entirely
+ *   on aria-*, role, and data attributes for its interactivity. Use any classes
+ *   or design system you like.
+ */
+
+:root {
+  --bhc-control-background-color: #fff;
+  --bhc-control-border-radius: calc(var(--bhc-control-width) / 2);
+  --bhc-control-color: #000;
+  --bhc-control-height: 50px;
+  --bhc-control-width: 50px;
+}
+
+.bhc {
+  position: relative;
+}
+
+.bhc__control {
+  align-items: center;
+  background-color: var(--bhc-control-background-color);
+  border: 3px solid var(--bhc-control-color);
+  border-radius: var(--bhc-control-border-radius);
+  color: var(--bhc-control-color);
+  display: flex;
+  height: var(--bhc-control-height);
+  justify-content: center;
+  padding: 0;
+  position: absolute;
+  top: calc(var(--bhc-control-height) / 4);
+  width: var(--bhc-control-width);
+}
+
+.bhc__control[data-bhc-playing="true"] .play {
+  display: none;
+}
+
+.bhc__control[data-bhc-playing="false"] .pause {
+  display: none;
+}
+
+.bhc__control[disabled] {
+  opacity: 60%;
+}
+
+.bhc__control[data-bhc-play-pause] {
+  left: calc(var(--bhc-control-height) / 4);
+}
+
+.bhc__control[data-bhc-play-pause][data-bhc-playing="false"] {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z'/%3E%3C/svg%3E%0A");
+}
+
+.bhc__control[data-bhc-play-pause][data-bhc-playing="true"] {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/%3E%3C/svg%3E%0A");
+}
+
+.bhc__control[data-bhc-next] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z'/%3E%3C/svg%3E%0A");
+  right: calc(var(--bhc-control-height) / 4);
+}
+
+.bhc__control[data-bhc-previous] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2S2 6.48 2 12zm10-1h4v2h-4v3l-4-4l4-4v3z'/%3E%3C/svg%3E");
+  right: calc((var(--bhc-control-height) * 1.5));
+}
+
+.bhc__control svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.bhc__items {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.bhc__item {
+  background: #fff;
+  display: grid;
+  grid-template-rows: auto 10em;
+}
+
+.bhc__item[aria-hidden="true"] {
+  display: none;
+}
+
+.bhc__item a {
+  display: block;
+}
+
+.bhc__image img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.bhc__caption {
+  padding: 0 1em 1em;
+}
+
+.bhc__caption p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 640px) {
+  .bhc__image img {
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .bhc__image img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .bhc__item {
+    grid-template-rows: auto 8em;
+  }
+
+  .bhc__item p {
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .bhc {
+    margin-inline: auto;
+    max-width: 1140px;
+  }
+
+  .bhc__item {
+  }
+
+  .bhc__image img {
+    aspect-ratio: auto;
+    max-height: 40vh;
+  }
+
+  .bhc__caption {
+    max-width: 768px;
+  }
+}

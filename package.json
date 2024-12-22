@@ -5,15 +5,15 @@
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
   "license": "GPL-2.0-or-later",
-  "main": "dist/bh-carousel.js",
-  "module": "dist/bh-carousel.esm.js",
-  "types": "dist/bh-carousel.d.ts",
+  "main": "dist/js/bh-carousel.js",
+  "module": "dist/js/bh-carousel.esm.js",
+  "types": "dist/js/bh-carousel.d.ts",
   "exports": {
     ".": {
-      "import": "dist/bh-carousel.esm.js",
-      "browser": "dist/bh-carousel.js",
-      "require": "dist/bh-carousel.cjs",
-      "types": "dist/bh-carousel.d.ts"
+      "import": "dist/js/bh-carousel.esm.js",
+      "browser": "dist/js/bh-carousel.js",
+      "require": "dist/js/bh-carousel.cjs",
+      "types": "dist/js/bh-carousel.d.ts"
     },
     "./*": "./*"
   },
@@ -32,15 +32,23 @@
     "dist/*"
   ],
   "scripts": {
-    "build": "npm run format ; rollup -c ; cp -R demo/* cypress/fixtures",
-    "format": "npx prettier -w src/bh-carousel.ts",
+    "build": "concurrently --raw npm:build:* ; concurrently --raw npm:copy:*",
+    "build:css": "postcss src/bh-carousel.css > dist/css/bh-carousel.min.css",
+    "build:ts": "rollup -c",
+    "copy:css": "cp src/bh-carousel.css demo/css && cp src/bh-carousel.css dist/css",
+    "format:ts": "npx prettier -w src/bh-carousel.ts",
+    "format:css": "npx prettier -w src/bh-carousel.css",
     "serve": "serve demo -p 3000"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.1",
+    "concurrently": "^9.1.0",
+    "cssnano": "^7.0.6",
     "cypress": "^13.16.1",
+    "postcss": "^8.4.49",
+    "postcss-cli": "^11.0.0",
     "rollup": "^4.28.1",
     "serve": "^14.2.4",
     "typescript": "^5.7.2"

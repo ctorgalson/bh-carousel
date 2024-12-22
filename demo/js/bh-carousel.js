@@ -22,6 +22,7 @@
             automatic: true,
             controlType: "buttons",
             interval: 4000,
+            startingIndex: 0,
         };
         firstIndex;
         intervalId;
@@ -53,12 +54,13 @@
             this.previous = this.$el.querySelector("[data-bhc-previous]");
             this.firstIndex = 0;
             this.lastIndex = this.slides.length - 1;
-            this.current = this.slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false");
+            this.current = this.getFirstIndex();
             this.playing = false;
             this.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)").matches;
             if (this.settings.autoEnable) {
                 this.enable();
             }
+            console.log({ this: this });
         }
         /**
          * Disables carousel interactivity.
@@ -85,13 +87,16 @@
          * @public
          */
         enable = () => {
+            // Slides.
+            this.slides.forEach((slide, index) => slide.setAttribute("aria-hidden", (index !== this.current).toString()));
             // Next button.
-            this.next.disabled = false;
+            this.next.hidden = false;
             this.next.addEventListener("click", this.handleNextClick);
             // Previous button.
-            this.previous.disabled = false;
+            this.previous.hidden = false;
             this.previous.addEventListener("click", this.handlePreviousClick);
             // Play/Pause button.
+            this.playPause.hidden = false;
             if (this.prefersReducedMotion) {
                 this.playPause.disabled = true;
             }
@@ -102,9 +107,18 @@
                 // Start if configured to do so.
                 if (this.settings.automatic) {
                     this.playPause.click();
+                    console.log("hello");
                 }
             }
             window.addEventListener("keydown", this.handleKeydown);
+        };
+        /**
+         * Retrieves first slide index; prefers aria-hidden, falls back to settings.
+         */
+        getFirstIndex = () => {
+            // Prefer an indication from the markup, but default to class settings.
+            const hiddenIndex = this.slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false");
+            return hiddenIndex != -1 ? hiddenIndex : this.settings.startingIndex;
         };
         /**
          * Navigates to another slide.
