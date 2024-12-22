@@ -9,6 +9,7 @@ export type BhCarouselSettings = {
   automatic: boolean;
   controlType: BhCarouselControls;
   interval: BhCarouselInterval;
+  startingIndex: number;
 };
 
 /**
@@ -29,6 +30,7 @@ export default class BhCarousel {
     automatic: true,
     controlType: "buttons",
     interval: 4000,
+    startingIndex: 0,
   };
   private firstIndex: number;
   private intervalId: string | number | NodeJS.Timeout | undefined;
@@ -65,9 +67,7 @@ export default class BhCarousel {
     ) as HTMLButtonElement;
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
-    this.current = this.slides.findIndex(
-      (slide) => (slide as HTMLElement).getAttribute("aria-hidden") === "false",
-    );
+    this.current = this.getFirstIndex();
     this.playing = false;
     this.prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion)",
@@ -84,7 +84,7 @@ export default class BhCarousel {
    * @method
    * @public
    */
-  public disable = () => {
+  public disable = (): void => {
     this.next.disabled = true;
     this.next.removeEventListener("click", this.handleNextClick);
     this.previous.disabled = true;
@@ -103,14 +103,19 @@ export default class BhCarousel {
    * @method
    * @public
    */
-  public enable = () => {
+  public enable = (): void => {
+    // Slides.
+    this.slides.forEach((slide, index) =>
+      slide.setAttribute("aria-hidden", (index !== this.current).toString()),
+    );
     // Next button.
-    this.next.disabled = false;
+    this.next.hidden = false;
     this.next.addEventListener("click", this.handleNextClick);
     // Previous button.
-    this.previous.disabled = false;
+    this.previous.hidden = false;
     this.previous.addEventListener("click", this.handlePreviousClick);
     // Play/Pause button.
+    this.playPause.hidden = false;
     if (this.prefersReducedMotion) {
       this.playPause.disabled = true;
     } else {
@@ -126,6 +131,18 @@ export default class BhCarousel {
   };
 
   /**
+   * Retrieves first slide index; prefers aria-hidden, falls back to settings.
+   */
+  protected getFirstIndex = (): number => {
+    // Prefer an indication from the markup, but default to class settings.
+    const hiddenIndex = this.slides.findIndex(
+      (slide) => (slide as HTMLElement).getAttribute("aria-hidden") === "false",
+    );
+
+    return hiddenIndex != -1 ? hiddenIndex : this.settings.startingIndex;
+  };
+
+  /**
    * Navigates to another slide.
    *
    * @param {BhCarouselDestination} destination
@@ -133,7 +150,7 @@ export default class BhCarousel {
    * @method
    * @public
    */
-  public goto = (destination: BhCarouselDestination) => {
+  public goto = (destination: BhCarouselDestination): void => {
     let index;
 
     switch (destination) {
@@ -169,7 +186,7 @@ export default class BhCarousel {
    * @param {KeyboardEvent} event
    *   The event passed in by the listener.
    */
-  protected handleKeydown = (event: KeyboardEvent) => {
+  protected handleKeydown = (event: KeyboardEvent): void => {
     const { key } = event;
 
     switch (key) {
@@ -202,7 +219,7 @@ export default class BhCarousel {
    * @param {Event} event
    *   The event passed in by the listener.
    */
-  protected handleNextClick = (event: Event) => {
+  protected handleNextClick = (event: Event): void => {
     if (event.currentTarget !== this.next) {
       return;
     }
@@ -216,7 +233,7 @@ export default class BhCarousel {
    * @param {Event} event
    *   The event passed in by the listener.
    */
-  protected handlePlayPauseClick = (event: Event) => {
+  protected handlePlayPauseClick = (event: Event): void => {
     if (event.currentTarget !== this.playPause) {
       return;
     }
@@ -234,7 +251,7 @@ export default class BhCarousel {
    * @param {Event} event
    *   The event passed in by the listener.
    */
-  protected handlePreviousClick = (event: Event) => {
+  protected handlePreviousClick = (event: Event): void => {
     if (event.currentTarget !== this.previous) {
       return;
     }
@@ -245,7 +262,7 @@ export default class BhCarousel {
   /**
    * Pauses carousel.
    */
-  public pause = () => {
+  public pause = (): void => {
     window.clearInterval(this.intervalId);
     this.playing = false;
     this.playPause.dataset.bhcPlaying = this.playing.toString();
@@ -256,7 +273,7 @@ export default class BhCarousel {
   /**
    * Plays carousel.
    */
-  public play = () => {
+  public play = (): void => {
     this.intervalId = window.setInterval(() => {
       this.goto("next");
     }, this.settings.interval);
