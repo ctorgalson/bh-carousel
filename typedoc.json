@@ -8,5 +8,6 @@
     "typedoc-plugin-mdn-links",
     "typedoc-plugin-rename-defaults"
   ],
-  "out": "docs"
+  "out": "docs",
+  "readme": "none"
 }
