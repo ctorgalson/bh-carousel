@@ -33,12 +33,18 @@
   ],
   "scripts": {
     "build": "concurrently --raw npm:build:* ; concurrently --raw npm:copy:*",
-    "build:css": "postcss src/bh-carousel.css > dist/css/bh-carousel.min.css",
-    "build:ts": "rollup -c",
-    "copy:css": "cp src/bh-carousel.css demo/css && cp src/bh-carousel.css dist/css",
+    "build:css": "postcss src/bh-carousel.css > dist/css/bh-carousel.min.css && npm run copy:css",
+    "build:ts": "rollup --config && npm run copy:js",
+    "copy:css": "for d in ./dist/css/ ./cypress/fixtures/css/ ; do cp -v src/bh-carousel.css \"$d\" ; done",
+    "copy:js": "cp -v ./dist/js/bh-carousel.js ./cypress/fixtures/js",
+    "format": "concurrently --raw npm:format:*",
     "format:ts": "npx prettier -w src/bh-carousel.ts",
     "format:css": "npx prettier -w src/bh-carousel.css",
-    "serve": "serve demo -p 3000"
+    "format:html": "npx prettier -w cypress/fixtures/index.html",
+    "start": "npm run build ; concurrently --raw npm:watch:* npm:serve",
+    "serve": "serve cypress/fixtures -p 3000",
+    "watch:css": "onchange -v 'src/**/*.css' -- npm run build:css",
+    "watch:ts": "onchange 'src/**/*.ts' -- npm run build:ts"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.0",
@@ -47,6 +53,7 @@
     "concurrently": "^9.1.0",
     "cssnano": "^7.0.6",
     "cypress": "^13.16.1",
+    "onchange": "^7.1.0",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
     "rollup": "^4.28.1",

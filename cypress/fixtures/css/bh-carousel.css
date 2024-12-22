@@ -1,9 +1,11 @@
 /**
  * Carousel
  *
- * @note: these BEM classes are completely arbitrary: the tool relies entirely
+ * @note: these BEM classes are completely arbitrary: the script relies entirely
  *   on aria-*, role, and data attributes for its interactivity. Use any classes
  *   or design system you like.
+ *
+ * @see ./demo/index.html for sample markup.
  */
 
 :root {
@@ -50,24 +52,21 @@
 }
 
 .bhc__control[data-bhc-play-pause][data-bhc-playing="false"] {
-  background-image:
-    url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z'/%3E%3C/svg%3E%0A");
 }
 
 .bhc__control[data-bhc-play-pause][data-bhc-playing="true"] {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/%3E%3C/svg%3E%0A");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z'/%3E%3C/svg%3E%0A");
 }
 
 .bhc__control[data-bhc-next] {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z'/%3E%3C/svg%3E%0A"); 
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z'/%3E%3C/svg%3E%0A");
   right: calc(var(--bhc-control-height) / 4);
 }
 
 .bhc__control[data-bhc-previous] {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2S2 6.48 2 12zm10-1h4v2h-4v3l-4-4l4-4v3z'/%3E%3C/svg%3E");
-  right: calc(
-    (var(--bhc-control-height) * 1.5)
-  );
+  right: calc((var(--bhc-control-height) * 1.5));
 }
 
 .bhc__control svg {

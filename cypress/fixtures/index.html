@@ -4,13 +4,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Demo | BH Carousel</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="stylesheet" href="./css/bh-carousel.css" />
+    <style>
+      body {
+        background: #dedede;
+        font-family: Verdana, Geneva, sans-serif;
+        font-size: 1.125rem;
+      }
+
+      body > * {
+        margin-inline: auto;
+        max-width: 1024px;
+      }
+    </style>
   </head>
 
   <body>
     <main>
       <section>
         <h1>BH Carousel Demo</h1>
+
         <div
           aria-label="Test carousel"
           aria-roledescription="carousel"
@@ -22,73 +35,30 @@
                 aria-label="Stop automatic slide show"
                 class="bhc__control"
                 data-bhc-play-pause
-                disabled
+                hidden
                 type="button"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="50"
-                  height="50"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    class="play"
-                    fill="currentColor"
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z"
-                  />
-                  <path
-                    class="pause"
-                    fill="currentColor"
-                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"
-                  />
-                </svg>
-              </button>
+              ></button>
 
               <button
                 aria-controls="test-carousel"
                 aria-label="Previous slide"
                 class="bhc__control bhc__control--previous"
                 data-bhc-previous
-                disabled
+                hidden
                 type="button"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="50"
-                  height="50"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2S2 6.48 2 12zm10-1h4v2h-4v3l-4-4l4-4v3z"
-                  />
-                </svg>
-              </button>
+              ></button>
 
               <button
                 aria-controls="test-carousel"
                 aria-label="Next slide"
                 class="bhc__control bhc__control--next"
                 data-bhc-next
-                disabled
+                hidden
                 type="button"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="50"
-                  height="50"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    fill="currentColor"
-                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z"
-                  />
-                </svg>
-              </button>
+              ></button>
             </div>
             <div aria-live="off" class="bhc__items" id="test-carousel">
               <div
-                aria-hidden="false"
                 aria-label="1 of 5"
                 aria-roledescription="slide"
                 class="bhc__item"
@@ -113,7 +83,6 @@
               </div>
 
               <div
-                aria-hidden="true"
                 aria-label="2 of 5"
                 aria-roledescription="slide"
                 class="bhc__item"
@@ -130,14 +99,13 @@
                 <div class="bhc__caption">
                   <h2>Slide 2</h2>
                   <p>
-                    Qui liber cum et mortem contemnit, qua qui est imbutus quietus
-                    esse numquam potest.
+                    Qui liber cum et mortem contemnit, qua qui est imbutus
+                    quietus esse numquam potest.
                   </p>
                 </div>
               </div>
 
               <div
-                aria-hidden="true"
                 aria-label="3 of 5"
                 aria-roledescription="slide"
                 class="bhc__item"
@@ -154,15 +122,14 @@
                 <div class="bhc__caption">
                   <h2>Slide 3</h2>
                   <p>
-                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
-                    permagna accessio potest, si aliquod aeternum et infinitum
-                    impendere malum nobis opinemur. Quod.
+                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri
+                    tamen permagna accessio potest, si aliquod aeternum et
+                    infinitum impendere malum nobis opinemur. Quod.
                   </p>
                 </div>
               </div>
 
               <div
-                aria-hidden="true"
                 aria-label="4 of 5"
                 aria-roledescription="slide"
                 class="bhc__item"
@@ -179,15 +146,14 @@
                 <div class="bhc__caption">
                   <h2>Slide 4</h2>
                   <p>
-                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
-                    permagna accessio potest, si aliquod aeternum et infinitum
-                    impendere malum nobis opinemur. Quod.
+                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri
+                    tamen permagna accessio potest, si aliquod aeternum et
+                    infinitum impendere malum nobis opinemur. Quod.
                   </p>
                 </div>
               </div>
 
               <div
-                aria-hidden="true"
                 aria-label="5 of 5"
                 aria-roledescription="slide"
                 class="bhc__item"
@@ -204,9 +170,9 @@
                 <div class="bhc__caption">
                   <h2>Slide 5</h2>
                   <p>
-                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri tamen
-                    permagna accessio potest, si aliquod aeternum et infinitum
-                    impendere malum nobis opinemur. Quod.
+                    Ut enim aeque doleamus animo, cum corpore dolemus, fieri
+                    tamen permagna accessio potest, si aliquod aeternum et
+                    infinitum impendere malum nobis opinemur. Quod.
                   </p>
                 </div>
               </div>
@@ -219,11 +185,11 @@
     <script src="./js/bh-carousel.js"></script>
     <script>
       window.carousels = window.carousels || [];
-      const element = document.querySelector(
-        '[aria-roledescription="carousel"]',
+      window.carousels.push(
+        new BhCarousel(
+          document.querySelector('[aria-roledescription="carousel"]'),
+        ),
       );
-      const carousel = new BhCarousel(element);
-      window.carousels.push(carousel);
     </script>
   </body>
 </html>

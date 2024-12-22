@@ -22,6 +22,7 @@
             automatic: true,
             controlType: "buttons",
             interval: 4000,
+            startingIndex: 0,
         };
         firstIndex;
         intervalId;
@@ -53,7 +54,7 @@
             this.previous = this.$el.querySelector("[data-bhc-previous]");
             this.firstIndex = 0;
             this.lastIndex = this.slides.length - 1;
-            this.current = this.slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false");
+            this.current = this.getFirstIndex();
             this.playing = false;
             this.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)").matches;
             if (this.settings.autoEnable) {
@@ -85,13 +86,16 @@
          * @public
          */
         enable = () => {
+            // Slides.
+            this.slides.forEach((slide, index) => slide.setAttribute("aria-hidden", (index !== this.current).toString()));
             // Next button.
-            this.next.disabled = false;
+            this.next.hidden = false;
             this.next.addEventListener("click", this.handleNextClick);
             // Previous button.
-            this.previous.disabled = false;
+            this.previous.hidden = false;
             this.previous.addEventListener("click", this.handlePreviousClick);
             // Play/Pause button.
+            this.playPause.hidden = false;
             if (this.prefersReducedMotion) {
                 this.playPause.disabled = true;
             }
@@ -105,6 +109,14 @@
                 }
             }
             window.addEventListener("keydown", this.handleKeydown);
+        };
+        /**
+         * Retrieves first slide index; prefers aria-hidden, falls back to settings.
+         */
+        getFirstIndex = () => {
+            // Prefer an indication from the markup, but default to class settings.
+            const hiddenIndex = this.slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false");
+            return hiddenIndex != -1 ? hiddenIndex : this.settings.startingIndex;
         };
         /**
          * Navigates to another slide.
@@ -137,6 +149,8 @@
          *
          * @param {KeyboardEvent} event
          *   The event passed in by the listener.
+         * @method
+         * @protected
          */
         handleKeydown = (event) => {
             const { key } = event;
@@ -164,6 +178,8 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
+         * @method
+         * @protected
          */
         handleNextClick = (event) => {
             if (event.currentTarget !== this.next) {
@@ -176,6 +192,8 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
+         * @method
+         * @protected
          */
         handlePlayPauseClick = (event) => {
             if (event.currentTarget !== this.playPause) {
@@ -193,6 +211,8 @@
          *
          * @param {Event} event
          *   The event passed in by the listener.
+         * @method
+         * @protected
          */
         handlePreviousClick = (event) => {
             if (event.currentTarget !== this.previous) {
@@ -202,6 +222,9 @@
         };
         /**
          * Pauses carousel.
+         *
+         * @method
+         * @public
          */
         pause = () => {
             window.clearInterval(this.intervalId);
@@ -212,6 +235,9 @@
         };
         /**
          * Plays carousel.
+         *
+         * @method
+         * @public
          */
         play = () => {
             this.intervalId = window.setInterval(() => {

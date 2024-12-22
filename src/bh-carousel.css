@@ -4,6 +4,8 @@
  * @note: these BEM classes are completely arbitrary: the script relies entirely
  *   on aria-*, role, and data attributes for its interactivity. Use any classes
  *   or design system you like.
+ *
+ * @see ./demo/index.html for sample markup.
  */
 
 :root {
