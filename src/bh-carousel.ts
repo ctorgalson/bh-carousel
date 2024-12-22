@@ -1,7 +1,18 @@
+/**
+ * A type used to define the acceptable values BhCarouselSettings.controlType.
+ */
 export type BhCarouselControls = "buttons" | "tabs";
 
+/**
+ * A type used to define the acceptable values BhCarouselSettings.interval.
+ */
 export type BhCarouselDestination = number | "next" | "previous";
 
+/**
+ * A type used to define the acceptable slide-timing range in ms.
+ *
+ * @todo For now, this is just number; we need to implement the range.
+ */
 export type BhCarouselInterval = number;
 
 /**
