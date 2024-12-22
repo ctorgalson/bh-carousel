@@ -106,7 +106,7 @@ export type BhCarouselSettings = {
  *   </div>
  * </div>
  * <script>
-   * new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
+ *   new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
  * </script>
  * ```
  *
