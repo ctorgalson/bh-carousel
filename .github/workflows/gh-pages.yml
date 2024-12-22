@@ -14,7 +14,7 @@ jobs:
       - name: Build static files
         id: build
         run:
-          cp -R cypress/fixtures _site`
+          cp -R cypress/fixtures _site
 
       - name: Upload static files as artifact
         id: deployment
