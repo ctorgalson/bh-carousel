@@ -8,7 +8,7 @@ The script is fully independent of any design-system, but that means you have
 to BYOCSS.
 
 - See `cypress/fixtures/` directory for a sample implementation.
-- Find complete typedoc documentation at `./docs`.
+- Find complete typedoc documentation in [the `docs/` directory](docs/).
 
 The project will provide npm packages once it reaches a more stable condition.
 Until then, you can generate package files with the following commands:
