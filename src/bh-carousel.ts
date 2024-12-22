@@ -19,6 +19,95 @@ export type BhCarouselSettings = {
  * any given design system. Only aria-* attributes are required, but they are
  * REQUIRED.
  *
+ * @example
+ *
+ * <div
+ *   aria-label="Test carousel"
+ *   aria-roledescription="carousel"
+ *   class="bhc"
+ * >
+ *   <div class="bhc__inner">
+ *     <div class="bhc__controls">
+ *       <button
+ *         aria-label="Stop automatic slide show"
+ *         class="bhc__control"
+ *         data-bhc-play-pause
+ *         hidden
+ *         type="button"
+ *       ></button>
+
+ *       <button
+ *         aria-controls="test-carousel"
+ *         aria-label="Previous slide"
+ *         class="bhc__control bhc__control--previous"
+ *         data-bhc-previous
+ *         hidden
+ *         type="button"
+ *       ></button>
+
+ *       <button
+ *         aria-controls="test-carousel"
+ *         aria-label="Next slide"
+ *         class="bhc__control bhc__control--next"
+ *         data-bhc-next
+ *         hidden
+ *         type="button"
+ *       ></button>
+ *     </div>
+ *     <div aria-live="off" class="bhc__items" id="test-carousel">
+ *       <div
+ *         aria-label="1 of 5"
+ *         aria-roledescription="slide"
+ *         class="bhc__item"
+ *         role="group"
+ *       >
+ *         <div class="bhc__image">
+ *           <a href="https://example.com/slide-1">
+ *             <img
+ *               src="./img/slide-1.webp"
+ *               alt="Bare trees and dead leaves alongside a creek in an autumn forest"
+ *             />
+ *           </a>
+ *         </div>
+ *         <div class="bhc__caption">
+ *           <h2>Slide 1</h2>
+ *           <p>
+ *             Ullus investigandi veri, nisi inveneris, et quaerendi
+ *             defatigatio turpis est, cum esset accusata et vituperata ab
+ *             Hortensio.
+ *           </p>
+ *         </div>
+ *       </div>
+
+ *       <div
+ *         aria-label="2 of 5"
+ *         aria-roledescription="slide"
+ *         class="bhc__item"
+ *         role="group"
+ *       >
+ *         <div class="bhc__image">
+ *           <a href="https://example.com/slide-2">
+ *             <img
+ *               src="./img/slide-2.webp"
+ *               alt="Path through a hollow rimmed with bare and yellowing trees on a sunny day in autumn"
+ *             />
+ *           </a>
+ *         </div>
+ *         <div class="bhc__caption">
+ *           <h2>Slide 2</h2>
+ *           <p>
+ *             Qui liber cum et mortem contemnit, qua qui est imbutus
+ *             quietus esse numquam potest.
+ *           </p>
+ *         </div>
+ *       </div>
+ *     </div>
+ *   </div>
+ * </div>
+ * <script>
+   * new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
+ * </script>
+ * 
  * @class
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
  */
