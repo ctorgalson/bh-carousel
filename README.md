@@ -1,5 +1,7 @@
 # BH Carousel
 
+![Documentation coverage](docs/coverage.svg))
+
 This project provides a markup-independent javascript implementation of the WAI
 ARIA [Carousel pattern](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)
 for use in npm or browser projects.
