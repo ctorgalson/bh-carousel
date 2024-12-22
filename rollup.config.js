@@ -37,6 +37,11 @@ export default {
     },
     // CJS
     { file: "dist/js/bh-carousel.cjs", format: "cjs" },
+    {
+      file: "dist/js/bh-carousel.min.cjs",
+      format: "cjs",
+      plugins: [minifyPlugin],
+    },
   ],
   watch: {
 		exclude: "node_modules/**",
