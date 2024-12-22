@@ -2,7 +2,7 @@
 
 ---
 
-[bh-carousel](../globals.md) / BhCarousel
+[bh-carousel](../README.md) / BhCarousel
 
 # Class: BhCarousel
 
@@ -138,7 +138,7 @@ BhCarousel;
 
 #### Defined in
 
-[bh-carousel.ts:148](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L148)
+[bh-carousel.ts:148](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L148)
 
 ## Methods
 
@@ -154,7 +154,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:179](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L179)
+[bh-carousel.ts:179](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L179)
 
 ---
 
@@ -170,7 +170,7 @@ Enables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:197](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L197)
+[bh-carousel.ts:197](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L197)
 
 ---
 
@@ -186,7 +186,7 @@ Retrieves first slide index; prefers aria-hidden, falls back to settings.
 
 #### Defined in
 
-[bh-carousel.ts:227](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L227)
+[bh-carousel.ts:227](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L227)
 
 ---
 
@@ -210,7 +210,7 @@ Navigates to another slide.
 
 #### Defined in
 
-[bh-carousel.ts:243](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L243)
+[bh-carousel.ts:243](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L243)
 
 ---
 
@@ -234,7 +234,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:280](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L280)
+[bh-carousel.ts:280](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L280)
 
 ---
 
@@ -258,7 +258,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:314](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L314)
+[bh-carousel.ts:314](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L314)
 
 ---
 
@@ -282,7 +282,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:329](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L329)
+[bh-carousel.ts:329](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L329)
 
 ---
 
@@ -306,7 +306,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:348](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L348)
+[bh-carousel.ts:348](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L348)
 
 ---
 
@@ -322,7 +322,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:361](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L361)
+[bh-carousel.ts:361](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L361)
 
 ---
 
@@ -338,4 +338,4 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:374](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L374)
+[bh-carousel.ts:374](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L374)

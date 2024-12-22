@@ -2,7 +2,7 @@
 
 ---
 
-[bh-carousel](../globals.md) / BhCarouselDestination
+[bh-carousel](../README.md) / BhCarouselDestination
 
 # Type Alias: BhCarouselDestination
 
@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[bh-carousel.ts:3](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L3)
+[bh-carousel.ts:3](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L3)

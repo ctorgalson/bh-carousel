@@ -2,7 +2,7 @@
 
 ---
 
-[bh-carousel](../globals.md) / BhCarouselInterval
+[bh-carousel](../README.md) / BhCarouselInterval
 
 # Type Alias: BhCarouselInterval
 
@@ -10,4 +10,4 @@
 
 ## Defined in
 
-[bh-carousel.ts:5](https://github.com/ctorgalson/bh-carousel/blob/593f2e26c9801f6aa61d059768cacec66f2dc030/src/bh-carousel.ts#L5)
+[bh-carousel.ts:5](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L5)
