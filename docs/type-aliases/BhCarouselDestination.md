@@ -8,6 +8,8 @@
 
 > **BhCarouselDestination**: `number` \| `"next"` \| `"previous"`
 
+A type used to define the acceptable values BhCarouselSettings.interval.
+
 ## Defined in
 
-[bh-carousel.ts:3](https://github.com/ctorgalson/bh-carousel/blob/55b2ec7d37a69c684f32066fa0f8a09923a0af89/src/bh-carousel.ts#L3)
+[bh-carousel.ts:9](https://github.com/ctorgalson/bh-carousel/blob/9766464d416c3699e041abcea0f1fb781a68cf59/src/bh-carousel.ts#L9)
