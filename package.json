@@ -41,8 +41,9 @@
     "format:ts": "npx prettier -w src/bh-carousel.ts",
     "format:css": "npx prettier -w src/bh-carousel.css",
     "format:html": "npx prettier -w cypress/fixtures/index.html",
-    "start": "npm run build ; concurrently --raw npm:watch:* npm:serve",
+    "start": "npm run build ; npm run watch",
     "serve": "serve cypress/fixtures -p 3000",
+    "watch": "concurrently --raw npm:watch:* npm:serve",
     "watch:css": "onchange -v 'src/**/*.css' -- npm run build:css",
     "watch:ts": "onchange 'src/**/*.ts' -- npm run build:ts"
   },
