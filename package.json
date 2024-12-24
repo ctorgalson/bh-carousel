@@ -44,7 +44,7 @@
     "format:html": "prettier -w cypress/fixtures/index.html",
     "start": "npm run build ; npm run watch",
     "serve": "serve cypress/fixtures -p 3000",
-    "test": "npx cypress",
+    "test": "concurrently --raw npm:serve \"cypress open\"",
     "watch": "concurrently --raw npm:watch:* npm:serve",
     "watch:css": "onchange 'src/**/*.css' -- npm run build:css",
     "watch:md": "onchange 'README.md' -- npm run build:docs",
