@@ -34,4 +34,4 @@ A type used to set the acceptable settings parameters for BhCarousel objects.
 
 ## Defined in
 
-[bh-carousel.ts:21](https://github.com/ctorgalson/bh-carousel/blob/9766464d416c3699e041abcea0f1fb781a68cf59/src/bh-carousel.ts#L21)
+[bh-carousel.ts:21](https://github.com/ctorgalson/bh-carousel/blob/996f3bed965bf01f1946b6462b8e42b774a03e1b/src/bh-carousel.ts#L21)
