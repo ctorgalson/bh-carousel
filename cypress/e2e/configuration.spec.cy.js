@@ -1,4 +1,4 @@
-describe("Slideshow plays automatically", () => {
+describe("Defaults: slideshow plays automatically", () => {
   it("Play/Pause button has data-bhc-playing attr set to 'true'", () => {
     cy.visit("/");
     cy.get("[data-bhc-play-pause]").should(
