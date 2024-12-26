@@ -183,12 +183,17 @@
     </main>
 
     <script src="./js/bh-carousel.js"></script>
+    <script src="./js/query2config.js"></script>
     <script>
+      const defaultConfiguration = {};
+      // For test use only.
+      const urlConfiguration = getConfigFromQuery();
+
       window.carousels = window.carousels || [];
       window.carousels.push(
         new BhCarousel(
           document.querySelector('[aria-roledescription="carousel"]'),
-          { interval: 3000 }
+          { ...defaultConfiguration, ...urlConfiguration }
         ),
       );
     </script>
