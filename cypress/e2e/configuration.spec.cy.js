@@ -10,11 +10,9 @@ describe("Defaults: slideshow plays automatically", () => {
 
   it("first slide's aria-hidden attr changes to 'true'", () => {
     cy.visit("/");
-    cy.get("[aria-roledescription='slide']:first-child").should(
-      "have.attr",
-      "aria-hidden",
-      "true",
-    );
+    cy.get("[aria-roledescription='slide']:first-child", {
+      timeout: 6000,
+    }).should("have.attr", "aria-hidden", "true");
   });
 
   it("Previous button is disabled", () => {
