@@ -27,4 +27,3 @@ describe("Defaults: slideshow plays automatically", () => {
     cy.get("[data-bhc-previous]").should("have.attr", "disabled");
   });
 });
-
