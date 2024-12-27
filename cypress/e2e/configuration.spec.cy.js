@@ -1,4 +1,20 @@
 // autoEnable
+describe("autoEnable=false: slideshow interactivity not enabled", () => {
+  it("Button controls are hidden", () => {
+    cy.visit("/", { qs: { autoEnable: false } });
+    cy.get("[data-bhc-play-pause]").should("have.attr", "hidden");
+    cy.get("[data-bhc-next]").should("have.attr", "hidden");
+    cy.get("[data-bhc-previous]").should("have.attr", "hidden");
+  });
+
+  it("Play/Pause button has no data-bhc-playing attr", () => {
+    cy.visit("/", { qs: { autoEnable: false } });
+    cy.get("[data-bhc-play-pause]").should(
+      "not.have.attr",
+      "data-bhc-playing",
+    );
+  });
+});
 
 // automatic
 describe("automatic=true: slideshow plays automatically", () => {
