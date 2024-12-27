@@ -1,7 +1,7 @@
 ---
 name: Cypress tests
 
-on: pull-request
+on: pull_request
 
 jobs:
   cypress-run:
