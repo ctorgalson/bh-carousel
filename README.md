@@ -1,7 +1,7 @@
 # BH Carousel
 
 ![Documentation coverage](docs/coverage.svg)
-[![Tests](https://github.com/cypress-io/github-action/actions/workflows/test.yml/badge.svg)](.github/workflows/test.yml)
+[![Deploy static content to Pages](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml)
 
 This project provides a markup-independent javascript implementation of the WAI
 ARIA [Carousel pattern](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)
