@@ -1,6 +1,7 @@
 # BH Carousel
 
 ![Documentation coverage](docs/coverage.svg)
+[![Cypress tests](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml)
 [![Deploy static content to Pages](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml)
 
 This project provides a markup-independent javascript implementation of the WAI
