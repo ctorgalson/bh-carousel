@@ -1,0 +1,16 @@
+---
+name: Cypress tests
+
+on: pull_request
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run serve
+          wait-on: http://localhost:3000

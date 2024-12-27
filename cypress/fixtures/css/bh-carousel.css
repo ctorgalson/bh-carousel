@@ -35,6 +35,10 @@
   width: var(--bhc-control-width);
 }
 
+.bhc__control[hidden] {
+  display: none;
+}
+
 .bhc__control[data-bhc-playing="true"] .play {
   display: none;
 }

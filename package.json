@@ -44,8 +44,9 @@
     "format:html": "prettier -w cypress/fixtures/index.html",
     "start": "npm run build ; npm run watch",
     "serve": "serve cypress/fixtures -p 3000",
-    "test:ui": "concurrently --raw npm:serve \"cypress open\"",
-    "watch": "concurrently --raw npm:watch:* npm:serve",
+    "test:cli": "npx cypress run --e2e",
+    "test:ui": "concurrently --kill-others --raw npm:serve \"cypress open\"",
+    "watch": "concurrently --kill-others --raw npm:watch:* npm:serve",
     "watch:css": "onchange 'src/**/*.css' -- npm run build:css",
     "watch:md": "onchange 'README.md' -- npm run build:docs",
     "watch:ts": "onchange 'src/**/*.ts' -- concurrently --raw npm:build:ts npm:build:docs"
