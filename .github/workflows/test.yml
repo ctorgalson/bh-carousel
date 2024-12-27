@@ -12,5 +12,5 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          install: npm ci
-          test: npm run serve && npm run test:cli
+          start: npm run serve
+          wait-on: http://localhost:3000
