@@ -1,0 +1,9 @@
+Projects
+
+- https://www.cypress.io/
+- https://github.com/github/gitignore
+- https://www.typescriptlang.org/
+
+Blogs
+
+https://www.codemotion.com/magazine/frontend/web-developer/how-to-set-up-a-cypress-typescript-project/
