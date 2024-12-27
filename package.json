@@ -43,7 +43,7 @@
     "format:css": "prettier -w src/bh-carousel.css",
     "format:html": "prettier -w cypress/fixtures/index.html",
     "start": "npm run build ; npm run watch",
-    "serve": "serve cypress/fixtures",
+    "serve": "serve cypress/fixtures -p 3000",
     "test:cli": "npx cypress run --e2e",
     "test:ui": "concurrently --kill-others --raw npm:serve \"cypress open\"",
     "watch": "concurrently --kill-others --raw npm:watch:* npm:serve",
