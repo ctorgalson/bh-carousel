@@ -12,4 +12,4 @@ jobs:
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          test: npm run test:cli
+          test: npm run serve && npm run test:cli
