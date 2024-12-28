@@ -11,7 +11,7 @@ export type BhCarouselDestination = number | "next" | "previous";
 /**
  * A type used to define the acceptable slide-timing range in ms.
  *
- * @todo For now, this is just number; we need to implement the range.
+ * TODO For now, this is just number; we need to implement the range.
  */
 export type BhCarouselInterval = number;
 
@@ -23,13 +23,29 @@ export type BhCarouselReducedMotion = "strict" | "permissive";
 
 /**
  * A type used to set the acceptable settings parameters for BhCarousel objects.
+ *
+ * @property {boolean} autoEnable
+ *   Whether or not to automatically enable carousel interactivity. Sometimes
+ *   useful when it's desireable to make the interactivity responsive.
+ * @property {boolean} automatic
+ *   Whether or not to auto-play the carousel on initialization. This setting
+ *   is only guaranteed to be honoured if the user's prefers-reduced-motion
+ *   allows it.
+ * @property {BhCarouselControls} controlType
+ *   Whether the carousel uses only buttons for control or buttons and tabs.
+ *   Currently has no effect as tab-style navigation hasn't been implemented.
+ * @property {BhCarouselInterval} interval
+ *   The interval, in milliseconds, between slides when carousel is playing
+ *   automatically.
+ * @property {number} startingIndex
+ *   Zero-based index of starting slide. E.g. to start on the third slide,
+ *   set this value to 2.
  */
-export type BhCarouselSettings = {
+export interface BhCarouselSettings {
   autoEnable: boolean;
   automatic: boolean;
   controlType: BhCarouselControls;
   interval: BhCarouselInterval;
-  reducedMotion: BhCarouselReducedMotion;
   startingIndex: number;
 };
 
@@ -144,7 +160,6 @@ export default class BhCarousel {
     automatic: true,
     controlType: "buttons",
     interval: 4000,
-    reducedMotion: "strict",
     startingIndex: 0,
   };
   private firstIndex: number;
@@ -184,14 +199,21 @@ export default class BhCarousel {
     this.lastIndex = this.slides.length - 1;
     this.current = this.getFirstIndex();
     this.playing = false;
-    this.prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion)",
-    ).matches;
+    this.prefersReducedMotion = this.getPrefersReducedMotion();
 
     if (this.settings.autoEnable) {
       this.enable();
     }
+
+    console.log(this);
   }
+
+  /**
+   * Returns a value for user's prefers-reduced-motion-setting
+   */
+  protected getPrefersReducedMotion = (): boolean => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  };
 
   /**
    * Disables carousel interactivity.
@@ -240,14 +262,14 @@ export default class BhCarousel {
     this.previous.hidden = false;
     this.previous.addEventListener("click", this.handlePreviousClick);
     // Play/Pause button.
-    this.playPause.hidden = false;
     if (this.prefersReducedMotion) {
-      this.playPause.disabled = true;
+      // Positive preference: never autoplays, Play/Pause hidden.
+      this.playPause.hidden = true;
     } else {
-      this.playPause.disabled = false;
+      // Negative preference: autoplays when configured, Play/Pause available.
+      this.playPause.hidden = false;
       this.playPause.dataset.bhcPlaying = this.playing.toString();
       this.playPause.addEventListener("click", this.handlePlayPauseClick);
-      // Start if configured to do so.
       if (this.settings.automatic) {
         this.playPause.click();
       }
