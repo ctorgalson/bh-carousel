@@ -16,6 +16,12 @@ export type BhCarouselDestination = number | "next" | "previous";
 export type BhCarouselInterval = number;
 
 /**
+ * A type used to define the slideshow behaviour in circumstances where there
+ * prefers-reduced-motion can't be reliably determined.
+ */
+export type BhCarouselReducedMotion = "strict" | "permissive";
+
+/**
  * A type used to set the acceptable settings parameters for BhCarousel objects.
  */
 export type BhCarouselSettings = {
@@ -23,6 +29,7 @@ export type BhCarouselSettings = {
   automatic: boolean;
   controlType: BhCarouselControls;
   interval: BhCarouselInterval;
+  reducedMotion: BhCarouselReducedMotion;
   startingIndex: number;
 };
 
@@ -137,6 +144,7 @@ export default class BhCarousel {
     automatic: true,
     controlType: "buttons",
     interval: 4000,
+    reducedMotion: "strict",
     startingIndex: 0,
   };
   private firstIndex: number;
@@ -205,6 +213,18 @@ export default class BhCarousel {
 
   /**
    * Enables carousel interactivity.
+   *
+   * - Previous and Next buttons are always un-hidden, and are enabled whenever
+   *   the carousel is not playing automatically.
+   * - Play/Pause button is:
+   *     - visible and enabled when this.prefersReducedMotion is false, OR when
+   *       the this.settings.reducedMotion setting is set to "permissive",
+   *     - hidden when this.prefersReducedMotion is true AND the setting
+   *       this.settings.reducedMotion is "strict".
+   *   These settings, in the default configuration, completely disable the
+   *   automatic carousel behaviour, but permit the USER to auto-play the
+   *   carousel in circumstances where this.prefersReducedMotion can't be
+   *   reliably determined.
    *
    * @public
    */
