@@ -149,11 +149,18 @@
             this.lastIndex = this.slides.length - 1;
             this.current = this.getFirstIndex();
             this.playing = false;
-            this.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)").matches;
+            this.prefersReducedMotion = this.getPrefersReducedMotion();
             if (this.settings.autoEnable) {
                 this.enable();
             }
+            console.log(this);
         }
+        /**
+         * Returns a value for user's prefers-reduced-motion-setting
+         */
+        getPrefersReducedMotion = () => {
+            return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        };
         /**
          * Disables carousel interactivity.
          *
@@ -174,6 +181,18 @@
         /**
          * Enables carousel interactivity.
          *
+         * - Previous and Next buttons are always un-hidden, and are enabled whenever
+         *   the carousel is not playing automatically.
+         * - Play/Pause button is:
+         *     - visible and enabled when this.prefersReducedMotion is false, OR when
+         *       the this.settings.reducedMotion setting is set to "permissive",
+         *     - hidden when this.prefersReducedMotion is true AND the setting
+         *       this.settings.reducedMotion is "strict".
+         *   These settings, in the default configuration, completely disable the
+         *   automatic carousel behaviour, but permit the USER to auto-play the
+         *   carousel in circumstances where this.prefersReducedMotion can't be
+         *   reliably determined.
+         *
          * @public
          */
         enable = () => {
@@ -186,15 +205,15 @@
             this.previous.hidden = false;
             this.previous.addEventListener("click", this.handlePreviousClick);
             // Play/Pause button.
-            this.playPause.hidden = false;
             if (this.prefersReducedMotion) {
-                this.playPause.disabled = true;
+                // Positive preference: never autoplays, Play/Pause hidden.
+                this.playPause.hidden = true;
             }
             else {
-                this.playPause.disabled = false;
+                // Negative preference: autoplays when configured, Play/Pause available.
+                this.playPause.hidden = false;
                 this.playPause.dataset.bhcPlaying = this.playing.toString();
                 this.playPause.addEventListener("click", this.handlePlayPauseClick);
-                // Start if configured to do so.
                 if (this.settings.automatic) {
                     this.playPause.click();
                 }
