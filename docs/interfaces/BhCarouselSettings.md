@@ -19,7 +19,7 @@ useful when it's desireable to make the interactivity responsive.
 
 #### Defined in
 
-[bh-carousel.ts:40](https://github.com/ctorgalson/bh-carousel/blob/f71a02c1885bedb4d629275e2ff359b11ae07882/src/bh-carousel.ts#L40)
+[bh-carousel.ts:40](https://github.com/ctorgalson/bh-carousel/blob/147693399637e2f8103b0a9a535f7000bd735bc1/src/bh-carousel.ts#L40)
 
 ---
 
@@ -33,7 +33,7 @@ allows it.
 
 #### Defined in
 
-[bh-carousel.ts:41](https://github.com/ctorgalson/bh-carousel/blob/f71a02c1885bedb4d629275e2ff359b11ae07882/src/bh-carousel.ts#L41)
+[bh-carousel.ts:41](https://github.com/ctorgalson/bh-carousel/blob/147693399637e2f8103b0a9a535f7000bd735bc1/src/bh-carousel.ts#L41)
 
 ---
 
@@ -46,7 +46,7 @@ Currently has no effect as tab-style navigation hasn't been implemented.
 
 #### Defined in
 
-[bh-carousel.ts:42](https://github.com/ctorgalson/bh-carousel/blob/f71a02c1885bedb4d629275e2ff359b11ae07882/src/bh-carousel.ts#L42)
+[bh-carousel.ts:42](https://github.com/ctorgalson/bh-carousel/blob/147693399637e2f8103b0a9a535f7000bd735bc1/src/bh-carousel.ts#L42)
 
 ---
 
@@ -59,7 +59,7 @@ automatically.
 
 #### Defined in
 
-[bh-carousel.ts:43](https://github.com/ctorgalson/bh-carousel/blob/f71a02c1885bedb4d629275e2ff359b11ae07882/src/bh-carousel.ts#L43)
+[bh-carousel.ts:43](https://github.com/ctorgalson/bh-carousel/blob/147693399637e2f8103b0a9a535f7000bd735bc1/src/bh-carousel.ts#L43)
 
 ---
 
@@ -72,4 +72,4 @@ set this value to 2.
 
 #### Defined in
 
-[bh-carousel.ts:44](https://github.com/ctorgalson/bh-carousel/blob/f71a02c1885bedb4d629275e2ff359b11ae07882/src/bh-carousel.ts#L44)
+[bh-carousel.ts:44](https://github.com/ctorgalson/bh-carousel/blob/147693399637e2f8103b0a9a535f7000bd735bc1/src/bh-carousel.ts#L44)
