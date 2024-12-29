@@ -138,7 +138,7 @@ BhCarousel;
 
 #### Defined in
 
-[bh-carousel.ts:162](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L162)
+[bh-carousel.ts:169](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L169)
 
 ## Methods
 
@@ -154,7 +154,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:193](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L193)
+[bh-carousel.ts:200](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L200)
 
 ---
 
@@ -170,23 +170,7 @@ Enables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:211](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L211)
-
----
-
-### getFirstIndex()
-
-> `protected` **getFirstIndex**(): `number`
-
-Retrieves first slide index; prefers aria-hidden, falls back to settings.
-
-#### Returns
-
-`number`
-
-#### Defined in
-
-[bh-carousel.ts:241](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L241)
+[bh-carousel.ts:218](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L218)
 
 ---
 
@@ -210,7 +194,7 @@ Navigates to another slide.
 
 #### Defined in
 
-[bh-carousel.ts:257](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L257)
+[bh-carousel.ts:252](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L252)
 
 ---
 
@@ -234,7 +218,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:294](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L294)
+[bh-carousel.ts:284](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L284)
 
 ---
 
@@ -258,7 +242,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:328](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L328)
+[bh-carousel.ts:307](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L307)
 
 ---
 
@@ -282,7 +266,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:343](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L343)
+[bh-carousel.ts:322](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L322)
 
 ---
 
@@ -306,7 +290,23 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:362](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L362)
+[bh-carousel.ts:341](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L341)
+
+---
+
+### next()
+
+> **next**(): `void`
+
+Advances carousel one slide.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[bh-carousel.ts:354](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L354)
 
 ---
 
@@ -322,7 +322,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:375](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L375)
+[bh-carousel.ts:361](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L361)
 
 ---
 
@@ -338,4 +338,20 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:388](https://github.com/ctorgalson/bh-carousel/blob/e8593410dfb9af7c808c907fd27bfbba773d7c07/src/bh-carousel.ts#L388)
+[bh-carousel.ts:374](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L374)
+
+---
+
+### previous()
+
+> **previous**(): `void`
+
+Reverses carousel one slide.
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[bh-carousel.ts:389](https://github.com/ctorgalson/bh-carousel/blob/8fee0f1ca7c370e811cf25f653457f2607477f4d/src/bh-carousel.ts#L389)

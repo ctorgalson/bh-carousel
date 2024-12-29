@@ -108,7 +108,7 @@
      * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
      */
     class BhCarousel {
-        $el;
+        el;
         current;
         defaults = {
             autoEnable: true,
@@ -120,11 +120,17 @@
         firstIndex;
         intervalId;
         lastIndex;
-        next;
+        nextButton;
         playing;
-        playPause;
-        previous;
+        playPauseButton;
+        previousButton;
         prefersReducedMotion;
+        selectors = {
+            nextButton: "[data-bhc-next]",
+            playPauseButton: "[data-bhc-play-pause]",
+            previousButton: "[data-bhc-previous]",
+            slide: "[aria-roledescription='slide']",
+        };
         settings;
         slides;
         /**
@@ -137,17 +143,15 @@
          * @defaultValue BhCarousel
          */
         constructor(element, settings) {
-            this.$el = element;
+            this.el = element;
             this.settings = { ...this.defaults, ...settings };
-            this.slides = [
-                ...this.$el.querySelectorAll('[aria-roledescription="slide"]'),
-            ];
-            this.playPause = this.$el.querySelector("[data-bhc-play-pause]");
-            this.next = this.$el.querySelector("[data-bhc-next]");
-            this.previous = this.$el.querySelector("[data-bhc-previous]");
+            this.slides = [...this.el.querySelectorAll(this.selectors.slide)];
+            this.playPauseButton = this.el.querySelector(this.selectors.playPauseButton);
+            this.nextButton = this.el.querySelector(this.selectors.nextButton);
+            this.previousButton = this.el.querySelector(this.selectors.previousButton);
             this.firstIndex = 0;
             this.lastIndex = this.slides.length - 1;
-            this.current = this.getFirstIndex();
+            this.current = this.settings.startingIndex;
             this.playing = false;
             this.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)").matches;
             if (this.settings.autoEnable) {
@@ -160,14 +164,14 @@
          * @public
          */
         disable = () => {
-            this.next.disabled = true;
-            this.next.removeEventListener("click", this.handleNextClick);
-            this.previous.disabled = true;
-            this.previous.removeEventListener("click", this.handlePreviousClick);
-            this.playPause.disabled = true;
-            this.playPause.removeEventListener("click", this.handlePlayPauseClick);
-            if (this.playPause.dataset.playing) {
-                this.playPause.click();
+            this.nextButton.disabled = true;
+            this.nextButton.removeEventListener("click", this.handleNextClick);
+            this.previousButton.disabled = true;
+            this.previousButton.removeEventListener("click", this.handlePreviousClick);
+            this.playPauseButton.disabled = true;
+            this.playPauseButton.removeEventListener("click", this.handlePlayPauseClick);
+            if (this.playPauseButton.dataset.playing) {
+                this.playPauseButton.click();
             }
             window.removeEventListener("keydown", this.handleKeydown);
         };
@@ -180,34 +184,26 @@
             // Slides.
             this.slides.forEach((slide, index) => slide.setAttribute("aria-hidden", (index !== this.current).toString()));
             // Next button.
-            this.next.hidden = false;
-            this.next.addEventListener("click", this.handleNextClick);
+            this.nextButton.hidden = false;
+            this.nextButton.addEventListener("click", this.handleNextClick);
             // Previous button.
-            this.previous.hidden = false;
-            this.previous.addEventListener("click", this.handlePreviousClick);
+            this.previousButton.hidden = false;
+            this.previousButton.addEventListener("click", this.handlePreviousClick);
             // Play/Pause button.
-            this.playPause.hidden = false;
+            this.playPauseButton.hidden = false;
             if (this.prefersReducedMotion) {
-                this.playPause.disabled = true;
+                this.playPauseButton.disabled = true;
             }
             else {
-                this.playPause.disabled = false;
-                this.playPause.dataset.bhcPlaying = this.playing.toString();
-                this.playPause.addEventListener("click", this.handlePlayPauseClick);
+                this.playPauseButton.disabled = false;
+                this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+                this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
                 // Start if configured to do so.
                 if (this.settings.automatic) {
-                    this.playPause.click();
+                    this.playPauseButton.click();
                 }
             }
             window.addEventListener("keydown", this.handleKeydown);
-        };
-        /**
-         * Retrieves first slide index; prefers aria-hidden, falls back to settings.
-         */
-        getFirstIndex = () => {
-            // Prefer an indication from the markup, but default to class settings.
-            const hiddenIndex = this.slides.findIndex((slide) => slide.getAttribute("aria-hidden") === "false");
-            return hiddenIndex != -1 ? hiddenIndex : this.settings.startingIndex;
         };
         /**
          * Navigates to another slide.
@@ -218,17 +214,16 @@
          */
         goto = (destination) => {
             let index;
-            switch (destination) {
-                case "next":
-                    index =
-                        this.current === this.lastIndex ? this.firstIndex : this.current + 1;
-                    break;
-                case "previous":
-                    index =
-                        this.current === this.firstIndex ? this.lastIndex : this.current - 1;
-                    break;
-                default:
-                    index = destination;
+            if (destination === "next") {
+                index =
+                    this.current === this.lastIndex ? this.firstIndex : this.current + 1;
+            }
+            else if (destination === "previous") {
+                index =
+                    this.current === this.firstIndex ? this.lastIndex : this.current - 1;
+            }
+            else {
+                index = destination;
             }
             this.slides[this.current].setAttribute("aria-hidden", true.toString());
             this.slides[index].setAttribute("aria-hidden", false.toString());
@@ -243,23 +238,19 @@
          */
         handleKeydown = (event) => {
             const { key } = event;
-            switch (key) {
-                case "ArrowRight":
-                    if (!this.next.disabled) {
-                        this.next.click();
-                    }
-                    break;
-                case "ArrowLeft":
-                    if (!this.previous.disabled) {
-                        this.previous.click();
-                    }
-                    break;
-                case "p":
-                case "P":
-                    if (!this.prefersReducedMotion) {
-                        this.playPause.click();
-                    }
-                    break;
+            if (key === "ArrowRight" && !this.nextButton.disabled) {
+                this.next();
+            }
+            else if (key === "ArrowLeft" && !this.previousButton.disabled) {
+                this.previous();
+            }
+            else if (key.toLowerCase() === "p" && !this.prefersReducedMotion) {
+                if (this.playing) {
+                    this.pause();
+                }
+                else {
+                    this.play();
+                }
             }
         };
         /**
@@ -270,10 +261,10 @@
          * @protected
          */
         handleNextClick = (event) => {
-            if (event.currentTarget !== this.next) {
+            if (event.currentTarget !== this.nextButton) {
                 return;
             }
-            this.goto("next");
+            this.next();
         };
         /**
          * Handles click events for Play/Pause button.
@@ -283,7 +274,7 @@
          * @protected
          */
         handlePlayPauseClick = (event) => {
-            if (event.currentTarget !== this.playPause) {
+            if (event.currentTarget !== this.playPauseButton) {
                 return;
             }
             if (this.playing) {
@@ -301,11 +292,17 @@
          * @protected
          */
         handlePreviousClick = (event) => {
-            if (event.currentTarget !== this.previous) {
+            if (event.currentTarget !== this.previousButton) {
                 return;
             }
-            this.goto("previous");
+            this.previous();
         };
+        /**
+         * Advances carousel one slide.
+         *
+         * @public
+         */
+        next = () => this.goto("next");
         /**
          * Pauses carousel.
          *
@@ -314,9 +311,9 @@
         pause = () => {
             window.clearInterval(this.intervalId);
             this.playing = false;
-            this.playPause.dataset.bhcPlaying = this.playing.toString();
-            this.next.disabled = false;
-            this.previous.disabled = false;
+            this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+            this.nextButton.disabled = false;
+            this.previousButton.disabled = false;
         };
         /**
          * Plays carousel.
@@ -328,10 +325,16 @@
                 this.goto("next");
             }, this.settings.interval);
             this.playing = true;
-            this.playPause.dataset.bhcPlaying = this.playing.toString();
-            this.next.disabled = true;
-            this.previous.disabled = true;
+            this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+            this.nextButton.disabled = true;
+            this.previousButton.disabled = true;
         };
+        /**
+         * Reverses carousel one slide.
+         *
+         * @public
+         */
+        previous = () => this.goto("previous");
     }
 
     return BhCarousel;
