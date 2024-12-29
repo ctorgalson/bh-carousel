@@ -17,9 +17,32 @@ export type BhCarouselDestination = number | "next" | "previous";
 export type BhCarouselInterval = number;
 
 /**
- * A type used to set the acceptable settings parameters for BhCarousel objects.
+ * A type used to define the slideshow behaviour in circumstances where there
+ * prefers-reduced-motion can't be reliably determined.
  */
-export type BhCarouselSettings = {
+export type BhCarouselReducedMotion = "strict" | "permissive";
+
+/**
+ * A type used to set the acceptable settings parameters for BhCarousel objects.
+ *
+ * @property {boolean} autoEnable
+ *   Whether or not to automatically enable carousel interactivity. Sometimes
+ *   useful when it's desireable to make the interactivity responsive.
+ * @property {boolean} automatic
+ *   Whether or not to auto-play the carousel on initialization. This setting
+ *   is only guaranteed to be honoured if the user's prefers-reduced-motion
+ *   allows it.
+ * @property {BhCarouselControls} controlType
+ *   Whether the carousel uses only buttons for control or buttons and tabs.
+ *   Currently has no effect as tab-style navigation hasn't been implemented.
+ * @property {BhCarouselInterval} interval
+ *   The interval, in milliseconds, between slides when carousel is playing
+ *   automatically.
+ * @property {number} startingIndex
+ *   Zero-based index of starting slide. E.g. to start on the third slide,
+ *   set this value to 2.
+ */
+export interface BhCarouselSettings {
   autoEnable: boolean;
   automatic: boolean;
   controlType: BhCarouselControls;
@@ -183,14 +206,21 @@ export default class BhCarousel {
     this.lastIndex = this.slides.length - 1;
     this.current = this.settings.startingIndex;
     this.playing = false;
-    this.prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion)",
-    ).matches;
+    this.prefersReducedMotion = this.getPrefersReducedMotion();
 
     if (this.settings.autoEnable) {
       this.enable();
     }
+
+    console.log(this);
   }
+
+  /**
+   * Returns a value for user's prefers-reduced-motion-setting
+   */
+  protected getPrefersReducedMotion = (): boolean => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  };
 
   /**
    * Disables carousel interactivity.
@@ -212,6 +242,18 @@ export default class BhCarousel {
 
   /**
    * Enables carousel interactivity.
+   *
+   * - Previous and Next buttons are always un-hidden, and are enabled whenever
+   *   the carousel is not playing automatically.
+   * - Play/Pause button is:
+   *     - visible and enabled when this.prefersReducedMotion is false, OR when
+   *       the this.settings.reducedMotion setting is set to "permissive",
+   *     - hidden when this.prefersReducedMotion is true AND the setting
+   *       this.settings.reducedMotion is "strict".
+   *   These settings, in the default configuration, completely disable the
+   *   automatic carousel behaviour, but permit the USER to auto-play the
+   *   carousel in circumstances where this.prefersReducedMotion can't be
+   *   reliably determined.
    *
    * @public
    */

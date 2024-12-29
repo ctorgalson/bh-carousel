@@ -38,6 +38,9 @@ const getConfigFromQuery = () => {
         case "startingIndex":
           paramValue = parseInt(value);
           break;
+
+        default:
+          paramValue = value.toString();
       }
       configuration[key] = paramValue;
     }
