@@ -153,11 +153,18 @@
             this.lastIndex = this.slides.length - 1;
             this.current = this.settings.startingIndex;
             this.playing = false;
-            this.prefersReducedMotion = window.matchMedia("(prefers-reduced-motion)").matches;
+            this.prefersReducedMotion = this.getPrefersReducedMotion();
             if (this.settings.autoEnable) {
                 this.enable();
             }
+            console.log(this);
         }
+        /**
+         * Returns a value for user's prefers-reduced-motion-setting
+         */
+        getPrefersReducedMotion = () => {
+            return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        };
         /**
          * Disables carousel interactivity.
          *
@@ -177,6 +184,18 @@
         };
         /**
          * Enables carousel interactivity.
+         *
+         * - Previous and Next buttons are always un-hidden, and are enabled whenever
+         *   the carousel is not playing automatically.
+         * - Play/Pause button is:
+         *     - visible and enabled when this.prefersReducedMotion is false, OR when
+         *       the this.settings.reducedMotion setting is set to "permissive",
+         *     - hidden when this.prefersReducedMotion is true AND the setting
+         *       this.settings.reducedMotion is "strict".
+         *   These settings, in the default configuration, completely disable the
+         *   automatic carousel behaviour, but permit the USER to auto-play the
+         *   carousel in circumstances where this.prefersReducedMotion can't be
+         *   reliably determined.
          *
          * @public
          */
