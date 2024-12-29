@@ -1,7 +1,7 @@
 {
   "name": "bh-carousel",
   "type": "module",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
   "license": "GPL-2.0-or-later",
@@ -37,7 +37,7 @@
     "build:ts": "rollup --config && npm run copy:js",
     "copy:css": "for d in ./dist/css/ ./cypress/fixtures/css/ ; do cp -v src/bh-carousel.css \"$d\" ; done",
     "copy:js": "cp -v ./dist/js/bh-carousel.js ./cypress/fixtures/js",
-    "build:docs": "typedoc --logLevel Verbose",
+    "build:docs": "typedoc --logLevel Verbose --coverageLabel 'Docs'",
     "format": "concurrently --raw npm:format:*",
     "format:ts": "prettier -w src/bh-carousel.ts",
     "format:css": "prettier -w src/bh-carousel.css",
