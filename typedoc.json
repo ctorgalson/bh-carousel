@@ -3,7 +3,12 @@
   "entryPoints": ["./src/bh-carousel.ts"],
   "formatWithPrettier": true,
   "plugin": [
-    "typedoc-plugin-coverage",
+    {
+      "name": "typedoc-plugin-coverage",
+      "options": {
+        "coverageLabel": "Documentation Coverage"
+      }
+    },
     "typedoc-plugin-markdown",
     "typedoc-plugin-mdn-links",
     "typedoc-plugin-rename-defaults"
