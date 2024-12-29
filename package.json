@@ -1,7 +1,7 @@
 {
   "name": "bh-carousel",
   "type": "module",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
   "license": "GPL-2.0-or-later",
