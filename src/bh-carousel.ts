@@ -17,12 +17,6 @@ export type BhCarouselDestination = number | "next" | "previous";
 export type BhCarouselInterval = number;
 
 /**
- * A type used to define the slideshow behaviour in circumstances where there
- * prefers-reduced-motion can't be reliably determined.
- */
-export type BhCarouselReducedMotion = "strict" | "permissive";
-
-/**
  * A type used to set the acceptable settings parameters for BhCarousel objects.
  *
  * @property {boolean} autoEnable
