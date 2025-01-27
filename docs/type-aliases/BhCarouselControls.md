@@ -12,4 +12,4 @@ A type used to define the acceptable values BhCarouselSettings.controlType.
 
 ## Defined in
 
-[bh-carousel.ts:5](https://github.com/ctorgalson/bh-carousel/blob/2f7dabc4fd9fa5cf46c771341f2b4d493520ede4/src/bh-carousel.ts#L5)
+[bh-carousel.ts:5](https://github.com/ctorgalson/bh-carousel/blob/53037e77ed9f3875410f7f06acf29260262072f1/src/bh-carousel.ts#L5)

@@ -115,6 +115,7 @@
             automatic: true,
             controlType: "buttons",
             interval: 4000,
+            itemStateAttribute: "aria-hidden",
             startingIndex: 0,
         };
         firstIndex;
@@ -201,7 +202,7 @@
          */
         enable = () => {
             // Slides.
-            this.slides.forEach((slide, index) => slide.setAttribute("aria-hidden", (index !== this.current).toString()));
+            this.slides.forEach((slide, index) => slide.setAttribute(this.settings.itemStateAttribute, (index !== this.current).toString()));
             // Next button.
             this.nextButton.hidden = false;
             this.nextButton.addEventListener("click", this.handleNextClick);
@@ -244,8 +245,8 @@
             else {
                 index = destination;
             }
-            this.slides[this.current].setAttribute("aria-hidden", true.toString());
-            this.slides[index].setAttribute("aria-hidden", false.toString());
+            this.slides[this.current].setAttribute(this.settings.itemStateAttribute, true.toString());
+            this.slides[index].setAttribute(this.settings.itemStateAttribute, false.toString());
             this.current = index;
         };
         /**
