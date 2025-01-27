@@ -33,9 +33,9 @@ export type BhCarouselInterval = number;
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
  * @property {itemStateAttribute} string
- *   The name of the attribute to set on active/inactive items. Defaults to
- *   aria-hidden; if set to any other value, than the default or `hidden`,
- *   take care for the accessibility of each item.
+ *   The name of the *boolean* attribute to set on active/inactive items.
+ *   Defaults to aria-hidden; if set to any other value, than the default or
+ *   `hidden`, take care for the accessibility of each item.
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
