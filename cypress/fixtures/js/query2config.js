@@ -9,6 +9,8 @@ const configOptions = {
   // Not yet implemented.
   // controlType: (value) => ["buttons", "tabs"].includes(value),
   interval: (value) => !isNaN(value),
+  itemStateAttribute: (value) =>
+    typeof value === "string" || value instanceof String,
   startingIndex: (value) => !isNaN(value),
 };
 
@@ -31,7 +33,7 @@ const getConfigFromQuery = () => {
       switch (key) {
         case "autoEnable":
         case "automatic":
-          paramValue = (value === "true");
+          paramValue = value === "true";
           break;
 
         case "interval":
@@ -39,6 +41,7 @@ const getConfigFromQuery = () => {
           paramValue = parseInt(value);
           break;
 
+        case "itemStateAttribute":
         default:
           paramValue = value.toString();
       }
