@@ -9,10 +9,7 @@ describe("autoEnable=false: slideshow interactivity not enabled", () => {
 
   it("Play/Pause button has no data-bhc-playing attr", () => {
     cy.visit("/", { qs: { autoEnable: false } });
-    cy.get("[data-bhc-play-pause]").should(
-      "not.have.attr",
-      "data-bhc-playing",
-    );
+    cy.get("[data-bhc-play-pause]").should("not.have.attr", "data-bhc-playing");
   });
 });
 
@@ -23,7 +20,7 @@ describe("automatic=true: slideshow plays automatically", () => {
     cy.get("[data-bhc-play-pause]").should(
       "have.attr",
       "data-bhc-playing",
-      "true",
+      "true"
     );
   });
 
@@ -51,15 +48,18 @@ describe("automatic=false: slideshow does not play automatically", () => {
     cy.get("[data-bhc-play-pause]").should(
       "have.attr",
       "data-bhc-playing",
-      "false",
+      "false"
     );
   });
 
   it("first slide's aria-hidden attr does not change to 'true'", () => {
     cy.visit("/", { qs: { automatic: false } });
     cy.wait(6000);
-    cy.get("[aria-roledescription='slide']:first-child")
-      .should("have.attr", "aria-hidden", "false");
+    cy.get("[aria-roledescription='slide']:first-child").should(
+      "have.attr",
+      "aria-hidden",
+      "false"
+    );
   });
 
   it("Previous button is not disabled", () => {
@@ -80,8 +80,34 @@ describe("interval=1000: slideshow pauses one second between slides", () => {
   it("first slide's aria-hidden is true after 1.1s", () => {
     cy.visit("/");
     cy.wait(1100);
-    cy.get("[aria-roledescription='slide']:first-child")
-      .should("have.attr", "aria-hidden", "true");
+    cy.get("[aria-roledescription='slide']:first-child").should(
+      "have.attr",
+      "aria-hidden",
+      "true"
+    );
+  });
+});
+
+// itemStateAttribute
+describe("itemStateAttribue=hidden: slides have data-hidden attribute", () => {
+  it("all slides have a hidden attribute", () => {
+    cy.visit("/", { qs: { itemStateAttribute: "data-hidden" } });
+    cy.get("[aria-roledescription='slide'][data-hidden]").should("have.length", 5);
+  });
+
+  it("third slide's data-hidden is 'false'", () => {
+    cy.visit("/", {
+      qs: {
+        automatic: false,
+        itemStateAttribute: "data-hidden",
+        startingIndex: 2,
+      },
+    });
+    cy.get("[aria-roledescription='slide']:nth-child(3)").should(
+      "have.attr",
+      "data-hidden",
+      "false"
+    );
   });
 });
 
@@ -89,7 +115,10 @@ describe("interval=1000: slideshow pauses one second between slides", () => {
 describe("startingIndex=2: slideshow starts at third slide", () => {
   it("third slide's aria-hidden is 'false'", () => {
     cy.visit("/", { qs: { automatic: false, startingIndex: 2 } });
-    cy.get("[aria-roledescription='slide']:nth-child(3)")
-      .should("have.attr", "aria-hidden", "false");
+    cy.get("[aria-roledescription='slide']:nth-child(3)").should(
+      "have.attr",
+      "aria-hidden",
+      "false"
+    );
   });
 });

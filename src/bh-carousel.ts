@@ -32,6 +32,10 @@ export type BhCarouselInterval = number;
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
+ * @property {itemStateAttribute} string
+ *   The name of the *boolean* attribute to set on active/inactive items.
+ *   Defaults to aria-hidden; if set to any other value, than the default or
+ *   `hidden`, take care for the accessibility of each item.
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
@@ -41,6 +45,7 @@ export interface BhCarouselSettings {
   automatic: boolean;
   controlType: BhCarouselControls;
   interval: BhCarouselInterval;
+  itemStateAttribute: string;
   startingIndex: number;
 };
 
@@ -155,6 +160,7 @@ export default class BhCarousel {
     automatic: true,
     controlType: "buttons",
     interval: 4000,
+    itemStateAttribute: "aria-hidden",
     startingIndex: 0,
   };
   private firstIndex: number;
@@ -254,7 +260,7 @@ export default class BhCarousel {
   public enable = (): void => {
     // Slides.
     this.slides.forEach((slide, index) =>
-      slide.setAttribute("aria-hidden", (index !== this.current).toString()),
+      slide.setAttribute(this.settings.itemStateAttribute, (index !== this.current).toString()),
     );
     // Next button.
     this.nextButton.hidden = false;
@@ -299,11 +305,11 @@ export default class BhCarousel {
     }
 
     (this.slides[this.current] as HTMLElement).setAttribute(
-      "aria-hidden",
+      this.settings.itemStateAttribute,
       true.toString(),
     );
     (this.slides[index] as HTMLElement).setAttribute(
-      "aria-hidden",
+      this.settings.itemStateAttribute,
       false.toString(),
     );
 
