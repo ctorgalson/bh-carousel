@@ -6,6 +6,13 @@ describe("Slideshow pauses when Play/Pause button clicked", () => {
       .should("have.attr", "data-bhc-playing", "false");
   });
 
+  it("Play/Pause button's aria-label attr changes to 'Play carousel'", () => {
+    cy.visit("/");
+    cy.get("[data-bhc-play-pause]")
+      .click()
+      .should("have.attr", "aria-label", "Play carousel");
+  });
+
   it("first slide's aria-hidden attr does not change to 'true'", () => {
     cy.visit("/");
     cy.get("[data-bhc-play-pause]")
@@ -39,6 +46,14 @@ describe("Slideshow resumes when Play/Pause button clicked", () => {
       .click()
       .get("[data-bhc-play-pause]")
       .should("have.attr", "data-bhc-playing", "true");
+  });
+
+  it("slideshow's aria-label attr changes to 'Pause carousel'", () => {
+    // Load the slideshow already "paused".
+    cy.visit("/", { qs: { automatic: false } });
+    cy.get("[data-bhc-play-pause]")
+      .click()
+      .should("have.attr", "aria-label", "Pause carousel");
   });
 
   it("first slide's aria-hidden attr changes to 'true'", () => {
