@@ -11,6 +11,7 @@ for use in browser projects.
 The script is fully independent of any design-system, but that means you have
 to BYOCSS.
 
+- Try [the demo](https://ctorgalson.github.io/bh-carousel/)
 - See `cypress/fixtures/` directory for a sample implementation.
 - Find complete typedoc documentation in [the `docs/` directory](docs/).
 
