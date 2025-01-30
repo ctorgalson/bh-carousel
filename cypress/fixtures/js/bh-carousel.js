@@ -22,7 +22,6 @@
      *   <div class="bhc__inner">
      *     <div class="bhc__controls">
      *       <button
-     *         aria-label="Start / stop automatic slide show"
      *         class="bhc__control"
      *         data-bhc-play-pause
      *         hidden
@@ -111,6 +110,8 @@
         el;
         current;
         defaults = {
+            ariaLabelPause: "Pause carousel",
+            ariaLabelPlay: "Play carousel",
             autoEnable: true,
             automatic: true,
             controlType: "buttons",
@@ -177,9 +178,10 @@
             this.previousButton.disabled = true;
             this.previousButton.removeEventListener("click", this.handlePreviousClick);
             this.playPauseButton.disabled = true;
+            this.playPauseButton.removeAttribute("aria-label");
             this.playPauseButton.removeEventListener("click", this.handlePlayPauseClick);
             if (this.playPauseButton.dataset.playing) {
-                this.playPauseButton.click();
+                this.pause();
             }
             window.removeEventListener("keydown", this.handleKeydown);
         };
@@ -220,7 +222,10 @@
                 this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
                 // Start if configured to do so.
                 if (this.settings.automatic) {
-                    this.playPauseButton.click();
+                    this.play();
+                }
+                else {
+                    this.pause();
                 }
             }
             window.addEventListener("keydown", this.handleKeydown);
@@ -332,6 +337,7 @@
             window.clearInterval(this.intervalId);
             this.playing = false;
             this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+            this.playPauseButton.setAttribute("aria-label", this.settings.ariaLabelPlay);
             this.nextButton.disabled = false;
             this.previousButton.disabled = false;
         };
@@ -346,6 +352,7 @@
             }, this.settings.interval);
             this.playing = true;
             this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+            this.playPauseButton.setAttribute("aria-label", this.settings.ariaLabelPause);
             this.nextButton.disabled = true;
             this.previousButton.disabled = true;
         };
