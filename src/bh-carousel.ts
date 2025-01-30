@@ -34,7 +34,7 @@ export type BhCarouselInterval = number;
  *   allows it.
  * @property {BhCarouselControls} controlType
  *   Whether the carousel uses only buttons for control or buttons and tabs.
- *   Currently has no effect as tab-style navigation hasn't been implemented.
+ aulay*   Currently has no effect as tab-style navigation hasn't been implemented.
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
@@ -248,7 +248,7 @@ export default class BhCarousel {
       this.handlePlayPauseClick
     );
     if (this.playPauseButton.dataset.playing) {
-      this.playPauseButton.click();
+      this.pause();
     }
     window.removeEventListener("keydown", this.handleKeydown);
   };
@@ -294,7 +294,9 @@ export default class BhCarousel {
       this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
       // Start if configured to do so.
       if (this.settings.automatic) {
-        this.playPauseButton.click();
+        this.play();
+      } else {
+        this.pause();
       }
     }
     window.addEventListener("keydown", this.handleKeydown);
