@@ -7,16 +7,21 @@ const require = createRequire(import.meta.url);
 const pkg = require("./package.json");
 const plugins = [nodeResolve(), typescript({ tsconfig: "./tsconfig.json" })];
 const minifyPlugin = terser({
+  compress: {
+    module: true,
+    toplevel: true,
+  },
+  ecma: 2020,
   format: {
     preamble: `/*! bh-carousel ${pkg.version} — © Christopher Torgalson */`,
   },
   keep_classnames: true,
   keep_fnames: false,
-  mangle: {
-    properties: {
-      regex: /^((?!disable|enable|goto|next|pause|play|previous).)*$/ // Keep specific public methods
-    },
-  },
+  // mangle: {
+  //   properties: {
+  //     regex: /^((?!disable|enable|goto|next|pause|play|previous).)*$/ // Keep specific public methods
+  //   },
+  // },
 });
 const umdCfg = {
   format: "umd",

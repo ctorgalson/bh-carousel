@@ -4,6 +4,10 @@
  * For use in tests only.
  */
 const configOptions = {
+  ariaLabelPause: (value) =>
+    typeof value === "string" || value instanceof String,
+  ariaLabelPlay: (value) =>
+    typeof value === "string" || value instanceof String,
   autoEnable: (value) => ["true", "false"].includes(value),
   automatic: (value) => ["true", "false"].includes(value),
   // Not yet implemented.
@@ -41,6 +45,8 @@ const getConfigFromQuery = () => {
           paramValue = parseInt(value);
           break;
 
+        case "ariaLabelPause":
+        case "ariaLabelPlay":
         case "itemStateAttribute":
         default:
           paramValue = value.toString();

@@ -1,3 +1,21 @@
+// ariaLabelPause
+describe("ariaLabelPause='Pause (Cypress)': Play/Pause button has correct aria-label attr", () => {
+  it("Play/Pause button has aria-label attribute set to 'Pause (Cypress)'", () => {
+    cy.visit("/", { qs: { ariaLabelPause: "Pause (Cypress)" } });
+    cy.get("[data-bhc-play-pause]")
+      .should("have.attr", "aria-label", "Pause (Cypress)");
+  });
+});
+
+// ariaLabelPlay
+describe("ariaLabelPlay='Play (Cypress)': Play/Pause button has correct aria-label attr", () => {
+  it("Play/Pause button has aria-label attribute set to 'Play (Cypress)'", () => {
+    cy.visit("/", { qs: { ariaLabelPlay: "Play (Cypress)", automatic: false } });
+    cy.get("[data-bhc-play-pause]")
+      .should("have.attr", "aria-label", "Play (Cypress)");
+  });
+});
+
 // autoEnable
 describe("autoEnable=false: slideshow interactivity not enabled", () => {
   it("Button controls are hidden", () => {

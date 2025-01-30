@@ -19,7 +19,6 @@ REQUIRED.
   <div class="bhc__inner">
     <div class="bhc__controls">
       <button
-        aria-label="Start / stop automatic slide show"
         class="bhc__control"
         data-bhc-play-pause
         hidden
@@ -138,7 +137,7 @@ BhCarousel;
 
 #### Defined in
 
-[bh-carousel.ts:192](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L192)
+[bh-carousel.ts:201](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L201)
 
 ## Methods
 
@@ -154,7 +153,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:230](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L230)
+[bh-carousel.ts:239](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L239)
 
 ---
 
@@ -182,7 +181,55 @@ Enables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:260](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L260)
+[bh-carousel.ts:273](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L273)
+
+---
+
+### getCurrentIndex()
+
+> **getCurrentIndex**(): `number`
+
+Returns the index of the current carousel item.
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[bh-carousel.ts:310](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L310)
+
+---
+
+### getFirstIndex()
+
+> **getFirstIndex**(): `number`
+
+Returns the index of the first carousel item.
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[bh-carousel.ts:317](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L317)
+
+---
+
+### getLastIndex()
+
+> **getLastIndex**(): `number`
+
+Returns the index of the last carousel item.
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[bh-carousel.ts:324](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L324)
 
 ---
 
@@ -198,7 +245,7 @@ Returns a value for user's prefers-reduced-motion-setting
 
 #### Defined in
 
-[bh-carousel.ts:221](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L221)
+[bh-carousel.ts:230](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L230)
 
 ---
 
@@ -222,7 +269,7 @@ Navigates to another slide.
 
 #### Defined in
 
-[bh-carousel.ts:294](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L294)
+[bh-carousel.ts:333](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L333)
 
 ---
 
@@ -246,7 +293,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:326](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L326)
+[bh-carousel.ts:365](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L365)
 
 ---
 
@@ -270,7 +317,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:349](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L349)
+[bh-carousel.ts:388](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L388)
 
 ---
 
@@ -294,7 +341,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:364](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L364)
+[bh-carousel.ts:403](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L403)
 
 ---
 
@@ -318,7 +365,7 @@ The event passed in by the listener.
 
 #### Defined in
 
-[bh-carousel.ts:383](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L383)
+[bh-carousel.ts:422](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L422)
 
 ---
 
@@ -334,7 +381,7 @@ Advances carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:396](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L396)
+[bh-carousel.ts:435](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L435)
 
 ---
 
@@ -350,7 +397,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:403](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L403)
+[bh-carousel.ts:442](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L442)
 
 ---
 
@@ -366,7 +413,7 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:416](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L416)
+[bh-carousel.ts:459](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L459)
 
 ---
 
@@ -382,4 +429,4 @@ Reverses carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:431](https://github.com/ctorgalson/bh-carousel/blob/f97121088c1910d9b0aa19966dee0d3b3138a34d/src/bh-carousel.ts#L431)
+[bh-carousel.ts:478](https://github.com/ctorgalson/bh-carousel/blob/5e99a1294c034f2369e6c93c94adc704d9f1d7b4/src/bh-carousel.ts#L478)
