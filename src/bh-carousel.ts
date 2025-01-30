@@ -303,6 +303,27 @@ export default class BhCarousel {
   };
 
   /**
+   * Returns the index of the current carousel item.
+   *
+   * @public
+   */
+  public getCurrentIndex = (): number => this.current;
+
+  /**
+   * Returns the index of the first carousel item.
+   *
+   * @public
+   */
+  public getFirstIndex = (): number => this.firstIndex;
+
+  /**
+   * Returns the index of the last carousel item.
+   *
+   * @public
+   */
+  public getLastIndex = (): number => this.lastIndex;
+
+  /**
    * Navigates to another slide.
    *
    * @param {BhCarouselDestination} destination
