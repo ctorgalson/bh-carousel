@@ -19,7 +19,7 @@ Value for the Play/Pause button's aria-label attribute when playing (e.g.
 
 #### Defined in
 
-[bh-carousel.ts:50](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L50)
+[bh-carousel.ts:50](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L50)
 
 ---
 
@@ -32,7 +32,7 @@ Value for the Play/Pause button's aria-label attribute when paused (e.g.
 
 #### Defined in
 
-[bh-carousel.ts:51](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L51)
+[bh-carousel.ts:51](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L51)
 
 ---
 
@@ -45,7 +45,7 @@ useful when it's desireable to make the interactivity responsive.
 
 #### Defined in
 
-[bh-carousel.ts:52](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L52)
+[bh-carousel.ts:52](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L52)
 
 ---
 
@@ -59,7 +59,7 @@ allows it.
 
 #### Defined in
 
-[bh-carousel.ts:53](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L53)
+[bh-carousel.ts:53](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L53)
 
 ---
 
@@ -72,7 +72,7 @@ aulay\* Currently has no effect as tab-style navigation hasn't been implemented.
 
 #### Defined in
 
-[bh-carousel.ts:54](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L54)
+[bh-carousel.ts:54](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L54)
 
 ---
 
@@ -85,7 +85,7 @@ automatically.
 
 #### Defined in
 
-[bh-carousel.ts:55](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L55)
+[bh-carousel.ts:55](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L55)
 
 ---
 
@@ -95,7 +95,7 @@ automatically.
 
 #### Defined in
 
-[bh-carousel.ts:56](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L56)
+[bh-carousel.ts:56](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L56)
 
 ---
 
@@ -108,4 +108,4 @@ set this value to 2.
 
 #### Defined in
 
-[bh-carousel.ts:57](https://github.com/ctorgalson/bh-carousel/blob/7553a497a10619f58321fdb257ffc4c4145df72b/src/bh-carousel.ts#L57)
+[bh-carousel.ts:57](https://github.com/ctorgalson/bh-carousel/blob/475d775975fc5480c5c9f26c489df8329463c770/src/bh-carousel.ts#L57)
