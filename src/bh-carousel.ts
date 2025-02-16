@@ -241,14 +241,16 @@ export default class BhCarousel {
     this.nextButton.removeEventListener("click", this.handleNextClick);
     this.previousButton.disabled = true;
     this.previousButton.removeEventListener("click", this.handlePreviousClick);
-    this.playPauseButton.disabled = true;
-    this.playPauseButton.removeAttribute("aria-label");
-    this.playPauseButton.removeEventListener(
-      "click",
-      this.handlePlayPauseClick
-    );
-    if (this.playPauseButton.dataset.playing) {
-      this.pause();
+    if (this.playPauseButton) {
+      this.playPauseButton.disabled = true;
+      this.playPauseButton.removeAttribute("aria-label");
+      this.playPauseButton.removeEventListener(
+        "click",
+        this.handlePlayPauseClick
+      );
+      if (this.playPauseButton.dataset.playing) {
+        this.pause();
+      }
     }
     window.removeEventListener("keydown", this.handleKeydown);
   };
@@ -285,18 +287,20 @@ export default class BhCarousel {
     this.previousButton.hidden = false;
     this.previousButton.addEventListener("click", this.handlePreviousClick);
     // Play/Pause button.
-    this.playPauseButton.hidden = false;
-    if (this.prefersReducedMotion) {
-      this.playPauseButton.disabled = true;
-    } else {
-      this.playPauseButton.disabled = false;
-      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-      this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
-      // Start if configured to do so.
-      if (this.settings.automatic) {
-        this.play();
+    if (this.playPauseButton) {
+      this.playPauseButton.hidden = false;
+      if (this.prefersReducedMotion) {
+        this.playPauseButton.disabled = true;
       } else {
-        this.pause();
+        this.playPauseButton.disabled = false;
+        this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+        this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
+        // Start if configured to do so.
+        if (this.settings.automatic) {
+          this.play();
+        } else {
+          this.pause();
+        }
       }
     }
     window.addEventListener("keydown", this.handleKeydown);
@@ -370,10 +374,12 @@ export default class BhCarousel {
     } else if (key === "ArrowLeft" && !this.previousButton.disabled) {
       this.previous();
     } else if (key.toLowerCase() === "p" && !this.prefersReducedMotion) {
-      if (this.playing) {
-        this.pause();
-      } else {
-        this.play();
+      if (this.playPauseButton) {
+        if (this.playing) {
+          this.pause();
+        } else {
+          this.play();
+        }
       }
     }
   };
