@@ -220,8 +220,6 @@ export default class BhCarousel {
     if (this.settings.autoEnable) {
       this.enable();
     }
-
-    console.log(this);
   }
 
   /**
