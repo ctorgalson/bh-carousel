@@ -229,10 +229,16 @@ export default class BhCarousel {
   /**
    * Creates a custom bhCarousel event.
    *
+   * @param {BhCarouselAction} action
+   *   The action triggering the event.
+   * @param {number} currentIndex
+   *   The numeric index of the current index AFTER the object updates.
+   * @param {number} previousIndex
+   *   The numeric index of the previous index AFTER the object updates.
    * @protected
    */
-  protected createEvent = (action: BhCarouselAction, currentIndex: number, lastIndex: number): Event => new CustomEvent(
-    'bhCarousel',
+  protected createEvent = (action: BhCarouselAction, currentIndex: number, previousIndex: number): Event => new CustomEvent(
+    'BhCarousel',
     {
       bubbles: true,
       cancelable: false,
@@ -240,7 +246,7 @@ export default class BhCarousel {
       detail: {
         action,
         currentIndex,
-        lastIndex,
+        previousIndex,
       },
     },
   );
@@ -356,28 +362,33 @@ export default class BhCarousel {
    * @public
    */
   public goto = (destination: BhCarouselDestination): void => {
-    let index;
+    const previousIndex = this.current;
+    let currentIndex;
 
     if (destination === "next") {
-      index =
+      currentIndex =
         this.current === this.lastIndex ? this.firstIndex : this.current + 1;
     } else if (destination === "previous") {
-      index =
+      currentIndex =
         this.current === this.firstIndex ? this.lastIndex : this.current - 1;
     } else {
-      index = destination;
+      currentIndex = destination;
     }
 
     (this.slides[this.current] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
       true.toString()
     );
-    (this.slides[index] as HTMLElement).setAttribute(
+    (this.slides[currentIndex] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
       false.toString()
     );
 
-    this.current = index;
+    this.current = currentIndex;
+
+    if (destination === "next" || destination === "previous") {
+      this.el.dispatchEvent(this.createEvent(destination, currentIndex, previousIndex));
+    }
   };
 
   /**
