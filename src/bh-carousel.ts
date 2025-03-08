@@ -225,13 +225,6 @@ export default class BhCarousel {
   }
 
   /**
-   * Returns a value for user's prefers-reduced-motion-setting
-   */
-  protected getPrefersReducedMotion = (): boolean => {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  };
-
-  /**
    * Disables carousel interactivity.
    *
    * @public
@@ -326,6 +319,13 @@ export default class BhCarousel {
    * @public
    */
   public getLastIndex = (): number => this.lastIndex;
+
+  /**
+   * Returns a value for user's prefers-reduced-motion-setting
+   */
+  protected getPrefersReducedMotion = (): boolean => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  };
 
   /**
    * Navigates to another slide.
