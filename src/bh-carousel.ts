@@ -1,4 +1,9 @@
 /**
+ * A type used to define the 'actions' that the library's events can report.
+ */
+export type BhCarouselAction = "next" | "pause" | "play" | "previous";
+
+/**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
  */
 export type BhCarouselControls = "buttons" | "tabs";
@@ -226,7 +231,7 @@ export default class BhCarousel {
    *
    * @protected
    */
-  protected createEvent = (action: string, currentIndex: number, lastIndex: number): Event => new CustomEvent(
+  protected createEvent = (action: BhCarouselAction, currentIndex: number, lastIndex: number): Event => new CustomEvent(
     'bhCarousel',
     {
       bubbles: true,
