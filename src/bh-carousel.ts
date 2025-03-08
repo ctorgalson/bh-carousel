@@ -1,6 +1,5 @@
 /**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
- *
  */
 export type BhCarouselControls = "buttons" | "tabs";
 
