@@ -223,6 +223,25 @@ export default class BhCarousel {
   }
 
   /**
+   * Creates a custom bhCarousel event.
+   *
+   * @protected
+   */
+  protected createEvent = (action: string, currentIndex: number, lastIndex: number): Event => new CustomEvent(
+    'bhCarousel',
+    {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+      detail: {
+        action,
+        currentIndex,
+        lastIndex,
+      },
+    },
+  );
+
+  /**
    * Disables carousel interactivity.
    *
    * @public
