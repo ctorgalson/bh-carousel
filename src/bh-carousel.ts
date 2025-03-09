@@ -1,6 +1,10 @@
 /**
+ * A type used to define the 'actions' that the library's events can report.
+ */
+export type BhCarouselAction = "next" | "pause" | "play" | "previous";
+
+/**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
- *
  */
 export type BhCarouselControls = "buttons" | "tabs";
 
@@ -8,6 +12,24 @@ export type BhCarouselControls = "buttons" | "tabs";
  * A type used to define the acceptable values BhCarouselSettings.interval.
  */
 export type BhCarouselDestination = number | "next" | "previous";
+
+/**
+ * An interface defining the structure of BhCarousel event details objects.
+ *
+ * @property {BhCarouselAction} action
+ *   The type of action triggering the event.
+ * @property {number} currentIndex
+ *   The index of the current item *after* updating the object in response to
+ *   the event ("previous" and "next" actions only.
+ * @property {number} previousIndex
+ *   The index of the previous item *after* updating the object in response to
+ *   the event ("previous" and "next" actions only).
+ */
+export interface BhCarouselEventDetail {
+  action: BhCarouselAction;
+  currentIndex?: number;
+  previousIndex?: number;
+}
 
 /**
  * A type used to define the acceptable slide-timing range in ms.
@@ -220,16 +242,24 @@ export default class BhCarousel {
     if (this.settings.autoEnable) {
       this.enable();
     }
-
-    console.log(this);
   }
 
   /**
-   * Returns a value for user's prefers-reduced-motion-setting
+   * Creates a custom bhCarousel event.
+   *
+   * @param {object} detail
+   *   The detail(s) for the event. For example, the 'previous' and 'next'
+   *   events return 'previous' or 'next', along with the current and previous
+   *   item indexes.
+   * @protected
    */
-  protected getPrefersReducedMotion = (): boolean => {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  };
+  protected createEvent = (detail: BhCarouselEventDetail): Event =>
+    new CustomEvent("BhCarousel", {
+      bubbles: true,
+      cancelable: false,
+      composed: true,
+      detail,
+    });
 
   /**
    * Disables carousel interactivity.
@@ -294,7 +324,10 @@ export default class BhCarousel {
       } else {
         this.playPauseButton.disabled = false;
         this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-        this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
+        this.playPauseButton.addEventListener(
+          "click",
+          this.handlePlayPauseClick
+        );
         // Start if configured to do so.
         if (this.settings.automatic) {
           this.play();
@@ -328,6 +361,13 @@ export default class BhCarousel {
   public getLastIndex = (): number => this.lastIndex;
 
   /**
+   * Returns a value for user's prefers-reduced-motion-setting
+   */
+  protected getPrefersReducedMotion = (): boolean => {
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  };
+
+  /**
    * Navigates to another slide.
    *
    * @param {BhCarouselDestination} destination
@@ -335,28 +375,35 @@ export default class BhCarousel {
    * @public
    */
   public goto = (destination: BhCarouselDestination): void => {
-    let index;
+    const previousIndex = this.current;
+    let currentIndex;
 
     if (destination === "next") {
-      index =
+      currentIndex =
         this.current === this.lastIndex ? this.firstIndex : this.current + 1;
     } else if (destination === "previous") {
-      index =
+      currentIndex =
         this.current === this.firstIndex ? this.lastIndex : this.current - 1;
     } else {
-      index = destination;
+      currentIndex = destination;
     }
 
     (this.slides[this.current] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
       true.toString()
     );
-    (this.slides[index] as HTMLElement).setAttribute(
+    (this.slides[currentIndex] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
       false.toString()
     );
 
-    this.current = index;
+    this.current = currentIndex;
+
+    if (destination === "next" || destination === "previous") {
+      this.el.dispatchEvent(
+        this.createEvent({ action: destination, currentIndex, previousIndex })
+      );
+    }
   };
 
   /**
@@ -455,6 +502,7 @@ export default class BhCarousel {
     );
     this.nextButton.disabled = false;
     this.previousButton.disabled = false;
+    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   };
 
   /**
@@ -474,6 +522,7 @@ export default class BhCarousel {
     );
     this.nextButton.disabled = true;
     this.previousButton.disabled = true;
+    this.el.dispatchEvent(this.createEvent({ action: "play" }));
   };
 
   /**
