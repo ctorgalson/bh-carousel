@@ -29,7 +29,7 @@ export interface BhCarouselEventDetail {
   action: BhCarouselAction;
   currentIndex?: number;
   previousIndex?: number;
-};
+}
 
 /**
  * A type used to define the acceptable slide-timing range in ms.
@@ -253,15 +253,13 @@ export default class BhCarousel {
    *   item indexes.
    * @protected
    */
-  protected createEvent = (detail: BhCarouselEventDetail): Event => new CustomEvent(
-    'BhCarousel',
-    {
+  protected createEvent = (detail: BhCarouselEventDetail): Event =>
+    new CustomEvent("BhCarousel", {
       bubbles: true,
       cancelable: false,
       composed: true,
       detail,
-    },
-  );
+    });
 
   /**
    * Disables carousel interactivity.
@@ -326,7 +324,10 @@ export default class BhCarousel {
       } else {
         this.playPauseButton.disabled = false;
         this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-        this.playPauseButton.addEventListener("click", this.handlePlayPauseClick);
+        this.playPauseButton.addEventListener(
+          "click",
+          this.handlePlayPauseClick
+        );
         // Start if configured to do so.
         if (this.settings.automatic) {
           this.play();
@@ -399,9 +400,9 @@ export default class BhCarousel {
     this.current = currentIndex;
 
     if (destination === "next" || destination === "previous") {
-      this.el.dispatchEvent(this.createEvent(
-        {action: destination, currentIndex, previousIndex}
-      ));
+      this.el.dispatchEvent(
+        this.createEvent({ action: destination, currentIndex, previousIndex })
+      );
     }
   };
 
