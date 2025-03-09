@@ -247,8 +247,6 @@ export default class BhCarousel {
   /**
    * Creates a custom bhCarousel event.
    *
-   * @param {BhCarouselAction} action
-   *   The action triggering the event.
    * @param {object} detail
    *   The detail(s) for the event. For example, the 'previous' and 'next'
    *   events return 'previous' or 'next', along with the current and previous
