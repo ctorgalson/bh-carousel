@@ -14,6 +14,24 @@ export type BhCarouselControls = "buttons" | "tabs";
 export type BhCarouselDestination = number | "next" | "previous";
 
 /**
+ * An interface defining the structure of BhCarousel event details objects.
+ *
+ * @property {BhCarouselAction} action
+ *   The type of action triggering the event.
+ * @property {number} currentIndex
+ *   The index of the current item *after* updating the object in response to
+ *   the event ("previous" and "next" actions only.
+ * @property {number} previousIndex
+ *   The index of the previous item *after* updating the object in response to
+ *   the event ("previous" and "next" actions only).
+ */
+export interface BhCarouselEventDetail {
+  action: BhCarouselAction;
+  currentIndex?: number;
+  previousIndex?: number;
+};
+
+/**
  * A type used to define the acceptable slide-timing range in ms.
  *
  * TODO For now, this is just number; we need to implement the range.
@@ -231,23 +249,19 @@ export default class BhCarousel {
    *
    * @param {BhCarouselAction} action
    *   The action triggering the event.
-   * @param {number} currentIndex
-   *   The numeric index of the current index AFTER the object updates.
-   * @param {number} previousIndex
-   *   The numeric index of the previous index AFTER the object updates.
+   * @param {object} detail
+   *   The detail(s) for the event. For example, the 'previous' and 'next'
+   *   events return 'previous' or 'next', along with the current and previous
+   *   item indexes.
    * @protected
    */
-  protected createEvent = (action: BhCarouselAction, currentIndex: number, previousIndex: number): Event => new CustomEvent(
+  protected createEvent = (detail: BhCarouselEventDetail): Event => new CustomEvent(
     'BhCarousel',
     {
       bubbles: true,
       cancelable: false,
       composed: true,
-      detail: {
-        action,
-        currentIndex,
-        previousIndex,
-      },
+      detail,
     },
   );
 
@@ -387,7 +401,9 @@ export default class BhCarousel {
     this.current = currentIndex;
 
     if (destination === "next" || destination === "previous") {
-      this.el.dispatchEvent(this.createEvent(destination, currentIndex, previousIndex));
+      this.el.dispatchEvent(this.createEvent(
+        {action: destination, currentIndex, previousIndex}
+      ));
     }
   };
 
@@ -487,6 +503,7 @@ export default class BhCarousel {
     );
     this.nextButton.disabled = false;
     this.previousButton.disabled = false;
+    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   };
 
   /**
@@ -506,6 +523,7 @@ export default class BhCarousel {
     );
     this.nextButton.disabled = true;
     this.previousButton.disabled = true;
+    this.el.dispatchEvent(this.createEvent({ action: "play" }));
   };
 
   /**
