@@ -214,11 +214,8 @@ export default class BhCarousel {
   /**
    * Constructs a new BhCarousel instance.
    *
-   * @param {HTMLElement} element
-   *   The overall containing element of the carousel.
-   * @param {BhCarouselSettings} settings
-   *   Settings object to override class defaults.
-   * @defaultValue BhCarousel
+   * @param element - The overall containing element of the carousel
+   * @param settings - Optional settings to override class defaults
    */
   constructor(element: HTMLElement, settings?: BhCarouselSettings) {
     this.el = element;
@@ -255,11 +252,8 @@ export default class BhCarousel {
   /**
    * Creates a custom bhCarousel event.
    *
-   * @param {object} detail
-   *   The detail(s) for the event. For example, the 'previous' and 'next'
-   *   events return 'previous' or 'next', along with the current and previous
-   *   item indexes.
-   * @protected
+   * The 'previous' and 'next' events include currentIndex and previousIndex
+   * in the detail. The 'play' and 'pause' events include only the action.
    */
   protected createEvent(detail: BhCarouselEventDetail): CustomEvent<BhCarouselEventDetail> {
     return new CustomEvent("BhCarousel", {
@@ -270,11 +264,7 @@ export default class BhCarousel {
     });
   }
 
-  /**
-   * Disables carousel interactivity.
-   *
-   * @public
-   */
+  /** Disables carousel interactivity. */
   public disable(): void {
     this.nextButton.disabled = true;
     this.nextButton.removeEventListener("click", this.handleNextClick);
@@ -297,19 +287,9 @@ export default class BhCarousel {
   /**
    * Enables carousel interactivity.
    *
-   * - Previous and Next buttons are always un-hidden, and are enabled whenever
-   *   the carousel is not playing automatically.
-   * - Play/Pause button is:
-   *     - visible and enabled when this.prefersReducedMotion is false, OR when
-   *       the this.settings.reducedMotion setting is set to "permissive",
-   *     - hidden when this.prefersReducedMotion is true AND the setting
-   *       this.settings.reducedMotion is "strict".
-   *   These settings, in the default configuration, completely disable the
-   *   automatic carousel behaviour, but permit the USER to auto-play the
-   *   carousel in circumstances where this.prefersReducedMotion can't be
-   *   reliably determined.
-   *
-   * @public
+   * Previous and Next buttons are always un-hidden and enabled when the
+   * carousel is not playing automatically. The Play/Pause button is disabled
+   * when prefersReducedMotion is true to respect user accessibility preferences.
    */
   public enable(): void {
     // Slides.
@@ -348,47 +328,27 @@ export default class BhCarousel {
     window.addEventListener("keydown", this.handleKeydown);
   };
 
-  /**
-   * Returns the index of the current carousel item.
-   *
-   * @public
-   */
+  /** Returns the index of the current carousel item. */
   public getCurrentIndex(): number {
     return this.current;
   }
 
-  /**
-   * Returns the index of the first carousel item.
-   *
-   * @public
-   */
+  /** Returns the index of the first carousel item. */
   public getFirstIndex(): number {
     return this.firstIndex;
   }
 
-  /**
-   * Returns the index of the last carousel item.
-   *
-   * @public
-   */
+  /** Returns the index of the last carousel item. */
   public getLastIndex(): number {
     return this.lastIndex;
   }
 
-  /**
-   * Returns a value for user's prefers-reduced-motion-setting
-   */
+  /** Returns whether user prefers reduced motion. */
   protected getPrefersReducedMotion(): boolean {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   };
 
-  /**
-   * Navigates to another slide.
-   *
-   * @param {BhCarouselDestination} destination
-   *   'next', 'previous', or the numberic index of the slide to go to.
-   * @public
-   */
+  /** Navigates to another slide: 'next', 'previous', or a numeric index. */
   public goto(destination: BhCarouselDestination): void {
     const previousIndex = this.current;
     let currentIndex;
@@ -421,13 +381,7 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles keydown events for Carousel.
-   *
-   * @param {KeyboardEvent} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles keydown events for keyboard navigation. */
   protected handleKeydown = (event: KeyboardEvent): void => {
     const { key } = event;
 
@@ -446,24 +400,12 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles click events for Next button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Next button. */
   protected handleNextClick = (event: Event): void => {
     this.next();
   };
 
-  /**
-   * Handles click events for Play/Pause button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Play/Pause button. */
   protected handlePlayPauseClick = (event: Event): void => {
     if (this.playing) {
       this.pause();
@@ -472,31 +414,17 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles click events for Previous button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Previous button. */
   protected handlePreviousClick = (event: Event): void => {
     this.previous();
   };
 
-  /**
-   * Advances carousel one slide.
-   *
-   * @public
-   */
+  /** Advances carousel one slide. */
   public next(): void {
     this.goto("next");
   }
 
-  /**
-   * Pauses carousel.
-   *
-   * @public
-   */
+  /** Pauses carousel. */
   public pause(): void {
     window.clearInterval(this.intervalId);
     this.playing = false;
@@ -512,11 +440,7 @@ export default class BhCarousel {
     this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   }
 
-  /**
-   * Plays carousel.
-   *
-   * @public
-   */
+  /** Plays carousel. */
   public play(): void {
     this.intervalId = window.setInterval(() => {
       this.goto("next");
@@ -534,11 +458,7 @@ export default class BhCarousel {
     this.el.dispatchEvent(this.createEvent({ action: "play" }));
   }
 
-  /**
-   * Reverses carousel one slide.
-   *
-   * @public
-   */
+  /** Reverses carousel one slide. */
   public previous(): void {
     return this.goto("previous");
   }
