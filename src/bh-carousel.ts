@@ -209,7 +209,7 @@ export default class BhCarousel {
     slide: "[aria-roledescription='slide']",
   };
   private settings: BhCarouselSettings;
-  private slides: Element[];
+  private slides: NodeList;
 
   /**
    * Constructs a new BhCarousel instance.
@@ -223,7 +223,7 @@ export default class BhCarousel {
   constructor(element: HTMLElement, settings?: BhCarouselSettings) {
     this.el = element;
     this.settings = { ...this.defaults, ...settings };
-    this.slides = [...this.el.querySelectorAll(this.selectors.slide)];
+    this.slides = this.el.querySelectorAll(this.selectors.slide);
     this.playPauseButton = this.el.querySelector(
       this.selectors.playPauseButton
     ) as HTMLButtonElement;
