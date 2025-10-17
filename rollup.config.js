@@ -17,11 +17,6 @@ const minifyPlugin = terser({
   },
   keep_classnames: true,
   keep_fnames: false,
-  // mangle: {
-  //   properties: {
-  //     regex: /^((?!disable|enable|goto|next|pause|play|previous).)*$/ // Keep specific public methods
-  //   },
-  // },
 });
 const umdCfg = {
   format: "umd",
