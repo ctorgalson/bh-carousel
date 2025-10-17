@@ -253,20 +253,21 @@ export default class BhCarousel {
    *   item indexes.
    * @protected
    */
-  protected createEvent = (detail: BhCarouselEventDetail): Event =>
-    new CustomEvent("BhCarousel", {
+  protected createEvent(detail: BhCarouselEventDetail): Event {
+    return new CustomEvent("BhCarousel", {
       bubbles: true,
       cancelable: false,
       composed: true,
       detail,
     });
+  }
 
   /**
    * Disables carousel interactivity.
    *
    * @public
    */
-  public disable = (): void => {
+  public disable(): void {
     this.nextButton.disabled = true;
     this.nextButton.removeEventListener("click", this.handleNextClick);
     this.previousButton.disabled = true;
@@ -302,7 +303,7 @@ export default class BhCarousel {
    *
    * @public
    */
-  public enable = (): void => {
+  public enable(): void {
     // Slides.
     this.slides.forEach((slide, index) =>
       slide.setAttribute(
@@ -344,26 +345,32 @@ export default class BhCarousel {
    *
    * @public
    */
-  public getCurrentIndex = (): number => this.current;
+  public getCurrentIndex(): number {
+    return this.current;
+  }
 
   /**
    * Returns the index of the first carousel item.
    *
    * @public
    */
-  public getFirstIndex = (): number => this.firstIndex;
+  public getFirstIndex(): number {
+    return this.firstIndex;
+  }
 
   /**
    * Returns the index of the last carousel item.
    *
    * @public
    */
-  public getLastIndex = (): number => this.lastIndex;
+  public getLastIndex(): number {
+    return this.lastIndex;
+  }
 
   /**
    * Returns a value for user's prefers-reduced-motion-setting
    */
-  protected getPrefersReducedMotion = (): boolean => {
+  protected getPrefersReducedMotion(): boolean {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   };
 
@@ -374,7 +381,7 @@ export default class BhCarousel {
    *   'next', 'previous', or the numberic index of the slide to go to.
    * @public
    */
-  public goto = (destination: BhCarouselDestination): void => {
+  public goto(destination: BhCarouselDestination): void {
     const previousIndex = this.current;
     let currentIndex;
 
@@ -485,14 +492,16 @@ export default class BhCarousel {
    *
    * @public
    */
-  public next = (): void => this.goto("next");
+  public next(): void {
+    this.goto("next");
+  }
 
   /**
    * Pauses carousel.
    *
    * @public
    */
-  public pause = (): void => {
+  public pause(): void {
     window.clearInterval(this.intervalId);
     this.playing = false;
     this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
@@ -510,7 +519,7 @@ export default class BhCarousel {
    *
    * @public
    */
-  public play = (): void => {
+  public play(): void {
     this.intervalId = window.setInterval(() => {
       this.goto("next");
     }, this.settings.interval);
@@ -530,5 +539,7 @@ export default class BhCarousel {
    *
    * @public
    */
-  public previous = (): void => this.goto("previous");
+  public previous(): void {
+    return this.goto("previous");
+  }
 }
