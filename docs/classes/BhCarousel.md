@@ -131,7 +131,7 @@ Optional settings to override class defaults
 
 #### Defined in
 
-[bh-carousel.ts:220](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L220)
+[bh-carousel.ts:220](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L220)
 
 ## Methods
 
@@ -156,7 +156,7 @@ in the detail. The 'play' and 'pause' events include only the action.
 
 #### Defined in
 
-[bh-carousel.ts:258](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L258)
+[bh-carousel.ts:262](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L262)
 
 ---
 
@@ -172,7 +172,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:268](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L268)
+[bh-carousel.ts:272](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L272)
 
 ---
 
@@ -192,7 +192,7 @@ when prefersReducedMotion is true to respect user accessibility preferences.
 
 #### Defined in
 
-[bh-carousel.ts:294](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L294)
+[bh-carousel.ts:298](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L298)
 
 ---
 
@@ -208,7 +208,7 @@ Returns the index of the current carousel item.
 
 #### Defined in
 
-[bh-carousel.ts:332](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L332)
+[bh-carousel.ts:336](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L336)
 
 ---
 
@@ -224,7 +224,7 @@ Returns the index of the first carousel item.
 
 #### Defined in
 
-[bh-carousel.ts:337](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L337)
+[bh-carousel.ts:341](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L341)
 
 ---
 
@@ -240,7 +240,7 @@ Returns the index of the last carousel item.
 
 #### Defined in
 
-[bh-carousel.ts:342](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L342)
+[bh-carousel.ts:346](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L346)
 
 ---
 
@@ -256,7 +256,7 @@ Returns whether user prefers reduced motion.
 
 #### Defined in
 
-[bh-carousel.ts:347](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L347)
+[bh-carousel.ts:351](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L351)
 
 ---
 
@@ -278,7 +278,7 @@ Navigates to another slide: 'next', 'previous', or a numeric index.
 
 #### Defined in
 
-[bh-carousel.ts:352](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L352)
+[bh-carousel.ts:356](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L356)
 
 ---
 
@@ -300,7 +300,7 @@ Handles keydown events for keyboard navigation.
 
 #### Defined in
 
-[bh-carousel.ts:385](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L385)
+[bh-carousel.ts:390](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L390)
 
 ---
 
@@ -322,7 +322,7 @@ Handles click events for Next button.
 
 #### Defined in
 
-[bh-carousel.ts:404](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L404)
+[bh-carousel.ts:409](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L409)
 
 ---
 
@@ -344,7 +344,7 @@ Handles click events for Play/Pause button.
 
 #### Defined in
 
-[bh-carousel.ts:409](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L409)
+[bh-carousel.ts:414](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L414)
 
 ---
 
@@ -366,7 +366,7 @@ Handles click events for Previous button.
 
 #### Defined in
 
-[bh-carousel.ts:418](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L418)
+[bh-carousel.ts:423](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L423)
 
 ---
 
@@ -382,7 +382,7 @@ Advances carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:423](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L423)
+[bh-carousel.ts:428](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L428)
 
 ---
 
@@ -398,7 +398,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:428](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L428)
+[bh-carousel.ts:433](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L433)
 
 ---
 
@@ -414,7 +414,7 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:444](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L444)
+[bh-carousel.ts:449](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L449)
 
 ---
 
@@ -430,4 +430,26 @@ Reverses carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:462](https://github.com/ctorgalson/bh-carousel/blob/89e44657dcf33661541bec8fa3e8d55f483310db/src/bh-carousel.ts#L462)
+[bh-carousel.ts:467](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L467)
+
+---
+
+### validateSlideIndex()
+
+> `protected` **validateSlideIndex**(`index`): `void`
+
+Validates that an index is within bounds.
+
+#### Parameters
+
+##### index
+
+`number`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[bh-carousel.ts:472](https://github.com/ctorgalson/bh-carousel/blob/2bb73feed14ff7dc8935a969c9e2369f4eb4f393/src/bh-carousel.ts#L472)
