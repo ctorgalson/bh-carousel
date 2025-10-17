@@ -261,7 +261,7 @@ export default class BhCarousel {
    *   item indexes.
    * @protected
    */
-  protected createEvent(detail: BhCarouselEventDetail): Event {
+  protected createEvent(detail: BhCarouselEventDetail): CustomEvent<BhCarouselEventDetail> {
     return new CustomEvent("BhCarousel", {
       bubbles: true,
       cancelable: false,
