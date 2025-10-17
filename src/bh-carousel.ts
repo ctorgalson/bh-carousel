@@ -217,7 +217,7 @@ export default class BhCarousel {
    * @param element - The overall containing element of the carousel
    * @param settings - Optional settings to override class defaults
    */
-  constructor(element: HTMLElement, settings?: BhCarouselSettings) {
+  constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
     this.settings = { ...this.defaults, ...settings };
     this.slides = this.el.querySelectorAll(this.selectors.slide);
