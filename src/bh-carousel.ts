@@ -240,6 +240,10 @@ export default class BhCarousel {
 
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
+
+    // Validate startingIndex
+    this.validateSlideIndex(this.settings.startingIndex);
+
     this.current = this.settings.startingIndex;
     this.playing = false;
     this.prefersReducedMotion = this.getPrefersReducedMotion();
@@ -277,7 +281,7 @@ export default class BhCarousel {
         "click",
         this.handlePlayPauseClick
       );
-      if (this.playPauseButton.dataset.playing) {
+      if (this.playPauseButton.dataset.bhcPlaying === "true") {
         this.pause();
       }
     }
@@ -360,6 +364,7 @@ export default class BhCarousel {
       currentIndex =
         this.current === this.firstIndex ? this.lastIndex : this.current - 1;
     } else {
+      this.validateSlideIndex(destination);
       currentIndex = destination;
     }
 
@@ -390,7 +395,7 @@ export default class BhCarousel {
     } else if (key === "ArrowLeft" && !this.previousButton.disabled) {
       this.previous();
     } else if (key.toLowerCase() === "p" && !this.prefersReducedMotion) {
-      if (this.playPauseButton) {
+      if (this.playPauseButton && !this.playPauseButton.disabled) {
         if (this.playing) {
           this.pause();
         } else {
@@ -461,5 +466,14 @@ export default class BhCarousel {
   /** Reverses carousel one slide. */
   public previous(): void {
     return this.goto("previous");
+  }
+
+  /** Validates that an index is within bounds. */
+  protected validateSlideIndex(index: number): void {
+    if (index < this.firstIndex || index > this.lastIndex) {
+      throw new Error(
+        `Index ${index} is out of bounds (${this.firstIndex}-${this.lastIndex})`
+      );
+    }
   }
 }
