@@ -48,10 +48,11 @@ export default {
       plugins: [minifyPlugin],
     },
     // CJS
-    { file: "dist/js/bh-carousel.cjs", format: "cjs" },
+    { file: "dist/js/bh-carousel.cjs", format: "cjs", exports: "default" },
     {
       file: "dist/js/bh-carousel.min.cjs",
       format: "cjs",
+      exports: "default",
       plugins: [minifyPlugin],
     },
   ],
