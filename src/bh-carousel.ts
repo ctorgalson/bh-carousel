@@ -195,7 +195,7 @@ export default class BhCarousel {
     startingIndex: 0,
   };
   private firstIndex: number;
-  private intervalId: string | number | NodeJS.Timeout | undefined;
+  private intervalId: number | undefined;
   private lastIndex: number;
   private nextButton: HTMLButtonElement;
   private playing: boolean;
