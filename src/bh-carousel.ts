@@ -199,7 +199,7 @@ export default class BhCarousel {
   private lastIndex: number;
   private nextButton: HTMLButtonElement;
   private playing: boolean;
-  private playPauseButton: HTMLButtonElement;
+  private playPauseButton: HTMLButtonElement | null;
   private previousButton: HTMLButtonElement;
   private prefersReducedMotion: boolean;
   private selectors = {
@@ -209,7 +209,7 @@ export default class BhCarousel {
     slide: "[aria-roledescription='slide']",
   };
   private settings: BhCarouselSettings;
-  private slides: NodeList;
+  private slides: NodeListOf<Element>;
 
   /**
    * Constructs a new BhCarousel instance.
@@ -224,15 +224,23 @@ export default class BhCarousel {
     this.el = element;
     this.settings = { ...this.defaults, ...settings };
     this.slides = this.el.querySelectorAll(this.selectors.slide);
-    this.playPauseButton = this.el.querySelector(
-      this.selectors.playPauseButton
-    ) as HTMLButtonElement;
-    this.nextButton = this.el.querySelector(
-      this.selectors.nextButton
-    ) as HTMLButtonElement;
-    this.previousButton = this.el.querySelector(
-      this.selectors.previousButton
-    ) as HTMLButtonElement;
+
+    // Required elements
+    const nextButton = this.el.querySelector(this.selectors.nextButton);
+    const previousButton = this.el.querySelector(this.selectors.previousButton);
+
+    if (!nextButton || !previousButton) {
+      throw new Error(
+        "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements"
+      );
+    }
+
+    this.nextButton = nextButton as HTMLButtonElement;
+    this.previousButton = previousButton as HTMLButtonElement;
+
+    // Optional element
+    this.playPauseButton = this.el.querySelector(this.selectors.playPauseButton);
+
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
     this.current = this.settings.startingIndex;
@@ -492,15 +500,17 @@ export default class BhCarousel {
   public pause(): void {
     window.clearInterval(this.intervalId);
     this.playing = false;
-    this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-    this.playPauseButton.setAttribute(
-      "aria-label",
-      this.settings.ariaLabelPlay
-    );
+    if (this.playPauseButton) {
+      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+      this.playPauseButton.setAttribute(
+        "aria-label",
+        this.settings.ariaLabelPlay
+      );
+    }
     this.nextButton.disabled = false;
     this.previousButton.disabled = false;
     this.el.dispatchEvent(this.createEvent({ action: "pause" }));
-  };
+  }
 
   /**
    * Plays carousel.
@@ -512,15 +522,17 @@ export default class BhCarousel {
       this.goto("next");
     }, this.settings.interval);
     this.playing = true;
-    this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-    this.playPauseButton.setAttribute(
-      "aria-label",
-      this.settings.ariaLabelPause
-    );
+    if (this.playPauseButton) {
+      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+      this.playPauseButton.setAttribute(
+        "aria-label",
+        this.settings.ariaLabelPause
+      );
+    }
     this.nextButton.disabled = true;
     this.previousButton.disabled = true;
     this.el.dispatchEvent(this.createEvent({ action: "play" }));
-  };
+  }
 
   /**
    * Reverses carousel one slide.
