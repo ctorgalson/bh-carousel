@@ -1,14 +1,14 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    // "declaration": true,
+    "declaration": true,
+    "declarationDir": "dist/js",
     "esModuleInterop": true,
     "isolatedModules": true,
     "lib": ["es2022", "dom", "dom.iterable"],
     "module": "NodeNext",
     "moduleDetection": "force",
     "noUncheckedIndexedAccess": true,
-    //"outDir": "dist",
     "skipLibCheck": true,
     "strict": true,
     "target": "es2022",

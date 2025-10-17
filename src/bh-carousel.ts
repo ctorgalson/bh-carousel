@@ -56,7 +56,7 @@ export type BhCarouselInterval = number;
  *   allows it.
  * @property {BhCarouselControls} controlType
  *   Whether the carousel uses only buttons for control or buttons and tabs.
- aulay*   Currently has no effect as tab-style navigation hasn't been implemented.
+ *   Currently has no effect as tab-style navigation hasn't been implemented.
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
@@ -195,11 +195,11 @@ export default class BhCarousel {
     startingIndex: 0,
   };
   private firstIndex: number;
-  private intervalId: string | number | NodeJS.Timeout | undefined;
+  private intervalId: number | undefined;
   private lastIndex: number;
   private nextButton: HTMLButtonElement;
   private playing: boolean;
-  private playPauseButton: HTMLButtonElement;
+  private playPauseButton: HTMLButtonElement | null;
   private previousButton: HTMLButtonElement;
   private prefersReducedMotion: boolean;
   private selectors = {
@@ -209,30 +209,35 @@ export default class BhCarousel {
     slide: "[aria-roledescription='slide']",
   };
   private settings: BhCarouselSettings;
-  private slides: Element[];
+  private slides: NodeListOf<HTMLElement>;
 
   /**
    * Constructs a new BhCarousel instance.
    *
-   * @param {HTMLElement} element
-   *   The overall containing element of the carousel.
-   * @param {BhCarouselSettings} settings
-   *   Settings object to override class defaults.
-   * @defaultValue BhCarousel
+   * @param element - The overall containing element of the carousel
+   * @param settings - Optional settings to override class defaults
    */
-  constructor(element: HTMLElement, settings?: BhCarouselSettings) {
+  constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
     this.settings = { ...this.defaults, ...settings };
-    this.slides = [...this.el.querySelectorAll(this.selectors.slide)];
-    this.playPauseButton = this.el.querySelector(
-      this.selectors.playPauseButton
-    ) as HTMLButtonElement;
-    this.nextButton = this.el.querySelector(
-      this.selectors.nextButton
-    ) as HTMLButtonElement;
-    this.previousButton = this.el.querySelector(
-      this.selectors.previousButton
-    ) as HTMLButtonElement;
+    this.slides = this.el.querySelectorAll(this.selectors.slide);
+
+    // Required elements
+    const nextButton = this.el.querySelector(this.selectors.nextButton);
+    const previousButton = this.el.querySelector(this.selectors.previousButton);
+
+    if (!nextButton || !previousButton) {
+      throw new Error(
+        "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements"
+      );
+    }
+
+    this.nextButton = nextButton as HTMLButtonElement;
+    this.previousButton = previousButton as HTMLButtonElement;
+
+    // Optional element
+    this.playPauseButton = this.el.querySelector(this.selectors.playPauseButton);
+
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
     this.current = this.settings.startingIndex;
@@ -247,26 +252,20 @@ export default class BhCarousel {
   /**
    * Creates a custom bhCarousel event.
    *
-   * @param {object} detail
-   *   The detail(s) for the event. For example, the 'previous' and 'next'
-   *   events return 'previous' or 'next', along with the current and previous
-   *   item indexes.
-   * @protected
+   * The 'previous' and 'next' events include currentIndex and previousIndex
+   * in the detail. The 'play' and 'pause' events include only the action.
    */
-  protected createEvent = (detail: BhCarouselEventDetail): Event =>
-    new CustomEvent("BhCarousel", {
+  protected createEvent(detail: BhCarouselEventDetail): CustomEvent<BhCarouselEventDetail> {
+    return new CustomEvent("BhCarousel", {
       bubbles: true,
       cancelable: false,
       composed: true,
       detail,
     });
+  }
 
-  /**
-   * Disables carousel interactivity.
-   *
-   * @public
-   */
-  public disable = (): void => {
+  /** Disables carousel interactivity. */
+  public disable(): void {
     this.nextButton.disabled = true;
     this.nextButton.removeEventListener("click", this.handleNextClick);
     this.previousButton.disabled = true;
@@ -288,21 +287,11 @@ export default class BhCarousel {
   /**
    * Enables carousel interactivity.
    *
-   * - Previous and Next buttons are always un-hidden, and are enabled whenever
-   *   the carousel is not playing automatically.
-   * - Play/Pause button is:
-   *     - visible and enabled when this.prefersReducedMotion is false, OR when
-   *       the this.settings.reducedMotion setting is set to "permissive",
-   *     - hidden when this.prefersReducedMotion is true AND the setting
-   *       this.settings.reducedMotion is "strict".
-   *   These settings, in the default configuration, completely disable the
-   *   automatic carousel behaviour, but permit the USER to auto-play the
-   *   carousel in circumstances where this.prefersReducedMotion can't be
-   *   reliably determined.
-   *
-   * @public
+   * Previous and Next buttons are always un-hidden and enabled when the
+   * carousel is not playing automatically. The Play/Pause button is disabled
+   * when prefersReducedMotion is true to respect user accessibility preferences.
    */
-  public enable = (): void => {
+  public enable(): void {
     // Slides.
     this.slides.forEach((slide, index) =>
       slide.setAttribute(
@@ -339,42 +328,28 @@ export default class BhCarousel {
     window.addEventListener("keydown", this.handleKeydown);
   };
 
-  /**
-   * Returns the index of the current carousel item.
-   *
-   * @public
-   */
-  public getCurrentIndex = (): number => this.current;
+  /** Returns the index of the current carousel item. */
+  public getCurrentIndex(): number {
+    return this.current;
+  }
 
-  /**
-   * Returns the index of the first carousel item.
-   *
-   * @public
-   */
-  public getFirstIndex = (): number => this.firstIndex;
+  /** Returns the index of the first carousel item. */
+  public getFirstIndex(): number {
+    return this.firstIndex;
+  }
 
-  /**
-   * Returns the index of the last carousel item.
-   *
-   * @public
-   */
-  public getLastIndex = (): number => this.lastIndex;
+  /** Returns the index of the last carousel item. */
+  public getLastIndex(): number {
+    return this.lastIndex;
+  }
 
-  /**
-   * Returns a value for user's prefers-reduced-motion-setting
-   */
-  protected getPrefersReducedMotion = (): boolean => {
+  /** Returns whether user prefers reduced motion. */
+  protected getPrefersReducedMotion(): boolean {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   };
 
-  /**
-   * Navigates to another slide.
-   *
-   * @param {BhCarouselDestination} destination
-   *   'next', 'previous', or the numberic index of the slide to go to.
-   * @public
-   */
-  public goto = (destination: BhCarouselDestination): void => {
+  /** Navigates to another slide: 'next', 'previous', or a numeric index. */
+  public goto(destination: BhCarouselDestination): void {
     const previousIndex = this.current;
     let currentIndex;
 
@@ -406,13 +381,7 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles keydown events for Carousel.
-   *
-   * @param {KeyboardEvent} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles keydown events for keyboard navigation. */
   protected handleKeydown = (event: KeyboardEvent): void => {
     const { key } = event;
 
@@ -431,33 +400,13 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles click events for Next button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Next button. */
   protected handleNextClick = (event: Event): void => {
-    if (event.currentTarget !== this.nextButton) {
-      return;
-    }
-
     this.next();
   };
 
-  /**
-   * Handles click events for Play/Pause button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Play/Pause button. */
   protected handlePlayPauseClick = (event: Event): void => {
-    if (event.currentTarget !== this.playPauseButton) {
-      return;
-    }
-
     if (this.playing) {
       this.pause();
     } else {
@@ -465,70 +414,52 @@ export default class BhCarousel {
     }
   };
 
-  /**
-   * Handles click events for Previous button.
-   *
-   * @param {Event} event
-   *   The event passed in by the listener.
-   * @protected
-   */
+  /** Handles click events for Previous button. */
   protected handlePreviousClick = (event: Event): void => {
-    if (event.currentTarget !== this.previousButton) {
-      return;
-    }
-
     this.previous();
   };
 
-  /**
-   * Advances carousel one slide.
-   *
-   * @public
-   */
-  public next = (): void => this.goto("next");
+  /** Advances carousel one slide. */
+  public next(): void {
+    this.goto("next");
+  }
 
-  /**
-   * Pauses carousel.
-   *
-   * @public
-   */
-  public pause = (): void => {
+  /** Pauses carousel. */
+  public pause(): void {
     window.clearInterval(this.intervalId);
     this.playing = false;
-    this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-    this.playPauseButton.setAttribute(
-      "aria-label",
-      this.settings.ariaLabelPlay
-    );
+    if (this.playPauseButton) {
+      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+      this.playPauseButton.setAttribute(
+        "aria-label",
+        this.settings.ariaLabelPlay
+      );
+    }
     this.nextButton.disabled = false;
     this.previousButton.disabled = false;
     this.el.dispatchEvent(this.createEvent({ action: "pause" }));
-  };
+  }
 
-  /**
-   * Plays carousel.
-   *
-   * @public
-   */
-  public play = (): void => {
+  /** Plays carousel. */
+  public play(): void {
     this.intervalId = window.setInterval(() => {
       this.goto("next");
     }, this.settings.interval);
     this.playing = true;
-    this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-    this.playPauseButton.setAttribute(
-      "aria-label",
-      this.settings.ariaLabelPause
-    );
+    if (this.playPauseButton) {
+      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
+      this.playPauseButton.setAttribute(
+        "aria-label",
+        this.settings.ariaLabelPause
+      );
+    }
     this.nextButton.disabled = true;
     this.previousButton.disabled = true;
     this.el.dispatchEvent(this.createEvent({ action: "play" }));
-  };
+  }
 
-  /**
-   * Reverses carousel one slide.
-   *
-   * @public
-   */
-  public previous = (): void => this.goto("previous");
+  /** Reverses carousel one slide. */
+  public previous(): void {
+    return this.goto("previous");
+  }
 }
