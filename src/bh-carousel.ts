@@ -228,7 +228,7 @@ export default class BhCarousel {
 
     if (!nextButton || !previousButton) {
       throw new Error(
-        "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements"
+        "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements",
       );
     }
 
@@ -236,7 +236,9 @@ export default class BhCarousel {
     this.previousButton = previousButton as HTMLButtonElement;
 
     // Optional element
-    this.playPauseButton = this.el.querySelector(this.selectors.playPauseButton);
+    this.playPauseButton = this.el.querySelector(
+      this.selectors.playPauseButton,
+    );
 
     this.firstIndex = 0;
     this.lastIndex = this.slides.length - 1;
@@ -259,7 +261,9 @@ export default class BhCarousel {
    * The 'previous' and 'next' events include currentIndex and previousIndex
    * in the detail. The 'play' and 'pause' events include only the action.
    */
-  protected createEvent(detail: BhCarouselEventDetail): CustomEvent<BhCarouselEventDetail> {
+  protected createEvent(
+    detail: BhCarouselEventDetail,
+  ): CustomEvent<BhCarouselEventDetail> {
     return new CustomEvent("BhCarousel", {
       bubbles: true,
       cancelable: false,
@@ -279,14 +283,14 @@ export default class BhCarousel {
       this.playPauseButton.removeAttribute("aria-label");
       this.playPauseButton.removeEventListener(
         "click",
-        this.handlePlayPauseClick
+        this.handlePlayPauseClick,
       );
       if (this.playPauseButton.dataset.bhcPlaying === "true") {
         this.pause();
       }
     }
     window.removeEventListener("keydown", this.handleKeydown);
-  };
+  }
 
   /**
    * Enables carousel interactivity.
@@ -300,8 +304,8 @@ export default class BhCarousel {
     this.slides.forEach((slide, index) =>
       slide.setAttribute(
         this.settings.itemStateAttribute,
-        (index !== this.current).toString()
-      )
+        (index !== this.current).toString(),
+      ),
     );
     // Next button.
     this.nextButton.hidden = false;
@@ -319,7 +323,7 @@ export default class BhCarousel {
         this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
         this.playPauseButton.addEventListener(
           "click",
-          this.handlePlayPauseClick
+          this.handlePlayPauseClick,
         );
         // Start if configured to do so.
         if (this.settings.automatic) {
@@ -330,7 +334,7 @@ export default class BhCarousel {
       }
     }
     window.addEventListener("keydown", this.handleKeydown);
-  };
+  }
 
   /** Returns the index of the current carousel item. */
   public getCurrentIndex(): number {
@@ -350,7 +354,7 @@ export default class BhCarousel {
   /** Returns whether user prefers reduced motion. */
   protected getPrefersReducedMotion(): boolean {
     return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  };
+  }
 
   /** Navigates to another slide: 'next', 'previous', or a numeric index. */
   public goto(destination: BhCarouselDestination): void {
@@ -370,21 +374,21 @@ export default class BhCarousel {
 
     (this.slides[this.current] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
-      true.toString()
+      true.toString(),
     );
     (this.slides[currentIndex] as HTMLElement).setAttribute(
       this.settings.itemStateAttribute,
-      false.toString()
+      false.toString(),
     );
 
     this.current = currentIndex;
 
     if (destination === "next" || destination === "previous") {
       this.el.dispatchEvent(
-        this.createEvent({ action: destination, currentIndex, previousIndex })
+        this.createEvent({ action: destination, currentIndex, previousIndex }),
       );
     }
-  };
+  }
 
   /** Handles keydown events for keyboard navigation. */
   protected handleKeydown = (event: KeyboardEvent): void => {
@@ -437,7 +441,7 @@ export default class BhCarousel {
       this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
       this.playPauseButton.setAttribute(
         "aria-label",
-        this.settings.ariaLabelPlay
+        this.settings.ariaLabelPlay,
       );
     }
     this.nextButton.disabled = false;
@@ -455,7 +459,7 @@ export default class BhCarousel {
       this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
       this.playPauseButton.setAttribute(
         "aria-label",
-        this.settings.ariaLabelPause
+        this.settings.ariaLabelPause,
       );
     }
     this.nextButton.disabled = true;
@@ -472,7 +476,7 @@ export default class BhCarousel {
   protected validateSlideIndex(index: number): void {
     if (index < this.firstIndex || index > this.lastIndex) {
       throw new Error(
-        `Index ${index} is out of bounds (${this.firstIndex}-${this.lastIndex})`
+        `Index ${index} is out of bounds (${this.firstIndex}-${this.lastIndex})`,
       );
     }
   }
