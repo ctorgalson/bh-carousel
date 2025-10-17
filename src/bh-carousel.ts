@@ -446,10 +446,6 @@ export default class BhCarousel {
    * @protected
    */
   protected handleNextClick = (event: Event): void => {
-    if (event.currentTarget !== this.nextButton) {
-      return;
-    }
-
     this.next();
   };
 
@@ -461,10 +457,6 @@ export default class BhCarousel {
    * @protected
    */
   protected handlePlayPauseClick = (event: Event): void => {
-    if (event.currentTarget !== this.playPauseButton) {
-      return;
-    }
-
     if (this.playing) {
       this.pause();
     } else {
@@ -480,10 +472,6 @@ export default class BhCarousel {
    * @protected
    */
   protected handlePreviousClick = (event: Event): void => {
-    if (event.currentTarget !== this.previousButton) {
-      return;
-    }
-
     this.previous();
   };
 
