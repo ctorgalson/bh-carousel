@@ -56,7 +56,7 @@ export type BhCarouselInterval = number;
  *   allows it.
  * @property {BhCarouselControls} controlType
  *   Whether the carousel uses only buttons for control or buttons and tabs.
- aulay*   Currently has no effect as tab-style navigation hasn't been implemented.
+ *   Currently has no effect as tab-style navigation hasn't been implemented.
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
@@ -209,7 +209,7 @@ export default class BhCarousel {
     slide: "[aria-roledescription='slide']",
   };
   private settings: BhCarouselSettings;
-  private slides: NodeListOf<Element>;
+  private slides: NodeListOf<HTMLElement>;
 
   /**
    * Constructs a new BhCarousel instance.
