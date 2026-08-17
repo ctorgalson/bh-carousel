@@ -78,6 +78,12 @@ describe("disable()", () => {
 });
 
 describe("enable()", () => {
+  it("reflects construction-time state", () => {
+    const el = buildCarouselDom();
+    expect(new BhCarousel(el, { automatic: true }).isPlaying()).toBe(true);
+    expect(new BhCarousel(el, { automatic: false }).isPlaying()).toBe(false);
+  });
+
   it("un-hides the nav buttons that autoEnable=false left hidden", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
@@ -108,10 +114,11 @@ describe("enable()", () => {
 
   it("starts autoplay when play/pause button does not exist", () => {
     const el = buildCarouselDom({ withPlayPauseButton: false });
-    const c = new BhCarousel(el, { autoEnable: false });
+    const c = new BhCarousel(el);
 
-    c.enable();
+    vi.advanceTimersByTime(4000);
     expect(c.isPlaying()).toBe(true);
+    expect(c.getCurrentIndex()).toBe(1);
   });
 });
 
@@ -234,7 +241,7 @@ describe("pause()", () => {
     expect(c.getCurrentIndex()).toBe(0);
   });
 
-  it("sets this.playing to false", () => {
+  it("sets playing state to false", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
@@ -266,7 +273,7 @@ describe("play()", () => {
     expect(c.getCurrentIndex()).toBe(1);
   });
 
-  it("sets this.playing to true", () => {
+  it("sets playing state to true", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
