@@ -434,6 +434,11 @@ export default class BhCarousel {
     this.goto("next");
   }
 
+  /** Returns current playing state. */
+  public isPlaying(): boolean {
+    return this.playing;
+  }
+
   /** Pauses carousel. */
   public pause(): void {
     window.clearInterval(this.intervalId);
