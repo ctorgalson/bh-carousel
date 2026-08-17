@@ -105,6 +105,14 @@ describe("enable()", () => {
       expect(slides[i]!.getAttribute("aria-hidden")).toBe("true");
     }
   });
+
+  it("starts autoplay when play/pause button does not exist", () => {
+    const el = buildCarouselDom({ withPlayPauseButton: false });
+    const c = new BhCarousel(el, { autoEnable: false });
+
+    c.enable();
+    expect(c.isPlaying()).toBe(true);
+  });
 });
 
 describe("getCurrentIndex()", () => {
