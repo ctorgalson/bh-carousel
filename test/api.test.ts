@@ -226,6 +226,15 @@ describe("pause()", () => {
     expect(c.getCurrentIndex()).toBe(0);
   });
 
+  it("sets this.playing to false", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.pause();
+
+    expect(c.isPlaying()).toBe(false);
+  });
+
   it("updates data-bhc-playing to 'false'", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
@@ -247,6 +256,15 @@ describe("play()", () => {
     vi.advanceTimersByTime(1000);
 
     expect(c.getCurrentIndex()).toBe(1);
+  });
+
+  it("sets this.playing to true", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.play();
+
+    expect(c.isPlaying()).toBe(true);
   });
 
   it("updates data-bhc-playing to 'true'", () => {
