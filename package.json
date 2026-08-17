@@ -33,7 +33,7 @@
   ],
   "scripts": {
     "build": "concurrently --raw npm:build:*",
-    "build:css": "postcss src/bh-carousel.css > dist/css/bh-carousel.min.css && npm run copy:css",
+    "build:css": "postcss src/bh-carousel.css -o dist/css/bh-carousel.min.css && npm run copy:css",
     "build:ts": "rollup --config && npm run copy:js",
     "copy:css": "for d in ./dist/css/ ./demo/css/ ; do cp -v src/bh-carousel.css \"$d\" ; done",
     "copy:js": "cp -v ./dist/js/bh-carousel.min.js ./demo/js",
