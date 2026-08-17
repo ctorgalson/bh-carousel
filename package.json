@@ -44,6 +44,8 @@
     "format:html": "prettier -w cypress/fixtures/index.html",
     "start": "npm run build ; npm run watch",
     "serve": "serve cypress/fixtures -p 3000",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "test:cli": "npx cypress run --e2e",
     "test:ui": "concurrently --kill-others --raw npm:serve \"cypress open\"",
     "watch": "concurrently --kill-others --raw npm:watch:* npm:serve",
@@ -58,6 +60,7 @@
     "concurrently": "^9.1.0",
     "cssnano": "^7.0.6",
     "cypress": "^13.16.1",
+    "jsdom": "^30.0.1",
     "onchange": "^7.1.0",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
@@ -69,6 +72,7 @@
     "typedoc-plugin-markdown": "^4.3.3",
     "typedoc-plugin-mdn-links": "^4.0.6",
     "typedoc-plugin-rename-defaults": "^0.7.2",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.10"
   }
 }
