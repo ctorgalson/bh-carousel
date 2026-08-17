@@ -222,6 +222,11 @@ export default class BhCarousel {
     this.settings = { ...this.defaults, ...settings };
     this.slides = this.el.querySelectorAll(this.selectors.slide);
 
+    // Not much to do with no slides...
+    if (this.slides.length === 0) {
+      throw new Error(`At least one slide is required to instantiate BhCarousel.`);
+    }
+
     // Required elements
     const nextButton = this.el.querySelector(this.selectors.nextButton);
     const previousButton = this.el.querySelector(this.selectors.previousButton);
