@@ -17,18 +17,40 @@ afterEach(() => {
 });
 
 describe("disable()", () => {
-  it("disables both nav buttons", () => {
+  it("disables both nav buttons while paused", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
-
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
     ).toBe(true);
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
     ).toBe(true);
+  });
+
+  it("keeps both nav buttons disabled if called while playing", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: true }); // Default
+
+    c.disable();
+    expect(
+      q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
+    ).toBe(true);
+    expect(
+      q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
+    ).toBe(true);
+  });
+
+  it("stops the interval from advancing slides", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { interval: 1000 });
+
+    c.disable();
+    vi.advanceTimersByTime(5000);
+
+    expect(c.getCurrentIndex()).toBe(0);
   });
 
   it("disables Play/Pause and removes its aria-label", () => {

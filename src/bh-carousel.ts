@@ -274,6 +274,10 @@ export default class BhCarousel {
 
   /** Disables carousel interactivity. */
   public disable(): void {
+    if (this.playing) {
+      window.clearInterval(this.intervalId);
+      this.playing = false;
+    }
     this.nextButton.disabled = true;
     this.nextButton.removeEventListener("click", this.handleNextClick);
     this.previousButton.disabled = true;
@@ -285,9 +289,6 @@ export default class BhCarousel {
         "click",
         this.handlePlayPauseClick,
       );
-      if (this.playPauseButton.dataset.bhcPlaying === "true") {
-        this.pause();
-      }
     }
     window.removeEventListener("keydown", this.handleKeydown);
   }
