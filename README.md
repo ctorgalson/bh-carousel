@@ -1,7 +1,7 @@
 # BH Carousel
 
 ![Documentation coverage](docs/coverage.svg)
-[![Cypress tests](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml)
+[![Tests](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml)
 [![Deploy static content to Pages](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml)
 
 This project provides a markup-independent javascript implementation of the WAI
@@ -12,7 +12,7 @@ The script is fully independent of any design-system, but that means you have
 to BYOCSS.
 
 - Try [the demo](https://ctorgalson.github.io/bh-carousel/)
-- See `cypress/fixtures/` directory for a sample implementation.
+- See `demo/` directory for a sample implementation.
 - Find complete typedoc documentation in [the `docs/` directory](docs/).
 
 ## Quickstart
