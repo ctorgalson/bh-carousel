@@ -326,13 +326,13 @@ export default class BhCarousel {
           "click",
           this.handlePlayPauseClick,
         );
-        // Start if configured to do so.
-        if (this.settings.automatic) {
-          this.play();
-        } else {
-          this.pause();
-        }
       }
+    }
+    // Start if configured to do so.
+    if (this.settings.automatic && !this.prefersReducedMotion) {
+      this.play();
+    } else {
+      this.pause();
     }
     window.addEventListener("keydown", this.handleKeydown);
   }
