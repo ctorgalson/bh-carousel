@@ -1,7 +1,8 @@
 /**
  * Simple-minded object of config names and validation functions.
  *
- * For use in tests only.
+ * Used by the demo page to accept configuration via URL query string
+ * (e.g. `?automatic=false&startingIndex=2`).
  */
 const configOptions = {
   ariaLabelPause: (value) =>
