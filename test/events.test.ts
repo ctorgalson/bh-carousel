@@ -15,6 +15,39 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
+describe("Slideshow honours user preference", () => {
+  it("does not autoplay when `prefers-reduced-motion` starts out `reduce`", () => {
+    stubMatchMedia(true);
+    const el = buildCarouselDom();
+    expect(new BhCarousel(el).isPlaying()).toBe(false);
+    expect(
+      el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
+    ).toBe(true);
+  });
+
+  it("stops playing when `prefers-reduced-motion` becomes `reduce`", () => {
+    const { trigger } = stubMatchMedia(false);
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el);
+    trigger(true);
+    expect(c.isPlaying()).toBe(false);
+    expect(
+      el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
+    ).toBe(true);
+  });
+
+  it("does not autoplay when `prefers-reduced-motion` becomes `no-preference`", () => {
+    const { trigger } = stubMatchMedia(true);
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el);
+    trigger(false);
+    expect(c.isPlaying()).toBe(false);
+    expect(
+      el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
+    ).toBe(false);
+  });
+});
+
 describe("Slideshow emits BhCarousel events on play/pause/next/previous", () => {
   it("Pause button emits detail {action: 'pause'}", () => {
     const el = buildCarouselDom();
