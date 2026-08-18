@@ -12,4 +12,4 @@ A type used to define the acceptable values for BhCarousel.goto().
 
 ## Defined in
 
-[bh-carousel.ts:14](https://github.com/ctorgalson/bh-carousel/blob/2af504f98a70be3a82b64a28432fe2d57f6f53ca/src/bh-carousel.ts#L14)
+[bh-carousel.ts:14](https://github.com/ctorgalson/bh-carousel/blob/03686fc8bff34cae1656cbde325b4fb27fe223a0/src/bh-carousel.ts#L14)
