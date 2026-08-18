@@ -62,8 +62,8 @@ export type BhCarouselInterval = number;
  *   automatically.
  * @property {string} itemStateAttribute
  *   The name of the *boolean* attribute to set on active/inactive items.
- *   Defaults to aria-hidden; if set to any other value, than the default or
- *   `hidden`, take care for the accessibility of each item.
+ *   Defaults to aria-hidden; if set to any other value, take care for the
+ *   accessibility of each item.
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
@@ -220,9 +220,14 @@ export default class BhCarousel {
     this.settings = { ...BhCarousel.defaults, ...settings };
     this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
 
+    // We need a real attribute.
+    if (!/^[a-z][a-z0-9-]*$/.test(this.settings.itemStateAttribute)) {
+      throw new Error(`BhCarousel: invalid attribute name supplied for settings.itemStateAttribute ("${this.settings.itemStateAttribute}").`);
+    }
+
     // Not much to do with no slides...
     if (this.slides.length === 0) {
-      throw new Error(`At least one slide is required to instantiate BhCarousel.`);
+      throw new Error("BhCarousel: at least one slide is required to instantiate the carousel.");
     }
 
     // Required elements
@@ -231,7 +236,7 @@ export default class BhCarousel {
 
     if (!(nextButton instanceof HTMLButtonElement) || !(previousButton instanceof HTMLButtonElement)) {
       throw new Error(
-        "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements",
+        "BhCarousel: both [data-bhc-next] and [data-bhc-previous] button elements are required.",
       );
     }
 
