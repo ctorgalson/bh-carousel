@@ -9,7 +9,7 @@ export type BhCarouselAction = "next" | "pause" | "play" | "previous";
 export type BhCarouselControls = "buttons" | "tabs";
 
 /**
- * A type used to define the acceptable values BhCarouselSettings.interval.
+ * A type used to define the acceptable values for BhCarousel.goto().
  */
 export type BhCarouselDestination = number | "next" | "previous";
 
@@ -20,7 +20,7 @@ export type BhCarouselDestination = number | "next" | "previous";
  *   The type of action triggering the event.
  * @property {number} currentIndex
  *   The index of the current item *after* updating the object in response to
- *   the event ("previous" and "next" actions only.
+ *   the event ("previous" and "next" actions only).
  * @property {number} previousIndex
  *   The index of the previous item *after* updating the object in response to
  *   the event ("previous" and "next" actions only).
@@ -49,7 +49,7 @@ export type BhCarouselInterval = number;
  *   "Play carousel").
  * @property {boolean} autoEnable
  *   Whether or not to automatically enable carousel interactivity. Sometimes
- *   useful when it's desireable to make the interactivity responsive.
+ *   useful when it's desirable to make the interactivity responsive.
  * @property {boolean} automatic
  *   Whether or not to auto-play the carousel on initialization. This setting
  *   is only guaranteed to be honoured if the user's prefers-reduced-motion
@@ -60,7 +60,7 @@ export type BhCarouselInterval = number;
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
- * @property {itemStateAttribute} string
+ * @property {string} itemStateAttribute
  *   The name of the *boolean* attribute to set on active/inactive items.
  *   Defaults to aria-hidden; if set to any other value, than the default or
  *   `hidden`, take care for the accessibility of each item.
@@ -175,8 +175,6 @@ export interface BhCarouselSettings {
  *   new BhCarousel(document.querySelector('[aria-roledescription="carousel"]'));
  * </script>
  * ```
- *
- * </code></pre>
  * 
  * @class
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
@@ -184,7 +182,7 @@ export interface BhCarouselSettings {
 export default class BhCarousel {
   private el: HTMLElement;
   private current: number;
-  private defaults: BhCarouselSettings = {
+  private static readonly defaults: BhCarouselSettings = {
     ariaLabelPause: "Pause carousel",
     ariaLabelPlay: "Play carousel",
     autoEnable: true,
@@ -202,7 +200,7 @@ export default class BhCarousel {
   private playPauseButton: HTMLButtonElement | null;
   private previousButton: HTMLButtonElement;
   private prefersReducedMotion: boolean;
-  private selectors = {
+  private readonly selectors = {
     nextButton: "[data-bhc-next]",
     playPauseButton: "[data-bhc-play-pause]",
     previousButton: "[data-bhc-previous]",
@@ -219,8 +217,8 @@ export default class BhCarousel {
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
-    this.settings = { ...this.defaults, ...settings };
-    this.slides = this.el.querySelectorAll(this.selectors.slide);
+    this.settings = { ...BhCarousel.defaults, ...settings };
+    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
 
     // Not much to do with no slides...
     if (this.slides.length === 0) {
@@ -231,14 +229,14 @@ export default class BhCarousel {
     const nextButton = this.el.querySelector(this.selectors.nextButton);
     const previousButton = this.el.querySelector(this.selectors.previousButton);
 
-    if (!nextButton || !previousButton) {
+    if (!(nextButton instanceof HTMLButtonElement) || !(previousButton instanceof HTMLButtonElement)) {
       throw new Error(
         "BhCarousel requires both [data-bhc-next] and [data-bhc-previous] button elements",
       );
     }
 
-    this.nextButton = nextButton as HTMLButtonElement;
-    this.previousButton = previousButton as HTMLButtonElement;
+    this.nextButton = nextButton;
+    this.previousButton = previousButton;
 
     // Optional element
     this.playPauseButton = this.el.querySelector(
@@ -283,6 +281,8 @@ export default class BhCarousel {
       window.clearInterval(this.intervalId);
       this.playing = false;
     }
+    // Slides.
+    this.slides.forEach((slide) => slide.removeAttribute(this.settings.itemStateAttribute));
     this.nextButton.disabled = true;
     this.nextButton.removeEventListener("click", this.handleNextClick);
     this.previousButton.disabled = true;
@@ -364,6 +364,10 @@ export default class BhCarousel {
 
   /** Navigates to another slide: 'next', 'previous', or a numeric index. */
   public goto(destination: BhCarouselDestination): void {
+    if (destination === this.current) {
+      return;
+    }
+
     const previousIndex = this.current;
     let currentIndex;
 
@@ -378,11 +382,11 @@ export default class BhCarousel {
       currentIndex = destination;
     }
 
-    (this.slides[this.current] as HTMLElement).setAttribute(
+    (this.slides[this.current])!.setAttribute(
       this.settings.itemStateAttribute,
       true.toString(),
     );
-    (this.slides[currentIndex] as HTMLElement).setAttribute(
+    (this.slides[currentIndex])!.setAttribute(
       this.settings.itemStateAttribute,
       false.toString(),
     );
@@ -416,12 +420,12 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Next button. */
-  protected handleNextClick = (event: Event): void => {
+  protected handleNextClick = (): void => {
     this.next();
   };
 
   /** Handles click events for Play/Pause button. */
-  protected handlePlayPauseClick = (event: Event): void => {
+  protected handlePlayPauseClick = (): void => {
     if (this.playing) {
       this.pause();
     } else {
@@ -430,7 +434,7 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Previous button. */
-  protected handlePreviousClick = (event: Event): void => {
+  protected handlePreviousClick = (): void => {
     this.previous();
   };
 
@@ -480,7 +484,7 @@ export default class BhCarousel {
 
   /** Reverses carousel one slide. */
   public previous(): void {
-    return this.goto("previous");
+    this.goto("previous");
   }
 
   /** Validates that an index is within bounds. */

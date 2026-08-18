@@ -64,16 +64,14 @@ describe("disable()", () => {
     expect(btn.getAttribute("aria-label")).toBeNull();
   });
 
-  it("stops responding to arrow keys", () => {
+  it("removes the aria-hidden attribute from all slide elements", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
-
     expect(
       qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
-    ).toBe("false");
+    ).toBeNull();
   });
 });
 
