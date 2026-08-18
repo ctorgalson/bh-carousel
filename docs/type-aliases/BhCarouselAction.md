@@ -12,4 +12,4 @@ A type used to define the 'actions' that the library's events can report.
 
 ## Defined in
 
-[bh-carousel.ts:4](https://github.com/ctorgalson/bh-carousel/blob/9f6cde6df66470cd71f8fad2792b5510171191c2/src/bh-carousel.ts#L4)
+[bh-carousel.ts:4](https://github.com/ctorgalson/bh-carousel/blob/2af504f98a70be3a82b64a28432fe2d57f6f53ca/src/bh-carousel.ts#L4)
