@@ -3,7 +3,9 @@ import BhCarousel from "../src/bh-carousel";
 import { buildCarouselDom, stubMatchMedia } from "./fixture";
 
 beforeEach(() => stubMatchMedia(false));
-afterEach(() => { document.body.innerHTML = ""; });
+afterEach(() => {
+  document.body.innerHTML = "";
+});
 
 describe("construction throws", () => {
   it("when there are no slides", () => {
@@ -13,7 +15,16 @@ describe("construction throws", () => {
 
   it("when startingIndex is out of bounds", () => {
     const el = buildCarouselDom();
-    expect(() => new BhCarousel(el, { startingIndex: 99 })).toThrow(/out of bounds/i);
+    expect(() => new BhCarousel(el, { startingIndex: 99 })).toThrow(
+      /out of bounds/i,
+    );
+  });
+
+  it("when settings.itemStateAttribute is an invalid attribute name", () => {
+    const el = buildCarouselDom();
+    expect(
+      () => new BhCarousel(el, { itemStateAttribute: "data-cat flap" }),
+    ).toThrow(/invalid attribute/i);
   });
 
   // TODO: create tests for missing previous/next buttons.
