@@ -195,6 +195,7 @@ export default class BhCarousel {
   private firstIndex: number;
   private intervalId: number | undefined;
   private lastIndex: number;
+  private reducedMotionQuery: MediaQueryList;
   private nextButton: HTMLButtonElement;
   private playing: boolean;
   private playPauseButton: HTMLButtonElement | null;
@@ -261,6 +262,7 @@ export default class BhCarousel {
     // Validate startingIndex
     this.validateSlideIndex(this.settings.startingIndex);
 
+    this.reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     this.current = this.settings.startingIndex;
     this.playing = false;
     this.prefersReducedMotion = this.getPrefersReducedMotion();
@@ -354,6 +356,7 @@ export default class BhCarousel {
       this.pause();
     }
     window.addEventListener("keydown", this.handleKeydown);
+    this.reducedMotionQuery.addEventListener("change", this.handleReducedMotionChange);
   }
 
   /** Returns the index of the current carousel item. */
@@ -373,7 +376,7 @@ export default class BhCarousel {
 
   /** Returns whether user prefers reduced motion. */
   protected getPrefersReducedMotion(): boolean {
-    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    return this.reducedMotionQuery.matches;
   }
 
   /** Navigates to another slide: 'next', 'previous', or a numeric index. */
@@ -450,6 +453,17 @@ export default class BhCarousel {
   /** Handles click events for Previous button. */
   protected handlePreviousClick = (): void => {
     this.previous();
+  };
+
+  /** Handles reduced motion preference change. */
+  protected handleReducedMotionChange = ({ matches }: MediaQueryListEvent): void => {
+    this.prefersReducedMotion = matches;
+    if (matches && this.isPlaying()) {
+      this.pause();
+    }
+    if (this.playPauseButton) {
+      this.playPauseButton.disabled = matches;
+    }
   };
 
   /** Advances carousel one slide. */

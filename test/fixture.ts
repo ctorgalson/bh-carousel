@@ -50,15 +50,21 @@ export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
   return container;
 }
 
-export function stubMatchMedia(matches = false): void {
-  window.matchMedia = ((query: string) => ({
+export function stubMatchMedia(matches = false): { trigger: (newMatches: boolean) => void } {
+  const listeners = new Set<(e: MediaQueryListEvent) => void>();
+  const mql = {
     matches,
-    media: query,
+    media: "(prefers-reduced-motion: reduce)",
     onchange: null,
-    addEventListener: () => {},
-    removeEventListener: () => {},
-    addListener: () => {},
-    removeListener: () => {},
+    addEventListener: (_: string, cb: any) => listeners.add(cb),
+    removeEventListener: (_: string, cb: any) => listeners.delete(cb),
     dispatchEvent: () => false,
-  })) as typeof window.matchMedia;
+  };
+  window.matchMedia = (() => mql) as typeof window.matchMedia;
+  return {
+    trigger: (newMatches: boolean) => {
+      mql.matches = newMatches;
+      listeners.forEach((cb) => cb({ matches: newMatches } as MediaQueryListEvent));
+    },
+  };
 }
