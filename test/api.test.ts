@@ -17,18 +17,40 @@ afterEach(() => {
 });
 
 describe("disable()", () => {
-  it("disables both nav buttons", () => {
+  it("disables both nav buttons while paused", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
-
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
     ).toBe(true);
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
     ).toBe(true);
+  });
+
+  it("keeps both nav buttons disabled if called while playing", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: true }); // Default
+
+    c.disable();
+    expect(
+      q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
+    ).toBe(true);
+    expect(
+      q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
+    ).toBe(true);
+  });
+
+  it("stops the interval from advancing slides", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { interval: 1000 });
+
+    c.disable();
+    vi.advanceTimersByTime(5000);
+
+    expect(c.getCurrentIndex()).toBe(0);
   });
 
   it("disables Play/Pause and removes its aria-label", () => {
@@ -42,20 +64,24 @@ describe("disable()", () => {
     expect(btn.getAttribute("aria-label")).toBeNull();
   });
 
-  it("stops responding to arrow keys", () => {
+  it("removes the aria-hidden attribute from all slide elements", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
-
     expect(
       qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
-    ).toBe("false");
+    ).toBeNull();
   });
 });
 
 describe("enable()", () => {
+  it("reflects construction-time state", () => {
+    const el = buildCarouselDom();
+    expect(new BhCarousel(el, { automatic: true }).isPlaying()).toBe(true);
+    expect(new BhCarousel(el, { automatic: false }).isPlaying()).toBe(false);
+  });
+
   it("un-hides the nav buttons that autoEnable=false left hidden", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
@@ -82,6 +108,15 @@ describe("enable()", () => {
     for (let i = 1; i < slides.length; i++) {
       expect(slides[i]!.getAttribute("aria-hidden")).toBe("true");
     }
+  });
+
+  it("starts autoplay when play/pause button does not exist", () => {
+    const el = buildCarouselDom({ withPlayPauseButton: false });
+    const c = new BhCarousel(el);
+
+    vi.advanceTimersByTime(4000);
+    expect(c.isPlaying()).toBe(true);
+    expect(c.getCurrentIndex()).toBe(1);
   });
 });
 
@@ -204,6 +239,15 @@ describe("pause()", () => {
     expect(c.getCurrentIndex()).toBe(0);
   });
 
+  it("sets playing state to false", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.pause();
+
+    expect(c.isPlaying()).toBe(false);
+  });
+
   it("updates data-bhc-playing to 'false'", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
@@ -225,6 +269,15 @@ describe("play()", () => {
     vi.advanceTimersByTime(1000);
 
     expect(c.getCurrentIndex()).toBe(1);
+  });
+
+  it("sets playing state to true", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.play();
+
+    expect(c.isPlaying()).toBe(true);
   });
 
   it("updates data-bhc-playing to 'true'", () => {
