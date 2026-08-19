@@ -38,6 +38,7 @@ const getConfigFromQuery = () => {
       switch (key) {
         case "autoEnable":
         case "automatic":
+        case "debug":
           paramValue = value === "true";
           break;
 
