@@ -289,6 +289,8 @@ export default class BhCarousel {
       "(prefers-reduced-motion: reduce)",
     );
 
+    this.validateSlideIndex(this.settings.startingIndex);
+
     this.setState(
       {
         currentIndex: this.settings.startingIndex,
@@ -300,8 +302,6 @@ export default class BhCarousel {
       },
       "constructor",
     );
-
-    this.validateSlideIndex(this.settings.startingIndex);
 
     if (this.settings.autoEnable) {
       this.enable();
@@ -589,7 +589,8 @@ export default class BhCarousel {
 
   /** Validates that an index is within bounds. */
   private validateSlideIndex(index: number): void {
-    const { firstIndex, lastIndex } = this.getState();
+    const firstIndex = 0;
+    const lastIndex = this.slides.length - 1;
     if (index < firstIndex || index > lastIndex) {
       throw new Error(
         `Index ${index} is out of bounds (${firstIndex} - ${lastIndex})`,
