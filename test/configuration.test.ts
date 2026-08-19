@@ -192,3 +192,23 @@ describe("startingIndex=2", () => {
     ).toBe("false");
   });
 });
+
+describe("debug", () => {
+  it("runs console.debug() when set", () => {
+    const debugSpy = vi.spyOn(console, "debug");
+    const el = buildCarouselDom();
+    new BhCarousel(el, { automatic: false, debug: true });
+    vi.advanceTimersByTime(2000);
+    expect(debugSpy).toHaveBeenCalled();
+    debugSpy.mockRestore();
+  });
+
+  it("runs no console methods when not set", () => {
+    const debugSpy = vi.spyOn(console, "debug");
+    const el = buildCarouselDom();
+    new BhCarousel(el, { automatic: false });
+    vi.advanceTimersByTime(2000);
+    expect(debugSpy).not.toHaveBeenCalled();
+    debugSpy.mockRestore();
+  });
+});

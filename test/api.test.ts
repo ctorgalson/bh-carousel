@@ -16,6 +16,34 @@ afterEach(() => {
   document.body.innerHTML = "";
 });
 
+describe("getState()", () => {
+  it("returns correct state values on start", () => {
+    const refState = {
+      playing: true,
+      currentIndex: 0,
+      enabled: true,
+      firstIndex: 0,
+      lastIndex: 4,
+      modifiedBy: "enable",
+      prefersReducedMotion: false,
+    };
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el);
+    expect(c.getState()).toEqual(refState);
+  });
+
+  it("returns a snapshot", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el);
+    const s = c.getState();
+    const originalPlaying = s.playing;
+    // Try to mutate the read-only property of c.state.
+    s.playing = false;
+    const { playing } = c.getState();
+    expect(playing).toEqual(originalPlaying);
+  })
+});
+
 describe("disable()", () => {
   it("disables both nav buttons while paused", () => {
     const el = buildCarouselDom();
@@ -127,8 +155,8 @@ describe("enable()", () => {
   });
 });
 
-describe("getCurrentIndex()", () => {
-  it("returns the startingIndex before any navigation", () => {
+describe("get currentIndex from state", () => {
+  it("returns the starting index before any navigation", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
     const { currentIndex } = c.getState();
@@ -265,5 +293,33 @@ describe("play()", () => {
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-play-pause]").dataset.bhcPlaying,
     ).toBe("true");
+  });
+});
+
+describe("getNextIndex()", () => {
+  it("returns current index + 1", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+    expect(c.getNextIndex()).toBe(1);
+  });
+
+  it("returns zero when currentIndex === lastIndex", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false, startingIndex: 4 });
+    expect(c.getNextIndex()).toBe(0);
+  });
+});
+
+describe("getPreviousIndex()", () => {
+  it("returns current index - 1", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false, startingIndex: 3 });
+    expect(c.getPreviousIndex()).toBe(2);
+  });
+
+  it("returns lastIndex when currentIndex === 0", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+    expect(c.getPreviousIndex()).toBe(4);
   });
 });
