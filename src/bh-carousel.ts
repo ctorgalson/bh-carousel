@@ -83,18 +83,18 @@ export interface BhCarouselSettings {
 /**
  * An interface for defining the current state of a BhCarousel instance.
  *
- * @param {boolean} playing
+ * @property {boolean} playing
  *   Whether or not the carousel is currently auto-playing.
- * @param {number} currentIndex
+ * @property {number} currentIndex
  *   The numeric (zero-based) index of the current slide in the carousel.
- * @param {boolean} enabled
+ * @property {boolean} enabled
  *   Whether or not carousel interactivity is enabled at all.
- * @param {number} firstIndex
+ * @property {number} firstIndex
  *   The numeric (zero-based) index of the first slide in the carousel. Always
  *   zero.
- * @param {number} lastIndex
+ * @property {number} lastIndex
  *   The numeric (zero-based) index of the last slide in the carousel.
- * @param {boolean} prefersReducedMotion
+ * @property {boolean} prefersReducedMotion
  *   The current user preference for prefers-reduced-motion (true means that
  *   a css media query has returned 'reduce', and false means that it has
  *   returned 'no-preference').
