@@ -354,24 +354,6 @@ export default class BhCarousel {
     }
   }
 
-  /** Returns the index of the current carousel item. */
-  public getCurrentIndex(): number {
-    const { currentIndex } = this.getState();
-    return currentIndex;
-  }
-
-  /** Returns the index of the first carousel item. */
-  public getFirstIndex(): number {
-    const { firstIndex } = this.getState();
-    return firstIndex;
-  }
-
-  /** Returns the index of the last carousel item. */
-  public getLastIndex(): number {
-    const { lastIndex } = this.getState();
-    return lastIndex;
-  }
-
   /** Returns numeric value of next slide. */
   public getNextIndex(): number {
     const { currentIndex, firstIndex, lastIndex } = this.getState();
@@ -445,8 +427,14 @@ export default class BhCarousel {
   protected handleNextClick = (): void => this.next();
 
   /** Handles click events for Play/Pause button. */
-  protected handlePlayPauseClick = (): void =>
-    this.isPlaying() ? this.pause() : this.play();
+  protected handlePlayPauseClick = (): void => {
+    const { playing } = this.getState();
+    if (playing) {
+      this.pause();
+    } else {
+      this.play();
+    }
+  }
 
   /** Handles click events for Previous button. */
   protected handlePreviousClick = (): void => this.previous();
@@ -455,7 +443,8 @@ export default class BhCarousel {
   protected handleReducedMotionChange = ({
     matches,
   }: MediaQueryListEvent): void => {
-    if (matches && this.isPlaying()) {
+    const { playing } = this.getState();
+    if (matches && playing) {
       this.pause();
     }
     this.setState({
@@ -463,12 +452,6 @@ export default class BhCarousel {
       modifiedBy: "handleReducedMotionChange",
     });
   };
-
-  /** Returns current playing state. */
-  public isPlaying(): boolean {
-    const { playing } = this.getState();
-    return playing;
-  }
 
   /** Advances carousel one slide. */
   public next(): void {

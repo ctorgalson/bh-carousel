@@ -19,7 +19,9 @@ describe("Slideshow honours user preference", () => {
   it("does not autoplay when `prefers-reduced-motion` starts out `reduce`", () => {
     stubMatchMedia(true);
     const el = buildCarouselDom();
-    expect(new BhCarousel(el).isPlaying()).toBe(false);
+    const c = new BhCarousel(el);
+    const { playing } = c.getState();
+    expect(playing).toBe(false);
     expect(
       el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
     ).toBe(true);
@@ -30,7 +32,8 @@ describe("Slideshow honours user preference", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
     trigger(true);
-    expect(c.isPlaying()).toBe(false);
+    const { playing } = c.getState();
+    expect(playing).toBe(false);
     expect(
       el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
     ).toBe(true);
@@ -41,7 +44,8 @@ describe("Slideshow honours user preference", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
     trigger(false);
-    expect(c.isPlaying()).toBe(false);
+    const { playing } = c.getState();
+    expect(playing).toBe(false);
     expect(
       el.querySelector<HTMLButtonElement>("[data-bhc-play-pause]")!.disabled
     ).toBe(false);
