@@ -572,11 +572,11 @@ export default class BhCarousel {
       );
     }
 
-    if (playing) {
+    if (playing && !prev.playing) {
       this.intervalId = window.setInterval(() => {
         this.next();
       }, this.settings.interval);
-    } else {
+    } else if (!playing && prev.playing) {
       window.clearInterval(this.intervalId);
     }
 
