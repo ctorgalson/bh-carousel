@@ -316,7 +316,7 @@ export default class BhCarousel {
    * The 'previous' and 'next' events include currentIndex and previousIndex
    * in the detail. The 'play' and 'pause' events include only the action.
    */
-  protected createEvent(
+  private createEvent(
     detail: BhCarouselEventDetail,
   ): CustomEvent<BhCarouselEventDetail> {
     return new CustomEvent("BhCarousel", {
@@ -402,7 +402,7 @@ export default class BhCarousel {
   }
 
   /** Handles keydown events for keyboard navigation. */
-  protected handleKeydown = (event: KeyboardEvent): void => {
+  private handleKeydown = (event: KeyboardEvent): void => {
     const { key } = event;
     const { playing, prefersReducedMotion } = this.getState();
 
@@ -422,10 +422,10 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Next button. */
-  protected handleNextClick = (): void => this.next();
+  private handleNextClick = (): void => this.next();
 
   /** Handles click events for Play/Pause button. */
-  protected handlePlayPauseClick = (): void => {
+  private handlePlayPauseClick = (): void => {
     const { playing } = this.getState();
     if (playing) {
       this.pause();
@@ -435,10 +435,10 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Previous button. */
-  protected handlePreviousClick = (): void => this.previous();
+  private handlePreviousClick = (): void => this.previous();
 
   /** Handles reduced motion preference change. */
-  protected handleReducedMotionChange = ({
+  private handleReducedMotionChange = ({
     matches,
   }: MediaQueryListEvent): void => {
     const { playing } = this.getState();
@@ -473,7 +473,7 @@ export default class BhCarousel {
   }
 
   /** Sets/updates UI based on carousel state. */
-  protected render(prev: BhCarouselState): void {
+  private render(prev: BhCarouselState): void {
     const state = this.getState();
     this.renderNavButtons(state);
     this.renderPlayPauseButton(state);
