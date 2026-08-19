@@ -499,7 +499,9 @@ export default class BhCarousel {
     playing,
     prefersReducedMotion,
   }: BhCarouselState): void {
-    if (!this.playPauseButton) return;
+    if (!this.playPauseButton) {
+      return;
+    }
     this.playPauseButton.hidden = !enabled;
     this.playPauseButton.disabled = !enabled || prefersReducedMotion;
     if (enabled) {
@@ -523,7 +525,9 @@ export default class BhCarousel {
       );
       return;
     }
-    if (!state.enabled) return;
+    if (!state.enabled) {
+      return;
+    }
 
     // Enable transition: full sync across all slides.
     if (!prev.enabled) {
@@ -551,7 +555,9 @@ export default class BhCarousel {
 
   /** Attaches or detaches DOM listeners on the enabled transition. */
   private renderListeners(state: BhCarouselState, prev: BhCarouselState): void {
-    if (state.enabled === prev.enabled) return;
+    if (state.enabled === prev.enabled) {
+      return;
+    }
     if (state.enabled) {
       this.nextButton.addEventListener("click", this.handleNextClick);
       this.previousButton.addEventListener("click", this.handlePreviousClick);
