@@ -383,14 +383,7 @@ export default class BhCarousel {
   }
 
   /** Returns the current instance state. */
-  public getState(): Readonly<{
-    currentIndex: number;
-    enabled: boolean;
-    firstIndex: number;
-    lastIndex: number;
-    playing: boolean;
-    prefersReducedMotion: boolean;
-  }> {
+  public getState(): Readonly<BhCarouselState> {
     return { ...this.state };
   }
 
