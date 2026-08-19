@@ -552,7 +552,8 @@ export default class BhCarousel {
           this.handlePlayPauseClick,
         );
       }
-      // Remove listeners EVERY time we detect !this.state.enabled.
+      // Remove listeners EVERY time we enabled is false (as long as it was
+      // previously true).
       this.nextButton.removeEventListener("click", this.handleNextClick);
       this.previousButton.removeEventListener(
         "click",
