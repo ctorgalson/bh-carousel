@@ -344,14 +344,19 @@ export default class BhCarousel {
    * when prefersReducedMotion is true to respect user accessibility preferences.
    */
   public enable(): void {
-    this.setState({ enabled: true, modifiedBy: "enable"});
+    // this.setState({ enabled: true, modifiedBy: "enable"});
     const { prefersReducedMotion } = this.getState();
     // Start if configured to do so.
-    if (this.settings.automatic && !prefersReducedMotion) {
-      this.play();
-    } else {
-      this.pause();
-    }
+    // if (this.settings.automatic && !prefersReducedMotion) {
+    //   this.play();
+    // } else {
+    //   this.pause();
+    // }
+    this.setState({
+      enabled: true,
+      modifiedBy: "enable",
+      playing: this.settings.automatic && !prefersReducedMotion,
+    })
   }
 
   /** Returns numeric value of next slide. */
@@ -444,13 +449,14 @@ export default class BhCarousel {
     matches,
   }: MediaQueryListEvent): void => {
     const { playing } = this.getState();
-    if (matches && playing) {
-      this.pause();
-    }
-    this.setState({
-      prefersReducedMotion: matches,
+    const newState: Partial<BhCarouselState> = {
       modifiedBy: "handleReducedMotionChange",
-    });
+      prefersReducedMotion: matches,
+    };
+    if (matches && playing) {
+      newState.playing = false;
+    }
+    this.setState(newState);
   };
 
   /** Advances carousel one slide. */
@@ -460,16 +466,12 @@ export default class BhCarousel {
 
   /** Pauses carousel. */
   public pause(): void {
-    window.clearInterval(this.intervalId);
     this.setState({ playing: false, modifiedBy: "pause"});
     this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   }
 
   /** Plays carousel. */
   public play(): void {
-    this.intervalId = window.setInterval(() => {
-      this.next();
-    }, this.settings.interval);
     this.setState({ playing: true, modifiedBy: "play"});
     this.el.dispatchEvent(this.createEvent({ action: "play" }));
   }
@@ -555,6 +557,14 @@ export default class BhCarousel {
         "change",
         this.handleReducedMotionChange,
       );
+    }
+
+    if (playing) {
+      this.intervalId = window.setInterval(() => {
+        this.next();
+      }, this.settings.interval);
+    } else {
+      window.clearInterval(this.intervalId);
     }
 
     if (this.settings.debug) {
