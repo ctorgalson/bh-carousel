@@ -94,6 +94,9 @@ export interface BhCarouselSettings {
  *   zero.
  * @property {number} lastIndex
  *   The numeric (zero-based) index of the last slide in the carousel.
+ * @property {string} modifiedBy
+ *   The name of the last method to modify the state var. Only exposed for
+ *   debugging purposes.
  * @property {boolean} prefersReducedMotion
  *   The current user preference for prefers-reduced-motion (true means that
  *   a css media query has returned 'reduce', and false means that it has
@@ -105,6 +108,7 @@ export interface BhCarouselState {
   enabled: boolean;
   firstIndex: number;
   lastIndex: number;
+  modifiedBy: string;
   prefersReducedMotion: boolean;
 }
 
@@ -297,10 +301,10 @@ export default class BhCarousel {
         enabled: false,
         firstIndex: 0,
         lastIndex: this.slides.length - 1,
+        modifiedBy: "constructor",
         playing: false,
         prefersReducedMotion: this.reducedMotionQuery.matches,
-      },
-      "constructor",
+      }
     );
 
     if (this.settings.autoEnable) {
@@ -331,7 +335,7 @@ export default class BhCarousel {
     if (playing) {
       window.clearInterval(this.intervalId);
     }
-    this.setState({ enabled: false, playing: false }, "disable");
+    this.setState({ enabled: false, playing: false, modifiedBy: "disable"});
   }
 
   /**
@@ -342,7 +346,7 @@ export default class BhCarousel {
    * when prefersReducedMotion is true to respect user accessibility preferences.
    */
   public enable(): void {
-    this.setState({ enabled: true }, "enable");
+    this.setState({ enabled: true, modifiedBy: "enable"});
     const { prefersReducedMotion } = this.getState();
     // Start if configured to do so.
     if (this.settings.automatic && !prefersReducedMotion) {
@@ -410,7 +414,7 @@ export default class BhCarousel {
         currentIndex = destination;
     }
 
-    this.setState({ currentIndex }, "goto");
+    this.setState({ currentIndex, modifiedBy: "goto"});
 
     if (destination === "next" || destination === "previous") {
       this.el.dispatchEvent(
@@ -456,10 +460,10 @@ export default class BhCarousel {
     if (matches && this.isPlaying()) {
       this.pause();
     }
-    this.setState(
-      { prefersReducedMotion: matches },
-      "handleReducedMotionChange",
-    );
+    this.setState({
+      prefersReducedMotion: matches,
+      modifiedBy: "handleReducedMotionChange",
+    });
   };
 
   /** Returns current playing state. */
@@ -476,7 +480,7 @@ export default class BhCarousel {
   /** Pauses carousel. */
   public pause(): void {
     window.clearInterval(this.intervalId);
-    this.setState({ playing: false }, "pause");
+    this.setState({ playing: false, modifiedBy: "pause"});
     this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   }
 
@@ -485,7 +489,7 @@ export default class BhCarousel {
     this.intervalId = window.setInterval(() => {
       this.next();
     }, this.settings.interval);
-    this.setState({ playing: true }, "play");
+    this.setState({ playing: true, modifiedBy: "play"});
     this.el.dispatchEvent(this.createEvent({ action: "play" }));
   }
 
