@@ -333,7 +333,7 @@ export default class BhCarousel {
     if (playing) {
       window.clearInterval(this.intervalId);
     }
-    this.setState({ enabled: false, playing: false, modifiedBy: "disable"});
+    this.setState({ enabled: false, playing: false, modifiedBy: "disable" });
   }
 
   /**
@@ -349,7 +349,7 @@ export default class BhCarousel {
       enabled: true,
       modifiedBy: "enable",
       playing: this.settings.automatic && !prefersReducedMotion,
-    })
+    });
   }
 
   /** Returns numeric value of next slide. */
@@ -392,7 +392,7 @@ export default class BhCarousel {
         currentIndex = destination;
     }
 
-    this.setState({ currentIndex, modifiedBy: "goto"});
+    this.setState({ currentIndex, modifiedBy: "goto" });
 
     if (destination === "next" || destination === "previous") {
       this.el.dispatchEvent(
@@ -432,7 +432,7 @@ export default class BhCarousel {
     } else {
       this.play();
     }
-  }
+  };
 
   /** Handles click events for Previous button. */
   protected handlePreviousClick = (): void => this.previous();
@@ -459,12 +459,12 @@ export default class BhCarousel {
 
   /** Pauses carousel. */
   public pause(): void {
-    this.setState({ playing: false, modifiedBy: "pause"});
+    this.setState({ playing: false, modifiedBy: "pause" });
   }
 
   /** Plays carousel. */
   public play(): void {
-    this.setState({ playing: true, modifiedBy: "play"});
+    this.setState({ playing: true, modifiedBy: "play" });
   }
 
   /** Reverses carousel one slide. */
@@ -550,10 +550,7 @@ export default class BhCarousel {
   }
 
   /** Attaches or detaches DOM listeners on the enabled transition. */
-  private renderListeners(
-    state: BhCarouselState,
-    prev: BhCarouselState,
-  ): void {
+  private renderListeners(state: BhCarouselState, prev: BhCarouselState): void {
     if (state.enabled === prev.enabled) return;
     if (state.enabled) {
       this.nextButton.addEventListener("click", this.handleNextClick);
@@ -614,7 +611,9 @@ export default class BhCarousel {
 
   /** Logs render call + current state when settings.debug is true. */
   private debugLog(state: BhCarouselState): void {
-    if (!this.settings.debug) return;
+    if (!this.settings.debug) {
+      return;
+    }
     console.debug(`render() method called by ${state.modifiedBy}().`, {
       state,
     });
