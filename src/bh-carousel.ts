@@ -482,7 +482,7 @@ export default class BhCarousel {
   }
 
   /** Sets/updates UI based on carousel state. */
-  protected render(): void {
+  protected render(prev: BhCarouselState): void {
     const {
       currentIndex,
       enabled,
@@ -506,12 +506,23 @@ export default class BhCarousel {
 
     if (enabled) {
       // Mutate slides.
-      this.slides.forEach((slide, index) =>
-        slide.setAttribute(
+      if (!prev.enabled) {
+        this.slides.forEach((slide, index) =>
+          slide.setAttribute(
+            this.settings.itemStateAttribute,
+            (index !== currentIndex).toString(),
+          ),
+        );
+      } else {
+        this.slides[prev.currentIndex]!.setAttribute(
           this.settings.itemStateAttribute,
-          (index !== currentIndex).toString(),
-        ),
-      );
+          "true"
+        );
+        this.slides[currentIndex]!.setAttribute(
+          this.settings.itemStateAttribute,
+          "false"
+        );
+      }
       // Handle optional play/pause button.
       if (this.playPauseButton) {
         this.playPauseButton.dataset.bhcPlaying = String(playing);
@@ -524,14 +535,16 @@ export default class BhCarousel {
           this.handlePlayPauseClick,
         );
       }
-      // Add listeners.
-      this.nextButton.addEventListener("click", this.handleNextClick);
-      this.previousButton.addEventListener("click", this.handlePreviousClick);
-      window.addEventListener("keydown", this.handleKeydown);
-      this.reducedMotionQuery.addEventListener(
-        "change",
-        this.handleReducedMotionChange,
-      );
+      // Add listeners only when the previous state not enabled.
+      if (!prev.enabled) {
+        this.nextButton.addEventListener("click", this.handleNextClick);
+        this.previousButton.addEventListener("click", this.handlePreviousClick);
+        window.addEventListener("keydown", this.handleKeydown);
+        this.reducedMotionQuery.addEventListener(
+          "change",
+          this.handleReducedMotionChange,
+        );
+      }
     } else {
       // Mutate slides.
       this.slides.forEach((slide) =>
@@ -546,7 +559,7 @@ export default class BhCarousel {
           this.handlePlayPauseClick,
         );
       }
-      // Remove listeners.
+      // Remove listeners EVERY time we detect !this.state.enabled.
       this.nextButton.removeEventListener("click", this.handleNextClick);
       this.previousButton.removeEventListener(
         "click",
@@ -576,8 +589,9 @@ export default class BhCarousel {
 
   /** Sets/updates carousel state. */
   private setState(patch: Partial<BhCarouselState>): void {
+    const prev = this.state;
     this.state = { ...this.state, ...patch };
-    this.render();
+    this.render(prev);
   }
 
   /** Validates that an index is within bounds. */
