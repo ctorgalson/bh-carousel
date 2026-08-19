@@ -484,8 +484,8 @@ export default class BhCarousel {
   /** Pauses carousel. */
   public pause(): void {
     window.clearInterval(this.intervalId);
-    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
     this.setState({ playing: false }, "pause");
+    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   }
 
   /** Plays carousel. */
@@ -493,8 +493,8 @@ export default class BhCarousel {
     this.intervalId = window.setInterval(() => {
       this.next();
     }, this.settings.interval);
-    this.el.dispatchEvent(this.createEvent({ action: "play" }));
     this.setState({ playing: true }, "play");
+    this.el.dispatchEvent(this.createEvent({ action: "play" }));
   }
 
   /** Reverses carousel one slide. */
