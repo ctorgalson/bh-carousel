@@ -460,7 +460,6 @@ export default class BhCarousel {
   protected handleReducedMotionChange = ({
     matches,
   }: MediaQueryListEvent): void => {
-    // this.prefersReducedMotion = matches;
     if (matches && this.isPlaying()) {
       this.pause();
     }
