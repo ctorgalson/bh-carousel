@@ -344,14 +344,7 @@ export default class BhCarousel {
    * when prefersReducedMotion is true to respect user accessibility preferences.
    */
   public enable(): void {
-    // this.setState({ enabled: true, modifiedBy: "enable"});
     const { prefersReducedMotion } = this.getState();
-    // Start if configured to do so.
-    // if (this.settings.automatic && !prefersReducedMotion) {
-    //   this.play();
-    // } else {
-    //   this.pause();
-    // }
     this.setState({
       enabled: true,
       modifiedBy: "enable",
@@ -467,13 +460,11 @@ export default class BhCarousel {
   /** Pauses carousel. */
   public pause(): void {
     this.setState({ playing: false, modifiedBy: "pause"});
-    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
   }
 
   /** Plays carousel. */
   public play(): void {
     this.setState({ playing: true, modifiedBy: "play"});
-    this.el.dispatchEvent(this.createEvent({ action: "play" }));
   }
 
   /** Reverses carousel one slide. */
@@ -530,10 +521,12 @@ export default class BhCarousel {
           "aria-label",
           playing ? this.settings.ariaLabelPause : this.settings.ariaLabelPlay,
         );
-        this.playPauseButton.addEventListener(
-          "click",
-          this.handlePlayPauseClick,
-        );
+        if (!prev.enabled) {
+          this.playPauseButton.addEventListener(
+            "click",
+            this.handlePlayPauseClick,
+          );
+        }
       }
       // Add listeners only when the previous state not enabled.
       if (!prev.enabled) {
@@ -545,7 +538,7 @@ export default class BhCarousel {
           this.handleReducedMotionChange,
         );
       }
-    } else {
+    } else if (prev.enabled) {
       // Mutate slides.
       this.slides.forEach((slide) =>
         slide.removeAttribute(this.settings.itemStateAttribute),
@@ -578,6 +571,12 @@ export default class BhCarousel {
       }, this.settings.interval);
     } else if (!playing && prev.playing) {
       window.clearInterval(this.intervalId);
+    }
+
+    if (playing !== prev.playing) {
+      this.el.dispatchEvent(
+        this.createEvent({ action: playing ? "play" : "pause" }),
+      );
     }
 
     if (this.settings.debug) {
