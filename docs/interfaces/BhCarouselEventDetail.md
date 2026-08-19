@@ -18,7 +18,7 @@ The type of action triggering the event.
 
 #### Defined in
 
-[bh-carousel.ts:29](https://github.com/ctorgalson/bh-carousel/blob/03686fc8bff34cae1656cbde325b4fb27fe223a0/src/bh-carousel.ts#L29)
+[bh-carousel.ts:29](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L29)
 
 ---
 
@@ -31,7 +31,7 @@ the event ("previous" and "next" actions only).
 
 #### Defined in
 
-[bh-carousel.ts:30](https://github.com/ctorgalson/bh-carousel/blob/03686fc8bff34cae1656cbde325b4fb27fe223a0/src/bh-carousel.ts#L30)
+[bh-carousel.ts:30](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L30)
 
 ---
 
@@ -44,4 +44,4 @@ the event ("previous" and "next" actions only).
 
 #### Defined in
 
-[bh-carousel.ts:31](https://github.com/ctorgalson/bh-carousel/blob/03686fc8bff34cae1656cbde325b4fb27fe223a0/src/bh-carousel.ts#L31)
+[bh-carousel.ts:31](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L31)

@@ -39,7 +39,7 @@ export interface BhCarouselEventDetail {
 export type BhCarouselInterval = number;
 
 /**
- * A type used to set the acceptable settings parameters for BhCarousel objects.
+ * An interface defining acceptable settings parameters for BhCarousel objects.
  *
  * @property {string} ariaLabelPause
  *   Value for the Play/Pause button's aria-label attribute when playing (e.g.
@@ -74,9 +74,42 @@ export interface BhCarouselSettings {
   autoEnable: boolean;
   automatic: boolean;
   controlType: BhCarouselControls;
+  debug: boolean;
   interval: BhCarouselInterval;
   itemStateAttribute: string;
   startingIndex: number;
+}
+
+/**
+ * An interface for defining the current state of a BhCarousel instance.
+ *
+ * @property {boolean} playing
+ *   Whether or not the carousel is currently auto-playing.
+ * @property {number} currentIndex
+ *   The numeric (zero-based) index of the current slide in the carousel.
+ * @property {boolean} enabled
+ *   Whether or not carousel interactivity is enabled at all.
+ * @property {number} firstIndex
+ *   The numeric (zero-based) index of the first slide in the carousel. Always
+ *   zero.
+ * @property {number} lastIndex
+ *   The numeric (zero-based) index of the last slide in the carousel.
+ * @property {string} modifiedBy
+ *   The name of the last method to modify the state var. Only exposed for
+ *   debugging purposes.
+ * @property {boolean} prefersReducedMotion
+ *   The current user preference for prefers-reduced-motion (true means that
+ *   a css media query has returned 'reduce', and false means that it has
+ *   returned 'no-preference').
+ */
+export interface BhCarouselState {
+  playing: boolean;
+  currentIndex: number;
+  enabled: boolean;
+  firstIndex: number;
+  lastIndex: number;
+  modifiedBy: string;
+  prefersReducedMotion: boolean;
 }
 
 /**
@@ -181,26 +214,22 @@ export interface BhCarouselSettings {
  */
 export default class BhCarousel {
   private el: HTMLElement;
-  private current: number;
   private static readonly defaults: BhCarouselSettings = {
     ariaLabelPause: "Pause carousel",
     ariaLabelPlay: "Play carousel",
     autoEnable: true,
     automatic: true,
     controlType: "buttons",
+    debug: false,
     interval: 4000,
     itemStateAttribute: "aria-hidden",
     startingIndex: 0,
   };
-  private firstIndex: number;
   private intervalId: number | undefined;
-  private lastIndex: number;
   private reducedMotionQuery: MediaQueryList;
   private nextButton: HTMLButtonElement;
-  private playing: boolean;
   private playPauseButton: HTMLButtonElement | null;
   private previousButton: HTMLButtonElement;
-  private prefersReducedMotion: boolean;
   private readonly selectors = {
     nextButton: "[data-bhc-next]",
     playPauseButton: "[data-bhc-play-pause]",
@@ -209,12 +238,15 @@ export default class BhCarousel {
   };
   private settings: BhCarouselSettings;
   private slides: NodeListOf<HTMLElement>;
+  private state!: BhCarouselState;
 
   /**
    * Constructs a new BhCarousel instance.
    *
-   * @param element - The overall containing element of the carousel
-   * @param settings - Optional settings to override class defaults
+   * @param element
+   *   The overall containing element of the carousel.
+   * @param settings
+   *   Optional settings to override class defaults.
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
@@ -256,16 +288,22 @@ export default class BhCarousel {
       this.selectors.playPauseButton,
     );
 
-    this.firstIndex = 0;
-    this.lastIndex = this.slides.length - 1;
-
     // Validate startingIndex
+    this.reducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
+
     this.validateSlideIndex(this.settings.startingIndex);
 
-    this.reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    this.current = this.settings.startingIndex;
-    this.playing = false;
-    this.prefersReducedMotion = this.getPrefersReducedMotion();
+    this.state = {
+      currentIndex: this.settings.startingIndex,
+      enabled: false,
+      firstIndex: 0,
+      lastIndex: this.slides.length - 1,
+      modifiedBy: "constructor",
+      playing: false,
+      prefersReducedMotion: this.reducedMotionQuery.matches,
+    };
 
     if (this.settings.autoEnable) {
       this.enable();
@@ -278,7 +316,7 @@ export default class BhCarousel {
    * The 'previous' and 'next' events include currentIndex and previousIndex
    * in the detail. The 'play' and 'pause' events include only the action.
    */
-  protected createEvent(
+  private createEvent(
     detail: BhCarouselEventDetail,
   ): CustomEvent<BhCarouselEventDetail> {
     return new CustomEvent("BhCarousel", {
@@ -291,27 +329,11 @@ export default class BhCarousel {
 
   /** Disables carousel interactivity. */
   public disable(): void {
-    if (this.playing) {
+    const { playing } = this.getState();
+    if (playing) {
       window.clearInterval(this.intervalId);
-      this.playing = false;
     }
-    // Slides.
-    this.slides.forEach((slide) =>
-      slide.removeAttribute(this.settings.itemStateAttribute),
-    );
-    this.nextButton.disabled = true;
-    this.nextButton.removeEventListener("click", this.handleNextClick);
-    this.previousButton.disabled = true;
-    this.previousButton.removeEventListener("click", this.handlePreviousClick);
-    if (this.playPauseButton) {
-      this.playPauseButton.disabled = true;
-      this.playPauseButton.removeAttribute("aria-label");
-      this.playPauseButton.removeEventListener(
-        "click",
-        this.handlePlayPauseClick,
-      );
-    }
-    window.removeEventListener("keydown", this.handleKeydown);
+    this.setState({ enabled: false, playing: false, modifiedBy: "disable" });
   }
 
   /**
@@ -322,93 +344,55 @@ export default class BhCarousel {
    * when prefersReducedMotion is true to respect user accessibility preferences.
    */
   public enable(): void {
-    // Slides.
-    this.slides.forEach((slide, index) =>
-      slide.setAttribute(
-        this.settings.itemStateAttribute,
-        (index !== this.current).toString(),
-      ),
-    );
-    // Next button.
-    this.nextButton.hidden = false;
-    this.nextButton.addEventListener("click", this.handleNextClick);
-    // Previous button.
-    this.previousButton.hidden = false;
-    this.previousButton.addEventListener("click", this.handlePreviousClick);
-    // Play/Pause button.
-    if (this.playPauseButton) {
-      this.playPauseButton.hidden = false;
-      if (this.prefersReducedMotion) {
-        this.playPauseButton.disabled = true;
-      } else {
-        this.playPauseButton.disabled = false;
-        this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-        this.playPauseButton.addEventListener(
-          "click",
-          this.handlePlayPauseClick,
-        );
-      }
-    }
-    // Start if configured to do so.
-    if (this.settings.automatic && !this.prefersReducedMotion) {
-      this.play();
-    } else {
-      this.pause();
-    }
-    window.addEventListener("keydown", this.handleKeydown);
-    this.reducedMotionQuery.addEventListener("change", this.handleReducedMotionChange);
+    const { prefersReducedMotion } = this.getState();
+    this.setState({
+      enabled: true,
+      modifiedBy: "enable",
+      playing: this.settings.automatic && !prefersReducedMotion,
+    });
   }
 
-  /** Returns the index of the current carousel item. */
-  public getCurrentIndex(): number {
-    return this.current;
+  /** Returns numeric value of next slide. */
+  public getNextIndex(): number {
+    const { currentIndex, firstIndex, lastIndex } = this.getState();
+    return currentIndex === lastIndex ? firstIndex : currentIndex + 1;
   }
 
-  /** Returns the index of the first carousel item. */
-  public getFirstIndex(): number {
-    return this.firstIndex;
+  /** Returns numeric value of previous slide. */
+  public getPreviousIndex(): number {
+    const { currentIndex, firstIndex, lastIndex } = this.getState();
+    return currentIndex === firstIndex ? lastIndex : currentIndex - 1;
   }
 
-  /** Returns the index of the last carousel item. */
-  public getLastIndex(): number {
-    return this.lastIndex;
-  }
-
-  /** Returns whether user prefers reduced motion. */
-  protected getPrefersReducedMotion(): boolean {
-    return this.reducedMotionQuery.matches;
+  /** Returns the current instance state. */
+  public getState(): Readonly<BhCarouselState> {
+    return { ...this.state };
   }
 
   /** Navigates to another slide: 'next', 'previous', or a numeric index. */
   public goto(destination: BhCarouselDestination): void {
-    if (destination === this.current) {
+    const { currentIndex: previousIndex } = this.getState();
+    let currentIndex;
+
+    if (destination === previousIndex) {
       return;
     }
 
-    const previousIndex = this.current;
-    let currentIndex;
+    switch (destination) {
+      case "next":
+        currentIndex = this.getNextIndex();
+        break;
 
-    if (destination === "next") {
-      currentIndex =
-        this.current === this.lastIndex ? this.firstIndex : this.current + 1;
-    } else if (destination === "previous") {
-      currentIndex =
-        this.current === this.firstIndex ? this.lastIndex : this.current - 1;
-    } else {
-      this.validateSlideIndex(destination);
-      currentIndex = destination;
+      case "previous":
+        currentIndex = this.getPreviousIndex();
+        break;
+
+      default:
+        this.validateSlideIndex(destination);
+        currentIndex = destination;
     }
 
-    this.slides[this.current]!.setAttribute(
-      this.settings.itemStateAttribute,
-      true.toString(),
-    );
-    this.slides[currentIndex]!.setAttribute(
-      this.settings.itemStateAttribute,
-      false.toString(),
-    );
-
-    this.current = currentIndex;
+    this.setState({ currentIndex, modifiedBy: "goto" });
 
     if (destination === "next" || destination === "previous") {
       this.el.dispatchEvent(
@@ -418,16 +402,17 @@ export default class BhCarousel {
   }
 
   /** Handles keydown events for keyboard navigation. */
-  protected handleKeydown = (event: KeyboardEvent): void => {
+  private handleKeydown = (event: KeyboardEvent): void => {
     const { key } = event;
+    const { playing, prefersReducedMotion } = this.getState();
 
     if (key === "ArrowRight" && !this.nextButton.disabled) {
       this.next();
     } else if (key === "ArrowLeft" && !this.previousButton.disabled) {
       this.previous();
-    } else if (key.toLowerCase() === "p" && !this.prefersReducedMotion) {
+    } else if (key.toLowerCase() === "p" && !prefersReducedMotion) {
       if (this.playPauseButton && !this.playPauseButton.disabled) {
-        if (this.playing) {
+        if (playing) {
           this.pause();
         } else {
           this.play();
@@ -437,13 +422,12 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Next button. */
-  protected handleNextClick = (): void => {
-    this.next();
-  };
+  private handleNextClick = (): void => this.next();
 
   /** Handles click events for Play/Pause button. */
-  protected handlePlayPauseClick = (): void => {
-    if (this.playing) {
+  private handlePlayPauseClick = (): void => {
+    const { playing } = this.getState();
+    if (playing) {
       this.pause();
     } else {
       this.play();
@@ -451,19 +435,21 @@ export default class BhCarousel {
   };
 
   /** Handles click events for Previous button. */
-  protected handlePreviousClick = (): void => {
-    this.previous();
-  };
+  private handlePreviousClick = (): void => this.previous();
 
   /** Handles reduced motion preference change. */
-  protected handleReducedMotionChange = ({ matches }: MediaQueryListEvent): void => {
-    this.prefersReducedMotion = matches;
-    if (matches && this.isPlaying()) {
-      this.pause();
+  private handleReducedMotionChange = ({
+    matches,
+  }: MediaQueryListEvent): void => {
+    const { playing } = this.getState();
+    const newState: Partial<BhCarouselState> = {
+      modifiedBy: "handleReducedMotionChange",
+      prefersReducedMotion: matches,
+    };
+    if (matches && playing) {
+      newState.playing = false;
     }
-    if (this.playPauseButton) {
-      this.playPauseButton.disabled = matches;
-    }
+    this.setState(newState);
   };
 
   /** Advances carousel one slide. */
@@ -471,43 +457,14 @@ export default class BhCarousel {
     this.goto("next");
   }
 
-  /** Returns current playing state. */
-  public isPlaying(): boolean {
-    return this.playing;
-  }
-
   /** Pauses carousel. */
   public pause(): void {
-    window.clearInterval(this.intervalId);
-    this.playing = false;
-    if (this.playPauseButton) {
-      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-      this.playPauseButton.setAttribute(
-        "aria-label",
-        this.settings.ariaLabelPlay,
-      );
-    }
-    this.nextButton.disabled = false;
-    this.previousButton.disabled = false;
-    this.el.dispatchEvent(this.createEvent({ action: "pause" }));
+    this.setState({ playing: false, modifiedBy: "pause" });
   }
 
   /** Plays carousel. */
   public play(): void {
-    this.intervalId = window.setInterval(() => {
-      this.goto("next");
-    }, this.settings.interval);
-    this.playing = true;
-    if (this.playPauseButton) {
-      this.playPauseButton.dataset.bhcPlaying = this.playing.toString();
-      this.playPauseButton.setAttribute(
-        "aria-label",
-        this.settings.ariaLabelPause,
-      );
-    }
-    this.nextButton.disabled = true;
-    this.previousButton.disabled = true;
-    this.el.dispatchEvent(this.createEvent({ action: "play" }));
+    this.setState({ playing: true, modifiedBy: "play" });
   }
 
   /** Reverses carousel one slide. */
@@ -515,11 +472,167 @@ export default class BhCarousel {
     this.goto("previous");
   }
 
+  /** Sets/updates UI based on carousel state. */
+  private render(prev: BhCarouselState): void {
+    const state = this.getState();
+    this.renderNavButtons(state);
+    this.renderPlayPauseButton(state);
+    this.renderSlides(state, prev);
+    this.renderListeners(state, prev);
+    this.renderInterval(state, prev);
+    this.renderTransitionEvents(state, prev);
+    this.debugLog(state);
+  }
+
+  /** Syncs previous/next buttons' hidden and disabled attrs from state. */
+  private renderNavButtons({ enabled, playing }: BhCarouselState): void {
+    const disabled = !enabled || playing;
+    this.nextButton.hidden = !enabled;
+    this.previousButton.hidden = !enabled;
+    this.nextButton.disabled = disabled;
+    this.previousButton.disabled = disabled;
+  }
+
+  /** Syncs the optional play/pause button's attrs from state. */
+  private renderPlayPauseButton({
+    enabled,
+    playing,
+    prefersReducedMotion,
+  }: BhCarouselState): void {
+    if (!this.playPauseButton) return;
+    this.playPauseButton.hidden = !enabled;
+    this.playPauseButton.disabled = !enabled || prefersReducedMotion;
+    if (enabled) {
+      this.playPauseButton.dataset.bhcPlaying = String(playing);
+      this.playPauseButton.setAttribute(
+        "aria-label",
+        playing ? this.settings.ariaLabelPause : this.settings.ariaLabelPlay,
+      );
+    } else {
+      this.playPauseButton.removeAttribute("aria-label");
+      delete this.playPauseButton.dataset.bhcPlaying;
+    }
+  }
+
+  /** Syncs slide itemStateAttribute values from state. */
+  private renderSlides(state: BhCarouselState, prev: BhCarouselState): void {
+    // Disable transition: clear attribute on all slides.
+    if (!state.enabled && prev.enabled) {
+      this.slides.forEach((slide) =>
+        slide.removeAttribute(this.settings.itemStateAttribute),
+      );
+      return;
+    }
+    if (!state.enabled) return;
+
+    // Enable transition: full sync across all slides.
+    if (!prev.enabled) {
+      this.slides.forEach((slide, index) =>
+        slide.setAttribute(
+          this.settings.itemStateAttribute,
+          (index !== state.currentIndex).toString(),
+        ),
+      );
+      return;
+    }
+
+    // Navigation: touch only the two changed slides.
+    if (state.currentIndex !== prev.currentIndex) {
+      this.slides[prev.currentIndex]!.setAttribute(
+        this.settings.itemStateAttribute,
+        "true",
+      );
+      this.slides[state.currentIndex]!.setAttribute(
+        this.settings.itemStateAttribute,
+        "false",
+      );
+    }
+  }
+
+  /** Attaches or detaches DOM listeners on the enabled transition. */
+  private renderListeners(state: BhCarouselState, prev: BhCarouselState): void {
+    if (state.enabled === prev.enabled) return;
+    if (state.enabled) {
+      this.nextButton.addEventListener("click", this.handleNextClick);
+      this.previousButton.addEventListener("click", this.handlePreviousClick);
+      window.addEventListener("keydown", this.handleKeydown);
+      this.reducedMotionQuery.addEventListener(
+        "change",
+        this.handleReducedMotionChange,
+      );
+      this.playPauseButton?.addEventListener(
+        "click",
+        this.handlePlayPauseClick,
+      );
+    } else {
+      this.nextButton.removeEventListener("click", this.handleNextClick);
+      this.previousButton.removeEventListener(
+        "click",
+        this.handlePreviousClick,
+      );
+      window.removeEventListener("keydown", this.handleKeydown);
+      this.reducedMotionQuery.removeEventListener(
+        "change",
+        this.handleReducedMotionChange,
+      );
+      this.playPauseButton?.removeEventListener(
+        "click",
+        this.handlePlayPauseClick,
+      );
+    }
+  }
+
+  /** Starts or clears the auto-advance interval on the playing transition. */
+  private renderInterval(
+    { playing }: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
+    if (playing && !prev.playing) {
+      this.intervalId = window.setInterval(
+        () => this.next(),
+        this.settings.interval,
+      );
+    } else if (!playing && prev.playing) {
+      window.clearInterval(this.intervalId);
+    }
+  }
+
+  /** Dispatches play/pause CustomEvents on the playing transition. */
+  private renderTransitionEvents(
+    { playing }: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
+    if (playing !== prev.playing) {
+      this.el.dispatchEvent(
+        this.createEvent({ action: playing ? "play" : "pause" }),
+      );
+    }
+  }
+
+  /** Logs render call + current state when settings.debug is true. */
+  private debugLog(state: BhCarouselState): void {
+    if (!this.settings.debug) {
+      return;
+    }
+    console.debug(`render() method called by ${state.modifiedBy}().`, {
+      state,
+    });
+  }
+
+  /** Sets/updates carousel state. */
+  private setState(patch: Partial<BhCarouselState>): void {
+    const prev = this.state;
+    this.state = { ...this.state, ...patch };
+    this.render(prev);
+  }
+
   /** Validates that an index is within bounds. */
-  protected validateSlideIndex(index: number): void {
-    if (index < this.firstIndex || index > this.lastIndex) {
+  private validateSlideIndex(index: number): void {
+    const firstIndex = 0;
+    const lastIndex = this.slides.length - 1;
+    if (index < firstIndex || index > lastIndex) {
       throw new Error(
-        `Index ${index} is out of bounds (${this.firstIndex}-${this.lastIndex})`,
+        `Index ${index} is out of bounds (${firstIndex} - ${lastIndex})`,
       );
     }
   }

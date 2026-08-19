@@ -49,8 +49,8 @@ describe("disable()", () => {
 
     c.disable();
     vi.advanceTimersByTime(5000);
-
-    expect(c.getCurrentIndex()).toBe(0);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(0);
   });
 
   it("disables Play/Pause and removes its aria-label", () => {
@@ -78,8 +78,14 @@ describe("disable()", () => {
 describe("enable()", () => {
   it("reflects construction-time state", () => {
     const el = buildCarouselDom();
-    expect(new BhCarousel(el, { automatic: true }).isPlaying()).toBe(true);
-    expect(new BhCarousel(el, { automatic: false }).isPlaying()).toBe(false);
+
+    const a = new BhCarousel(el, { automatic: true });
+    const { playing: aPlaying } = a.getState();
+    expect(aPlaying).toBe(true);
+
+    const b = new BhCarousel(el, { automatic: false });
+    const { playing: bPlaying } = b.getState();
+    expect(bPlaying).toBe(false);
   });
 
   it("un-hides the nav buttons that autoEnable=false left hidden", () => {
@@ -115,8 +121,9 @@ describe("enable()", () => {
     const c = new BhCarousel(el);
 
     vi.advanceTimersByTime(4000);
-    expect(c.isPlaying()).toBe(true);
-    expect(c.getCurrentIndex()).toBe(1);
+    const { currentIndex, playing } = c.getState();
+    expect(playing).toBe(true);
+    expect(currentIndex).toBe(1);
   });
 });
 
@@ -124,42 +131,16 @@ describe("getCurrentIndex()", () => {
   it("returns the startingIndex before any navigation", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
-
-    expect(c.getCurrentIndex()).toBe(2);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(2);
   });
 
   it("reflects navigation via next()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
-
     c.next();
-
-    expect(c.getCurrentIndex()).toBe(3);
-  });
-});
-
-describe("getFirstIndex()", () => {
-  it("returns 0", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el, { automatic: false });
-
-    expect(c.getFirstIndex()).toBe(0);
-  });
-});
-
-describe("getLastIndex()", () => {
-  it("returns slideCount - 1", () => {
-    const el = buildCarouselDom({ slideCount: 5 });
-    const c = new BhCarousel(el, { automatic: false });
-
-    expect(c.getLastIndex()).toBe(4);
-  });
-
-  it("scales with slideCount", () => {
-    const el = buildCarouselDom({ slideCount: 3 });
-    const c = new BhCarousel(el, { automatic: false });
-
-    expect(c.getLastIndex()).toBe(2);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(3);
   });
 });
 
@@ -167,10 +148,10 @@ describe("goto()", () => {
   it("navigates to a numeric index", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-
     c.goto(3);
+    const { currentIndex } = c.getState();
 
-    expect(c.getCurrentIndex()).toBe(3);
+    expect(currentIndex).toBe(3);
     const slides = qa(el, "[aria-roledescription='slide']");
     expect(slides[3]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
@@ -179,12 +160,15 @@ describe("goto()", () => {
   it("accepts 'next' and 'previous'", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
+    let currentIndex;
 
     c.goto("next");
-    expect(c.getCurrentIndex()).toBe(3);
+    ({ currentIndex} = c.getState());
+    expect(currentIndex).toBe(3);
 
     c.goto("previous");
-    expect(c.getCurrentIndex()).toBe(2);
+    ({ currentIndex} = c.getState());
+    expect(currentIndex).toBe(2);
   });
 });
 
@@ -192,19 +176,17 @@ describe("next()", () => {
   it("advances by one", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-
     c.next();
-
-    expect(c.getCurrentIndex()).toBe(1);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(1);
   });
 
   it("wraps to first from last", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 4 });
-
     c.next();
-
-    expect(c.getCurrentIndex()).toBe(0);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(0);
   });
 });
 
@@ -212,19 +194,17 @@ describe("previous()", () => {
   it("goes back by one", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
-
     c.previous();
-
-    expect(c.getCurrentIndex()).toBe(1);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(1);
   });
 
   it("wraps to last from first", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-
     c.previous();
-
-    expect(c.getCurrentIndex()).toBe(4);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(4);
   });
 });
 
@@ -232,20 +212,18 @@ describe("pause()", () => {
   it("stops the interval from advancing slides", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { interval: 1000 });
-
     c.pause();
     vi.advanceTimersByTime(5000);
-
-    expect(c.getCurrentIndex()).toBe(0);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(0);
   });
 
   it("sets playing state to false", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-
     c.pause();
-
-    expect(c.isPlaying()).toBe(false);
+    const { playing } = c.getState();
+    expect(playing).toBe(false);
   });
 
   it("updates data-bhc-playing to 'false'", () => {
@@ -264,20 +242,18 @@ describe("play()", () => {
   it("starts the interval and advances at each tick", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, interval: 1000 });
-
     c.play();
     vi.advanceTimersByTime(1000);
-
-    expect(c.getCurrentIndex()).toBe(1);
+    const { currentIndex } = c.getState();
+    expect(currentIndex).toBe(1);
   });
 
   it("sets playing state to true", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-
     c.play();
-
-    expect(c.isPlaying()).toBe(true);
+    const { playing } = c.getState();
+    expect(playing).toBe(true);
   });
 
   it("updates data-bhc-playing to 'true'", () => {
