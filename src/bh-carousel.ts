@@ -391,7 +391,7 @@ export default class BhCarousel {
     playing: boolean;
     prefersReducedMotion: boolean;
   }> {
-    return this.state;
+    return { ...this.state };
   }
 
   /** Navigates to another slide: 'next', 'previous', or a numeric index. */
