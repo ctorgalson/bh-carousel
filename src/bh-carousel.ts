@@ -295,17 +295,15 @@ export default class BhCarousel {
 
     this.validateSlideIndex(this.settings.startingIndex);
 
-    this.setState(
-      {
-        currentIndex: this.settings.startingIndex,
-        enabled: false,
-        firstIndex: 0,
-        lastIndex: this.slides.length - 1,
-        modifiedBy: "constructor",
-        playing: false,
-        prefersReducedMotion: this.reducedMotionQuery.matches,
-      }
-    );
+    this.state = {
+      currentIndex: this.settings.startingIndex,
+      enabled: false,
+      firstIndex: 0,
+      lastIndex: this.slides.length - 1,
+      modifiedBy: "constructor",
+      playing: false,
+      prefersReducedMotion: this.reducedMotionQuery.matches,
+    };
 
     if (this.settings.autoEnable) {
       this.enable();
@@ -499,8 +497,14 @@ export default class BhCarousel {
   }
 
   /** Sets/updates UI based on carousel state. */
-  protected render(caller: string): void {
-    const { currentIndex, enabled, playing, prefersReducedMotion } = this.getState();
+  protected render(): void {
+    const {
+      currentIndex,
+      enabled,
+      modifiedBy,
+      playing,
+      prefersReducedMotion
+    } = this.getState();
 
     // Handle boolean mutations of previous and next buttons.
     const previousNextDisabled = !enabled || playing;
@@ -571,16 +575,16 @@ export default class BhCarousel {
     }
 
     if (this.settings.debug) {
-      console.debug(`render() method called by ${caller}().`, {
+      console.debug(`render() method called by ${modifiedBy}().`, {
         state: this.getState(),
       });
     }
   }
 
   /** Sets/updates carousel state. */
-  private setState(patch: Partial<BhCarouselState>, caller: string): void {
+  private setState(patch: Partial<BhCarouselState>): void {
     this.state = { ...this.state, ...patch };
-    this.render(caller);
+    this.render();
   }
 
   /** Validates that an index is within bounds. */
