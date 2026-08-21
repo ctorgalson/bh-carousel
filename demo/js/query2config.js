@@ -13,6 +13,7 @@ const configOptions = {
   automatic: (value) => ["true", "false"].includes(value),
   // Not yet implemented.
   // controlType: (value) => ["buttons", "tabs"].includes(value),
+  debug: (value) => ["true", "false"].includes(value),
   interval: (value) => !isNaN(value),
   itemStateAttribute: (value) =>
     typeof value === "string" || value instanceof String,
