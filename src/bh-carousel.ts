@@ -18,11 +18,6 @@ export type BhCarouselAction =
 export type BhCarouselControls = "buttons" | "tabs";
 
 /**
- * A type used to define the acceptable values for BhCarousel.goto().
- */
-export type BhCarouselDestination = number | "next" | "previous";
-
-/**
  * An interface defining the structure of BhCarousel event details objects.
  *
  * @property {BhCarouselAction} action
