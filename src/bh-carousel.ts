@@ -264,10 +264,9 @@ export default class BhCarousel {
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
-    this.settings = { ...BhCarousel.defaults, ...settings };
-    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
 
-    // We need a real attribute.
+    // We need to verify certain settings.
+    this.settings = { ...BhCarousel.defaults, ...settings };
     if (!/^[a-z][a-z0-9-]*$/.test(this.settings.itemStateAttribute)) {
       throw new Error(
         `BhCarousel: invalid attribute name supplied for settings.itemStateAttribute ("${this.settings.itemStateAttribute}").`,
@@ -275,6 +274,7 @@ export default class BhCarousel {
     }
 
     // Not much to do with no slides...
+    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
     if (this.slides.length === 0) {
       throw new Error(
         "BhCarousel: at least one slide is required to instantiate the carousel.",
@@ -284,7 +284,6 @@ export default class BhCarousel {
     // Required elements
     const nextButton = this.el.querySelector(this.selectors.nextButton);
     const previousButton = this.el.querySelector(this.selectors.previousButton);
-
     if (
       !(nextButton instanceof HTMLButtonElement) ||
       !(previousButton instanceof HTMLButtonElement)
@@ -293,7 +292,6 @@ export default class BhCarousel {
         "BhCarousel: both [data-bhc-next] and [data-bhc-previous] button elements are required.",
       );
     }
-
     this.nextButton = nextButton;
     this.previousButton = previousButton;
 
