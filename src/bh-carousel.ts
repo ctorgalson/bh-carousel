@@ -1,7 +1,16 @@
 /**
  * A type used to define the 'actions' that the library's events can report.
  */
-export type BhCarouselAction = "next" | "pause" | "play" | "previous";
+export type BhCarouselAction =
+  | "constructor"
+  | "disable"
+  | "enable"
+  | "goto"
+  | "handleReducedMotionChange"
+  | "next"
+  | "pause"
+  | "play"
+  | "previous";
 
 /**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
@@ -20,14 +29,18 @@ export type BhCarouselDestination = number | "next" | "previous";
  *   The type of action triggering the event.
  * @property {number} currentIndex
  *   The index of the current item *after* updating the object in response to
- *   the event ("previous" and "next" actions only).
+ *   the event.
+ * @property {number} nextIndex
+ *   The index of the next item *after* updating the object in response to
+ *   the event.
  * @property {number} previousIndex
  *   The index of the previous item *after* updating the object in response to
- *   the event ("previous" and "next" actions only).
+ *   the event.
  */
 export interface BhCarouselEventDetail {
   action: BhCarouselAction;
   currentIndex?: number;
+  nextIndex?: number;
   previousIndex?: number;
 }
 
@@ -108,7 +121,9 @@ export interface BhCarouselState {
   enabled: boolean;
   firstIndex: number;
   lastIndex: number;
-  modifiedBy: string;
+  nextIndex: number;
+  previousIndex: number;
+  modifiedBy: BhCarouselAction;
   prefersReducedMotion: boolean;
 }
 
@@ -319,7 +334,8 @@ export default class BhCarousel {
   private createEvent(
     detail: BhCarouselEventDetail,
   ): CustomEvent<BhCarouselEventDetail> {
-    return new CustomEvent("BhCarousel", {
+    const { action } = detail;
+    return new CustomEvent(`bhcarousel:${action}`, {
       bubbles: true,
       cancelable: false,
       composed: true,
@@ -561,6 +577,7 @@ export default class BhCarousel {
     if (state.enabled) {
       this.nextButton.addEventListener("click", this.handleNextClick);
       this.previousButton.addEventListener("click", this.handlePreviousClick);
+      // TODO: should this be attached to the element?
       window.addEventListener("keydown", this.handleKeydown);
       this.reducedMotionQuery.addEventListener(
         "change",
@@ -603,16 +620,18 @@ export default class BhCarousel {
     }
   }
 
-  /** Dispatches play/pause CustomEvents on the playing transition. */
-  private renderTransitionEvents(
-    { playing }: BhCarouselState,
-    prev: BhCarouselState,
-  ): void {
-    if (playing !== prev.playing) {
-      this.el.dispatchEvent(
-        this.createEvent({ action: playing ? "play" : "pause" }),
-      );
-    }
+  /** Dispatches CustomEvents on various transitions. */
+  private renderTransitionEvents(state: BhCarouselState): void {
+    const {
+      currentIndex,
+      modifiedBy: action,
+      nextIndex,
+      previousIndex,
+    } = state;
+
+    this.el.dispatchEvent(
+      this.createEvent({ action, currentIndex, nextIndex, previousIndex }),
+    );
   }
 
   /** Logs render call + current state when settings.debug is true. */
