@@ -16,8 +16,9 @@
   --bhc-control-width: 50px;
 }
 
-.bhc {
+.bhc__controls {
   position: relative;
+  z-index: 5;
 }
 
 .bhc__control {
@@ -80,19 +81,46 @@
 }
 
 .bhc__items {
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
+  display: grid;
+  overflow: hidden;
 }
 
 .bhc__item {
   background: #fff;
-  display: grid;
+  display: none;
+  grid-area: 1 / 1;
   grid-template-rows: auto 10em;
+  width: 100%;
 }
 
-.bhc__item[aria-hidden="true"] {
-  display: none;
+.bhc__item[data-bhc-current-slide],
+.bhc__item[data-bhc-previous-slide],
+.bhc__item[data-bhc-next-slide] {
+  display: grid;
+  will-change: transform;
+}
+
+.bhc__item[data-bhc-current-slide] {
+  transform: translateX(0);
+  z-index: 2;
+}
+
+.bhc__item[data-bhc-previous-slide] {
+  transform: translateX(-100%);
+  z-index: 1;
+}
+
+.bhc__item[data-bhc-next-slide] {
+  transform: translateX(100%);
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .bhc__item[data-bhc-current-slide],
+  .bhc__item[data-bhc-previous-slide],
+  .bhc__item[data-bhc-next-slide] {
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  }
 }
 
 .bhc__item a {
@@ -117,11 +145,6 @@
   overflow: hidden;
 }
 
-@media screen and (min-width: 640px) {
-  .bhc__image img {
-  }
-}
-
 @media screen and (min-width: 768px) {
   .bhc__image img {
     aspect-ratio: 16 / 9;
@@ -132,7 +155,7 @@
   }
 
   .bhc__item p {
-    -webkit-line-clamp: 2;
+    /* -webkit-line-clamp: 2; */
   }
 }
 
@@ -140,9 +163,6 @@
   .bhc {
     margin-inline: auto;
     max-width: 1140px;
-  }
-
-  .bhc__item {
   }
 
   .bhc__image img {
