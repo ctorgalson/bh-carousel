@@ -102,6 +102,10 @@ export interface BhCarouselSettings {
  *   zero.
  * @property {number} lastIndex
  *   The numeric (zero-based) index of the last slide in the carousel.
+ * @property {number} nextIndex
+ *   The numeric (zero-based) index of the next slide in the carousel.
+ * @property {number} previousIndex
+ *   The numeric (zero-based) index of the previous slide in the carousel.
  * @property {string} modifiedBy
  *   The name of the last method to modify the state var. Only exposed for
  *   debugging purposes.
@@ -298,21 +302,25 @@ export default class BhCarousel {
       this.selectors.playPauseButton,
     );
 
-    // Validate startingIndex
     this.reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
 
-    this.validateSlideIndex(this.settings.startingIndex);
+    const { startingIndex } = this.settings;
+    const { nextIndex, previousIndex } = this.getRelativeIndices(startingIndex);
+    // Validate startingIndex
+    this.validateSlideIndex(startingIndex);
 
     this.state = {
-      currentIndex: this.settings.startingIndex,
+      currentIndex: startingIndex,
       enabled: false,
       firstIndex: 0,
       lastIndex: this.slides.length - 1,
+      nextIndex: nextIndex!,
       modifiedBy: "constructor",
       playing: false,
       prefersReducedMotion: this.reducedMotionQuery.matches,
+      previousIndex: previousIndex!,
     };
 
     if (this.settings.autoEnable) {
@@ -363,16 +371,20 @@ export default class BhCarousel {
     });
   }
 
-  /** Returns numeric value of next slide. */
-  public getNextIndex(): number {
-    const { currentIndex, firstIndex, lastIndex } = this.getState();
-    return currentIndex === lastIndex ? firstIndex : currentIndex + 1;
-  }
+  /** Computes next, prev indices using currentIndex from state/override . */
+  private getRelativeIndices(
+    currentIndexOverride?: number,
+  ): Partial<BhCarouselState> {
+    const state = this.getState();
+    const currentIndex = currentIndexOverride ?? state.currentIndex;
+    const firstIndex = state.firstIndex ?? 0;
+    const lastIndex = state.lastIndex ?? this.slides.length - 1;
+    const nextIndex =
+      currentIndex === lastIndex ? firstIndex : currentIndex + 1;
+    const previousIndex =
+      currentIndex === firstIndex ? lastIndex : currentIndex - 1;
 
-  /** Returns numeric value of previous slide. */
-  public getPreviousIndex(): number {
-    const { currentIndex, firstIndex, lastIndex } = this.getState();
-    return currentIndex === firstIndex ? lastIndex : currentIndex - 1;
+    return { currentIndex, nextIndex, previousIndex };
   }
 
   /** Returns the current instance state. */
@@ -380,36 +392,24 @@ export default class BhCarousel {
     return { ...this.state };
   }
 
-  /** Navigates to another slide: 'next', 'previous', or a numeric index. */
-  public goto(destination: BhCarouselDestination): void {
-    const { currentIndex: previousIndex } = this.getState();
-    let currentIndex;
+  /** Navigates to another by numeric index. */
+  public goto(newCurrentIndex: number): void {
+    const { currentIndex: prevCurrentIndex } = this.getState();
 
-    if (destination === previousIndex) {
+    // Do nothing if we've been asked to navigate to where we already are.
+    if (newCurrentIndex === prevCurrentIndex) {
       return;
     }
 
-    switch (destination) {
-      case "next":
-        currentIndex = this.getNextIndex();
-        break;
+    // In-bounds check.
+    this.validateSlideIndex(newCurrentIndex);
 
-      case "previous":
-        currentIndex = this.getPreviousIndex();
-        break;
-
-      default:
-        this.validateSlideIndex(destination);
-        currentIndex = destination;
-    }
-
-    this.setState({ currentIndex, modifiedBy: "goto" });
-
-    if (destination === "next" || destination === "previous") {
-      this.el.dispatchEvent(
-        this.createEvent({ action: destination, currentIndex, previousIndex }),
-      );
-    }
+    // Update state.
+    this.setState({
+      currentIndex: newCurrentIndex,
+      ...this.getRelativeIndices(newCurrentIndex),
+      modifiedBy: "goto",
+    });
   }
 
   /** Handles keydown events for keyboard navigation. */
@@ -453,19 +453,20 @@ export default class BhCarousel {
     matches,
   }: MediaQueryListEvent): void => {
     const { playing } = this.getState();
-    const newState: Partial<BhCarouselState> = {
+    this.setState({
       modifiedBy: "handleReducedMotionChange",
       prefersReducedMotion: matches,
-    };
-    if (matches && playing) {
-      newState.playing = false;
-    }
-    this.setState(newState);
+      ...(matches && playing ? { playing: false } : {}),
+    });
   };
 
   /** Advances carousel one slide. */
   public next(): void {
-    this.goto("next");
+    const { nextIndex: newCurrentIndex } = this.getRelativeIndices();
+    this.setState({
+      ...this.getRelativeIndices(newCurrentIndex),
+      modifiedBy: "next",
+    });
   }
 
   /** Pauses carousel. */
@@ -480,7 +481,11 @@ export default class BhCarousel {
 
   /** Reverses carousel one slide. */
   public previous(): void {
-    this.goto("previous");
+    const { previousIndex: newCurrentIndex } = this.getRelativeIndices();
+    this.setState({
+      ...this.getRelativeIndices(newCurrentIndex),
+      modifiedBy: "previous",
+    });
   }
 
   /** Sets/updates UI based on carousel state. */
