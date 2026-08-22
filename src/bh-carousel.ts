@@ -350,18 +350,15 @@ export default class BhCarousel {
 
   /** Computes next, prev indices using currentIndex from state/override . */
   private getRelativeIndices(
-    currentIndexOverride?: number,
-  ): Partial<BhCarouselState> {
-    const state = this.getState();
-    const currentIndex = currentIndexOverride ?? state.currentIndex;
-    const firstIndex = state.firstIndex ?? 0;
-    const lastIndex = state.lastIndex ?? this.slides.length - 1;
-    const nextIndex =
-      currentIndex === lastIndex ? firstIndex : currentIndex + 1;
-    const previousIndex =
-      currentIndex === firstIndex ? lastIndex : currentIndex - 1;
-
-    return { currentIndex, nextIndex, previousIndex };
+    currentIndex: number,
+    lastIndex = this.slides.length - 1
+  ): Pick<BhCarouselState, "currentIndex" | "nextIndex" | "previousIndex"> {
+    const firstIndex = 0;
+    return {
+      currentIndex,
+      nextIndex: currentIndex === lastIndex ? firstIndex : currentIndex + 1,
+      previousIndex: currentIndex === firstIndex ? lastIndex : currentIndex - 1,
+    };
   }
 
   /** Returns the current instance state. */
@@ -383,7 +380,6 @@ export default class BhCarousel {
 
     // Update state.
     this.setState({
-      currentIndex: newCurrentIndex,
       ...this.getRelativeIndices(newCurrentIndex),
       action: "goto",
     });
