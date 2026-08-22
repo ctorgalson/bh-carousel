@@ -24,7 +24,7 @@ describe("getState()", () => {
       enabled: true,
       firstIndex: 0,
       lastIndex: 4,
-      modifiedBy: "enable",
+      action: "enable",
       nextIndex: 1,
       prefersReducedMotion: false,
       previousIndex: 4,

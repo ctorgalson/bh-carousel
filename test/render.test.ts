@@ -13,75 +13,75 @@ afterEach(() => {
 });
 
 describe("Carousel render()", () => {
-  it("sets state.modifiedBy to 'constructor' when instantiated without enabling", () => {
+  it("sets state.action to 'constructor' when instantiated without enabling", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("constructor");
+    const { action } = c.getState();
+    expect(action).toBe("constructor");
   });
 
-  it("sets state.modifiedBy to 'disable' on disable()", () => {
+  it("sets state.action to 'disable' on disable()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
     c.disable();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("disable");
+    const { action } = c.getState();
+    expect(action).toBe("disable");
   });
 
-  it("sets state.modifiedBy to 'enable' on enable()", () => {
+  it("sets state.action to 'enable' on enable()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.enable();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("enable");
+    const { action } = c.getState();
+    expect(action).toBe("enable");
   });
 
-  it("sets state.modifiedBy to 'goto' on goto()", () => {
+  it("sets state.action to 'goto' on goto()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.goto(4);
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("goto");
+    const { action } = c.getState();
+    expect(action).toBe("goto");
   });
 
-  it("sets state.modifiedBy to 'handleReducedMotionChange' on handleReducedMotionChange()", () => {
+  it("sets state.action to 'handleReducedMotionChange' on handleReducedMotionChange()", () => {
     const { trigger } = stubMatchMedia(true);
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
     trigger(true);
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("handleReducedMotionChange");
+    const { action } = c.getState();
+    expect(action).toBe("handleReducedMotionChange");
   });
 
-  it("sets state.modifiedBy to 'next' on next()", () => {
+  it("sets state.action to 'next' on next()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.next();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("next");
+    const { action } = c.getState();
+    expect(action).toBe("next");
   });
 
-  it("sets state.modifiedBy to 'pause' on pause()", () => {
+  it("sets state.action to 'pause' on pause()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.pause();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("pause");
+    const { action } = c.getState();
+    expect(action).toBe("pause");
   });
 
-  it("sets state.modifiedBy to 'play' on play()", () => {
+  it("sets state.action to 'play' on play()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.play();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("play");
+    const { action } = c.getState();
+    expect(action).toBe("play");
   });
 
-  it("sets state.modifiedBy to 'previous' on previous()", () => {
+  it("sets state.action to 'previous' on previous()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     c.previous();
-    const { modifiedBy } = c.getState();
-    expect(modifiedBy).toBe("previous");
+    const { action } = c.getState();
+    expect(action).toBe("previous");
   });
 });
