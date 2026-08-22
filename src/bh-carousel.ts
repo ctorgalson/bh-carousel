@@ -476,7 +476,7 @@ export default class BhCarousel {
     this.renderSlides(state, prev);
     this.renderListeners(state, prev);
     this.renderInterval(state, prev);
-    this.renderTransitionEvents(state, prev);
+    this.renderTransitionEvents(state);
     this.debugLog(state);
   }
 
