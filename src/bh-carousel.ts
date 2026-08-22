@@ -346,9 +346,9 @@ export default class BhCarousel {
 
   /** Disables carousel interactivity. */
   public disable(): void {
-    const { playing } = this.getState();
-    if (playing) {
-      window.clearInterval(this.intervalId);
+    const { enabled } = this.getState();
+    if (!enabled) {
+      return;
     }
     this.setState({ enabled: false, playing: false, modifiedBy: "disable" });
   }
@@ -420,12 +420,10 @@ export default class BhCarousel {
     } else if (key === "ArrowLeft" && !this.previousButton.disabled) {
       this.previous();
     } else if (key.toLowerCase() === "p" && !prefersReducedMotion) {
-      if (this.playPauseButton && !this.playPauseButton.disabled) {
-        if (playing) {
-          this.pause();
-        } else {
-          this.play();
-        }
+      if (playing) {
+        this.pause();
+      } else {
+        this.play();
       }
     }
   };
@@ -487,8 +485,14 @@ export default class BhCarousel {
   }
 
   /** Sets/updates UI based on carousel state. */
-  private render(prev: BhCarouselState): void {
-    const state = this.getState();
+  private render(state: BhCarouselState, prev: BhCarouselState): void {
+    if (
+      (prev.enabled && state.modifiedBy === "enable") ||
+      (!prev.enabled && state.modifiedBy === "disable")
+    ) {
+      return;
+    }
+
     this.renderNavButtons(state);
     this.renderPlayPauseButton(state);
     this.renderSlides(state, prev);
@@ -539,9 +543,6 @@ export default class BhCarousel {
       );
       return;
     }
-    if (!state.enabled) {
-      return;
-    }
 
     // Enable transition: full sync across all slides.
     if (!prev.enabled) {
@@ -551,6 +552,9 @@ export default class BhCarousel {
           (index !== state.currentIndex).toString(),
         ),
       );
+      this.slides[state.currentIndex]!.dataset.bhcCurrentSlide = "";
+      this.slides[state.nextIndex]!.dataset.bhcNextSlide = "";
+      this.slides[state.previousIndex]!.dataset.bhcPreviousSlide = "";
       return;
     }
 
@@ -564,6 +568,12 @@ export default class BhCarousel {
         this.settings.itemStateAttribute,
         "false",
       );
+      delete this.slides[prev.currentIndex]!.dataset.bhcCurrentSlide;
+      this.slides[state.currentIndex]!.dataset.bhcCurrentSlide = "";
+      delete this.slides[prev.nextIndex]!.dataset.bhcNextSlide;
+      this.slides[state.nextIndex]!.dataset.bhcNextSlide = "";
+      delete this.slides[prev.previousIndex]!.dataset.bhcPreviousSlide;
+      this.slides[state.previousIndex]!.dataset.bhcPreviousSlide = "";
     }
   }
 
@@ -645,8 +655,9 @@ export default class BhCarousel {
   /** Sets/updates carousel state. */
   private setState(patch: Partial<BhCarouselState>): void {
     const prev = this.state;
-    this.state = { ...this.state, ...patch };
-    this.render(prev);
+    const state = { ...this.state, ...patch };
+    this.state = state;
+    this.render(state, prev);
   }
 
   /** Validates that an index is within bounds. */
