@@ -358,7 +358,7 @@ export default class BhCarousel {
    *
    * Previous and Next buttons are always un-hidden and enabled when the
    * carousel is not playing automatically. The Play/Pause button is disabled
-   * when prefersReducedMotion is true to respect user accessibility preferences.
+   * when prefersReducedMotion is true to respect user accessibility preference.
    */
   public enable(): void {
     const { prefersReducedMotion } = this.getState();
@@ -411,8 +411,7 @@ export default class BhCarousel {
   }
 
   /** Handles keydown events for keyboard navigation. */
-  private handleKeydown = (event: KeyboardEvent): void => {
-    const { key } = event;
+  private handleKeydown = ({ key }: KeyboardEvent): void => {
     const { playing, prefersReducedMotion } = this.getState();
 
     if (key === "ArrowRight" && !this.nextButton.disabled) {
