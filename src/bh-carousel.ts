@@ -10,7 +10,8 @@ export type BhCarouselAction =
   | "next"
   | "pause"
   | "play"
-  | "previous";
+  | "previous"
+  | null;
 
 /**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
@@ -69,8 +70,9 @@ export interface BhCarouselSettings {
 /**
  * An interface for defining the current state of a BhCarousel instance.
  *
- * @property {boolean} playing
- *   Whether or not the carousel is currently auto-playing.
+ * @property {string} action
+ *   The name of the last method to modify the state var. Only exposed for
+ *   debugging purposes.
  * @property {number} currentIndex
  *   The numeric (zero-based) index of the current slide in the carousel.
  * @property {boolean} enabled
@@ -82,26 +84,25 @@ export interface BhCarouselSettings {
  *   The numeric (zero-based) index of the last slide in the carousel.
  * @property {number} nextIndex
  *   The numeric (zero-based) index of the next slide in the carousel.
- * @property {number} previousIndex
- *   The numeric (zero-based) index of the previous slide in the carousel.
- * @property {string} action
- *   The name of the last method to modify the state var. Only exposed for
- *   debugging purposes.
+ * @property {boolean} playing
+ *   Whether or not the carousel is currently auto-playing.
  * @property {boolean} prefersReducedMotion
  *   The current user preference for prefers-reduced-motion (true means that
  *   a css media query has returned 'reduce', and false means that it has
  *   returned 'no-preference').
+ * @property {number} previousIndex
+ *   The numeric (zero-based) index of the previous slide in the carousel.
  */
 export interface BhCarouselState {
-  playing: boolean;
+  action: BhCarouselAction;
   currentIndex: number;
   enabled: boolean;
   firstIndex: number;
   lastIndex: number;
   nextIndex: number;
-  previousIndex: number;
-  action: BhCarouselAction;
+  playing: boolean;
   prefersReducedMotion: boolean;
+  previousIndex: number;
 }
 
 /**
@@ -293,7 +294,7 @@ export default class BhCarousel {
       firstIndex: 0,
       lastIndex: this.slides.length - 1,
       nextIndex: nextIndex!,
-      action: "constructor",
+      action: null,
       playing: false,
       prefersReducedMotion: this.reducedMotionQuery.matches,
       previousIndex: previousIndex!,

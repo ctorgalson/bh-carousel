@@ -13,11 +13,11 @@ afterEach(() => {
 });
 
 describe("Carousel render()", () => {
-  it("sets state.action to 'constructor' when instantiated without enabling", () => {
+  it("sets state.action to null when instantiated without enabling", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { autoEnable: false });
     const { action } = c.getState();
-    expect(action).toBe("constructor");
+    expect(action).toBe(null);
   });
 
   it("sets state.action to 'disable' on disable()", () => {
