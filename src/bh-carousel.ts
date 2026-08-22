@@ -436,9 +436,9 @@ export default class BhCarousel {
 
   /** Advances carousel one slide. */
   public next(): void {
-    const { nextIndex: newCurrentIndex } = this.getRelativeIndices();
+    const { nextIndex } = this.getState();
     this.setState({
-      ...this.getRelativeIndices(newCurrentIndex),
+      ...this.getRelativeIndices(nextIndex),
       action: "next",
     });
   }
@@ -455,9 +455,9 @@ export default class BhCarousel {
 
   /** Reverses carousel one slide. */
   public previous(): void {
-    const { previousIndex: newCurrentIndex } = this.getRelativeIndices();
+    const { previousIndex } = this.getState();
     this.setState({
-      ...this.getRelativeIndices(newCurrentIndex),
+      ...this.getRelativeIndices(previousIndex),
       action: "previous",
     });
   }
