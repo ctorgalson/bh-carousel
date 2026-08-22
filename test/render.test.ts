@@ -44,13 +44,13 @@ describe("Carousel render()", () => {
     expect(action).toBe("goto");
   });
 
-  it("sets state.action to 'handleReducedMotionChange' on handleReducedMotionChange()", () => {
+  it("sets state.action to 'reducedMotionChange' on handleReducedMotionChange()", () => {
     const { trigger } = stubMatchMedia(true);
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
     trigger(true);
     const { action } = c.getState();
-    expect(action).toBe("handleReducedMotionChange");
+    expect(action).toBe("reducedMotionChange");
   });
 
   it("sets state.action to 'next' on next()", () => {

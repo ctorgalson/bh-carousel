@@ -6,7 +6,7 @@ export type BhCarouselAction =
   | "disable"
   | "enable"
   | "goto"
-  | "handleReducedMotionChange"
+  | "reducedMotionChange"
   | "next"
   | "pause"
   | "play"
@@ -428,7 +428,7 @@ export default class BhCarousel {
   }: MediaQueryListEvent): void => {
     const { playing } = this.getState();
     this.setState({
-      action: "handleReducedMotionChange",
+      action: "reducedMotionChange",
       prefersReducedMotion: matches,
       ...(matches && playing ? { playing: false } : {}),
     });
