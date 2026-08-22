@@ -25,7 +25,9 @@ describe("getState()", () => {
       firstIndex: 0,
       lastIndex: 4,
       modifiedBy: "enable",
+      nextIndex: 1,
       prefersReducedMotion: false,
+      previousIndex: 4,
     };
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
@@ -184,20 +186,6 @@ describe("goto()", () => {
     expect(slides[3]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
   });
-
-  it("accepts 'next' and 'previous'", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
-    let currentIndex;
-
-    c.goto("next");
-    ({ currentIndex} = c.getState());
-    expect(currentIndex).toBe(3);
-
-    c.goto("previous");
-    ({ currentIndex} = c.getState());
-    expect(currentIndex).toBe(2);
-  });
 });
 
 describe("next()", () => {
@@ -300,13 +288,15 @@ describe("getNextIndex()", () => {
   it("returns current index + 1", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-    expect(c.getNextIndex()).toBe(1);
+    const { nextIndex } = c.getState();
+    expect(nextIndex).toBe(1);
   });
 
   it("returns zero when currentIndex === lastIndex", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 4 });
-    expect(c.getNextIndex()).toBe(0);
+    const { nextIndex } = c.getState();
+    expect(nextIndex).toBe(0);
   });
 });
 
@@ -314,12 +304,14 @@ describe("getPreviousIndex()", () => {
   it("returns current index - 1", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 3 });
-    expect(c.getPreviousIndex()).toBe(2);
+    const { previousIndex } = c.getState();
+    expect(previousIndex).toBe(2);
   });
 
   it("returns lastIndex when currentIndex === 0", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
-    expect(c.getPreviousIndex()).toBe(4);
+    const { previousIndex } = c.getState();
+    expect(previousIndex).toBe(4);
   });
 });
