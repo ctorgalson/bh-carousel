@@ -91,6 +91,7 @@
   grid-area: 1 / 1;
   grid-template-rows: auto 10em;
   width: 100%;
+  position: relative;
 }
 
 .bhc__item[data-bhc-current-slide],
@@ -155,7 +156,7 @@
   }
 
   .bhc__item p {
-    /* -webkit-line-clamp: 2; */
+    -webkit-line-clamp: 2;
   }
 }
 

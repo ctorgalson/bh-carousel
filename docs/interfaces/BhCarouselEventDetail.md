@@ -18,7 +18,7 @@ The type of action triggering the event.
 
 #### Defined in
 
-[bh-carousel.ts:29](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L29)
+[bh-carousel.ts:36](https://github.com/ctorgalson/bh-carousel/blob/f3dde9212771daad40bc31ee9ddb5248863b8dec/src/bh-carousel.ts#L36)
 
 ---
 
@@ -27,11 +27,24 @@ The type of action triggering the event.
 > `optional` **currentIndex**: `number`
 
 The index of the current item _after_ updating the object in response to
-the event ("previous" and "next" actions only).
+the event.
 
 #### Defined in
 
-[bh-carousel.ts:30](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L30)
+[bh-carousel.ts:37](https://github.com/ctorgalson/bh-carousel/blob/f3dde9212771daad40bc31ee9ddb5248863b8dec/src/bh-carousel.ts#L37)
+
+---
+
+### nextIndex?
+
+> `optional` **nextIndex**: `number`
+
+The index of the next item _after_ updating the object in response to
+the event.
+
+#### Defined in
+
+[bh-carousel.ts:38](https://github.com/ctorgalson/bh-carousel/blob/f3dde9212771daad40bc31ee9ddb5248863b8dec/src/bh-carousel.ts#L38)
 
 ---
 
@@ -40,8 +53,8 @@ the event ("previous" and "next" actions only).
 > `optional` **previousIndex**: `number`
 
 The index of the previous item _after_ updating the object in response to
-the event ("previous" and "next" actions only).
+the event.
 
 #### Defined in
 
-[bh-carousel.ts:31](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L31)
+[bh-carousel.ts:39](https://github.com/ctorgalson/bh-carousel/blob/f3dde9212771daad40bc31ee9ddb5248863b8dec/src/bh-carousel.ts#L39)

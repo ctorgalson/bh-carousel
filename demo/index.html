@@ -184,17 +184,24 @@
     <script src="./js/bh-carousel.min.js"></script>
     <script src="./js/query2config.js"></script>
     <script>
-      const defaultConfiguration = {};
+      window.carousels = window.carousels || [];
+      const logEvent = (e) => console.log(e);
+      const defaultConfiguration = { interval: 5000 };
       // For test use only.
       const urlConfiguration = getConfigFromQuery();
-
-      window.carousels = window.carousels || [];
-      window.carousels.push(
-        new BhCarousel(
-          document.querySelector('[aria-roledescription="carousel"]'),
-          { ...defaultConfiguration, ...urlConfiguration }
-        ),
+      const carousel = new BhCarousel(
+        document.querySelector('[aria-roledescription="carousel"]'),
+        { ...defaultConfiguration, ...urlConfiguration }
       );
+
+      window.addEventListener("bhcarousel:disable", logEvent);
+      window.addEventListener("bhcarousel:enable", logEvent);
+      window.addEventListener("bhcarousel:goto", logEvent);
+      window.addEventListener("bhcarousel:next", logEvent);
+      window.addEventListener("bhcarousel:pause", logEvent);
+      window.addEventListener("bhcarousel:play", logEvent);
+      window.addEventListener("bhcarousel:previous", logEvent);
+      window.carousels.push(carousel);
     </script>
   </body>
 </html>
