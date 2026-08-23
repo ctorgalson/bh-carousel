@@ -472,7 +472,7 @@ export default class BhCarousel {
     this.renderSlides(state, prev);
     this.renderListeners(state, prev);
     this.renderInterval(state, prev);
-    this.renderTransitionEvents(state);
+    this.renderTransitionEvents(state, prev);
     this.debugLog(state);
   }
 
@@ -603,8 +603,21 @@ export default class BhCarousel {
   }
 
   /** Dispatches CustomEvents on various transitions. */
-  private renderTransitionEvents(state: BhCarouselState): void {
+  private renderTransitionEvents(state: BhCarouselState, prev: BhCarouselState): void {
     this.el.dispatchEvent(this.createEvent(state));
+
+    if (
+      state.playing !== prev.playing &&
+      state.action !== "play" &&
+      state.action !== "pause"
+    ) {
+      this.el.dispatchEvent(
+        this.createEvent({
+          ...state,
+          action: state.playing ? "play" : "pause",
+        })
+      );
+    }
   }
 
   /** Logs render call + current state when settings.debug is true. */
