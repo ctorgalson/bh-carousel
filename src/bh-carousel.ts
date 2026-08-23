@@ -313,7 +313,7 @@ export default class BhCarousel {
    */
   private createEvent(
     detail: BhCarouselState,
-  ): CustomEvent<BhCarouselEventDetail> {
+  ): CustomEvent<BhCarouselState> {
     const { action } = detail;
     return new CustomEvent(`bhcarousel:${action}`, {
       bubbles: true,
