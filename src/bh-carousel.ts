@@ -508,6 +508,28 @@ export default class BhCarousel {
     }
   }
 
+  /** Sets and removes dataset attributes according to current/prev state. */
+  private syncRelativeIndexAttributes(
+    state: BhCarouselState,
+    prev?: BhCarouselState,
+  ): void {
+    const attributes: Array<[keyof DOMStringMap, keyof BhCarouselState]> = [
+      ["bhcCurrentSlide", "currentIndex"],
+      ["bhcNextSlide", "nextIndex"],
+      ["bhcPreviousSlide", "previousIndex"],
+    ];
+    for (const [dsKey, stateKey] of attributes) {
+      const indexBefore = prev?.[stateKey] as number | undefined;
+      const indexNow = state[stateKey] as number;
+      if (indexBefore !== undefined && indexBefore !== indexNow) {
+        delete this.slides[indexBefore]!.dataset[dsKey];
+      }
+      if (indexNow !== undefined) {
+        this.slides[indexNow]!.dataset[dsKey] = "";
+      }
+    }
+  }
+
   /** Syncs slide itemStateAttribute values from state. */
   private renderSlides(state: BhCarouselState, prev: BhCarouselState): void {
     // Disable transition: clear attribute on all slides.
@@ -515,6 +537,7 @@ export default class BhCarousel {
       this.slides.forEach((slide) =>
         slide.removeAttribute(this.settings.itemStateAttribute),
       );
+      this.syncRelativeIndexAttributes(state, prev);
       return;
     }
 
@@ -526,9 +549,7 @@ export default class BhCarousel {
           (index !== state.currentIndex).toString(),
         ),
       );
-      this.slides[state.currentIndex]!.dataset.bhcCurrentSlide = "";
-      this.slides[state.nextIndex]!.dataset.bhcNextSlide = "";
-      this.slides[state.previousIndex]!.dataset.bhcPreviousSlide = "";
+      this.syncRelativeIndexAttributes(state, prev);
       return;
     }
 
@@ -542,12 +563,7 @@ export default class BhCarousel {
         this.settings.itemStateAttribute,
         "false",
       );
-      delete this.slides[prev.currentIndex]!.dataset.bhcCurrentSlide;
-      this.slides[state.currentIndex]!.dataset.bhcCurrentSlide = "";
-      delete this.slides[prev.nextIndex]!.dataset.bhcNextSlide;
-      this.slides[state.nextIndex]!.dataset.bhcNextSlide = "";
-      delete this.slides[prev.previousIndex]!.dataset.bhcPreviousSlide;
-      this.slides[state.previousIndex]!.dataset.bhcPreviousSlide = "";
+      this.syncRelativeIndexAttributes(state, prev);
     }
   }
 
