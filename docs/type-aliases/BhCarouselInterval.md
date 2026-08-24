@@ -14,4 +14,4 @@ TODO For now, this is just number; we need to implement the range.
 
 ## Defined in
 
-[bh-carousel.ts:47](https://github.com/ctorgalson/bh-carousel/blob/f3dde9212771daad40bc31ee9ddb5248863b8dec/src/bh-carousel.ts#L47)
+[bh-carousel.ts:26](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L26)

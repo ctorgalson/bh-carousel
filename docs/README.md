@@ -10,7 +10,6 @@
 
 ## Interfaces
 
-- [BhCarouselEventDetail](interfaces/BhCarouselEventDetail.md)
 - [BhCarouselSettings](interfaces/BhCarouselSettings.md)
 - [BhCarouselState](interfaces/BhCarouselState.md)
 
