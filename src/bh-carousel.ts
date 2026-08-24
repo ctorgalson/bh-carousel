@@ -1,35 +1,22 @@
 /**
  * A type used to define the 'actions' that the library's events can report.
  */
-export type BhCarouselAction = "next" | "pause" | "play" | "previous";
+export type BhCarouselAction =
+  | "constructor"
+  | "disable"
+  | "enable"
+  | "goto"
+  | "reducedMotionChange"
+  | "next"
+  | "pause"
+  | "play"
+  | "previous"
+  | null;
 
 /**
  * A type used to define the acceptable values BhCarouselSettings.controlType.
  */
 export type BhCarouselControls = "buttons" | "tabs";
-
-/**
- * A type used to define the acceptable values for BhCarousel.goto().
- */
-export type BhCarouselDestination = number | "next" | "previous";
-
-/**
- * An interface defining the structure of BhCarousel event details objects.
- *
- * @property {BhCarouselAction} action
- *   The type of action triggering the event.
- * @property {number} currentIndex
- *   The index of the current item *after* updating the object in response to
- *   the event ("previous" and "next" actions only).
- * @property {number} previousIndex
- *   The index of the previous item *after* updating the object in response to
- *   the event ("previous" and "next" actions only).
- */
-export interface BhCarouselEventDetail {
-  action: BhCarouselAction;
-  currentIndex?: number;
-  previousIndex?: number;
-}
 
 /**
  * A type used to define the acceptable slide-timing range in ms.
@@ -83,8 +70,9 @@ export interface BhCarouselSettings {
 /**
  * An interface for defining the current state of a BhCarousel instance.
  *
- * @property {boolean} playing
- *   Whether or not the carousel is currently auto-playing.
+ * @property {string} action
+ *   The name of the last method to modify the state var. Only exposed for
+ *   debugging purposes.
  * @property {number} currentIndex
  *   The numeric (zero-based) index of the current slide in the carousel.
  * @property {boolean} enabled
@@ -94,22 +82,27 @@ export interface BhCarouselSettings {
  *   zero.
  * @property {number} lastIndex
  *   The numeric (zero-based) index of the last slide in the carousel.
- * @property {string} modifiedBy
- *   The name of the last method to modify the state var. Only exposed for
- *   debugging purposes.
+ * @property {number} nextIndex
+ *   The numeric (zero-based) index of the next slide in the carousel.
+ * @property {boolean} playing
+ *   Whether or not the carousel is currently auto-playing.
  * @property {boolean} prefersReducedMotion
  *   The current user preference for prefers-reduced-motion (true means that
  *   a css media query has returned 'reduce', and false means that it has
  *   returned 'no-preference').
+ * @property {number} previousIndex
+ *   The numeric (zero-based) index of the previous slide in the carousel.
  */
 export interface BhCarouselState {
-  playing: boolean;
+  action: BhCarouselAction;
   currentIndex: number;
   enabled: boolean;
   firstIndex: number;
   lastIndex: number;
-  modifiedBy: string;
+  nextIndex: number;
+  playing: boolean;
   prefersReducedMotion: boolean;
+  previousIndex: number;
 }
 
 /**
@@ -250,10 +243,9 @@ export default class BhCarousel {
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
     this.el = element;
-    this.settings = { ...BhCarousel.defaults, ...settings };
-    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
 
-    // We need a real attribute.
+    // We need to verify certain settings.
+    this.settings = { ...BhCarousel.defaults, ...settings };
     if (!/^[a-z][a-z0-9-]*$/.test(this.settings.itemStateAttribute)) {
       throw new Error(
         `BhCarousel: invalid attribute name supplied for settings.itemStateAttribute ("${this.settings.itemStateAttribute}").`,
@@ -261,6 +253,7 @@ export default class BhCarousel {
     }
 
     // Not much to do with no slides...
+    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
     if (this.slides.length === 0) {
       throw new Error(
         "BhCarousel: at least one slide is required to instantiate the carousel.",
@@ -270,7 +263,6 @@ export default class BhCarousel {
     // Required elements
     const nextButton = this.el.querySelector(this.selectors.nextButton);
     const previousButton = this.el.querySelector(this.selectors.previousButton);
-
     if (
       !(nextButton instanceof HTMLButtonElement) ||
       !(previousButton instanceof HTMLButtonElement)
@@ -279,7 +271,6 @@ export default class BhCarousel {
         "BhCarousel: both [data-bhc-next] and [data-bhc-previous] button elements are required.",
       );
     }
-
     this.nextButton = nextButton;
     this.previousButton = previousButton;
 
@@ -288,21 +279,25 @@ export default class BhCarousel {
       this.selectors.playPauseButton,
     );
 
-    // Validate startingIndex
     this.reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
 
-    this.validateSlideIndex(this.settings.startingIndex);
+    const { startingIndex } = this.settings;
+    const { nextIndex, previousIndex } = this.getRelativeIndices(startingIndex);
+    // Validate startingIndex
+    this.validateSlideIndex(startingIndex);
 
     this.state = {
-      currentIndex: this.settings.startingIndex,
+      currentIndex: startingIndex,
       enabled: false,
       firstIndex: 0,
       lastIndex: this.slides.length - 1,
-      modifiedBy: "constructor",
+      nextIndex: nextIndex!,
+      action: null,
       playing: false,
       prefersReducedMotion: this.reducedMotionQuery.matches,
+      previousIndex: previousIndex!,
     };
 
     if (this.settings.autoEnable) {
@@ -317,9 +312,10 @@ export default class BhCarousel {
    * in the detail. The 'play' and 'pause' events include only the action.
    */
   private createEvent(
-    detail: BhCarouselEventDetail,
-  ): CustomEvent<BhCarouselEventDetail> {
-    return new CustomEvent("BhCarousel", {
+    detail: BhCarouselState,
+  ): CustomEvent<BhCarouselState> {
+    const { action } = detail;
+    return new CustomEvent(`bhcarousel:${action}`, {
       bubbles: true,
       cancelable: false,
       composed: true,
@@ -329,11 +325,11 @@ export default class BhCarousel {
 
   /** Disables carousel interactivity. */
   public disable(): void {
-    const { playing } = this.getState();
-    if (playing) {
-      window.clearInterval(this.intervalId);
+    const { enabled } = this.getState();
+    if (!enabled) {
+      return;
     }
-    this.setState({ enabled: false, playing: false, modifiedBy: "disable" });
+    this.setState({ enabled: false, playing: false, action: "disable" });
   }
 
   /**
@@ -341,27 +337,28 @@ export default class BhCarousel {
    *
    * Previous and Next buttons are always un-hidden and enabled when the
    * carousel is not playing automatically. The Play/Pause button is disabled
-   * when prefersReducedMotion is true to respect user accessibility preferences.
+   * when prefersReducedMotion is true to respect user accessibility preference.
    */
   public enable(): void {
     const { prefersReducedMotion } = this.getState();
     this.setState({
       enabled: true,
-      modifiedBy: "enable",
+      action: "enable",
       playing: this.settings.automatic && !prefersReducedMotion,
     });
   }
 
-  /** Returns numeric value of next slide. */
-  public getNextIndex(): number {
-    const { currentIndex, firstIndex, lastIndex } = this.getState();
-    return currentIndex === lastIndex ? firstIndex : currentIndex + 1;
-  }
-
-  /** Returns numeric value of previous slide. */
-  public getPreviousIndex(): number {
-    const { currentIndex, firstIndex, lastIndex } = this.getState();
-    return currentIndex === firstIndex ? lastIndex : currentIndex - 1;
+  /** Computes next, prev indices using currentIndex from state/override . */
+  private getRelativeIndices(
+    currentIndex: number,
+    lastIndex = this.slides.length - 1
+  ): Pick<BhCarouselState, "currentIndex" | "nextIndex" | "previousIndex"> {
+    const firstIndex = 0;
+    return {
+      currentIndex,
+      nextIndex: currentIndex === lastIndex ? firstIndex : currentIndex + 1,
+      previousIndex: currentIndex === firstIndex ? lastIndex : currentIndex - 1,
+    };
   }
 
   /** Returns the current instance state. */
@@ -369,41 +366,27 @@ export default class BhCarousel {
     return { ...this.state };
   }
 
-  /** Navigates to another slide: 'next', 'previous', or a numeric index. */
-  public goto(destination: BhCarouselDestination): void {
-    const { currentIndex: previousIndex } = this.getState();
-    let currentIndex;
+  /** Navigates to another by numeric index. */
+  public goto(newCurrentIndex: number): void {
+    const { currentIndex: prevCurrentIndex } = this.getState();
 
-    if (destination === previousIndex) {
+    // Do nothing if we've been asked to navigate to where we already are.
+    if (newCurrentIndex === prevCurrentIndex) {
       return;
     }
 
-    switch (destination) {
-      case "next":
-        currentIndex = this.getNextIndex();
-        break;
+    // In-bounds check.
+    this.validateSlideIndex(newCurrentIndex);
 
-      case "previous":
-        currentIndex = this.getPreviousIndex();
-        break;
-
-      default:
-        this.validateSlideIndex(destination);
-        currentIndex = destination;
-    }
-
-    this.setState({ currentIndex, modifiedBy: "goto" });
-
-    if (destination === "next" || destination === "previous") {
-      this.el.dispatchEvent(
-        this.createEvent({ action: destination, currentIndex, previousIndex }),
-      );
-    }
+    // Update state.
+    this.setState({
+      ...this.getRelativeIndices(newCurrentIndex),
+      action: "goto",
+    });
   }
 
   /** Handles keydown events for keyboard navigation. */
-  private handleKeydown = (event: KeyboardEvent): void => {
-    const { key } = event;
+  private handleKeydown = ({ key }: KeyboardEvent): void => {
     const { playing, prefersReducedMotion } = this.getState();
 
     if (key === "ArrowRight" && !this.nextButton.disabled) {
@@ -411,12 +394,10 @@ export default class BhCarousel {
     } else if (key === "ArrowLeft" && !this.previousButton.disabled) {
       this.previous();
     } else if (key.toLowerCase() === "p" && !prefersReducedMotion) {
-      if (this.playPauseButton && !this.playPauseButton.disabled) {
-        if (playing) {
-          this.pause();
-        } else {
-          this.play();
-        }
+      if (playing) {
+        this.pause();
+      } else {
+        this.play();
       }
     }
   };
@@ -442,39 +423,50 @@ export default class BhCarousel {
     matches,
   }: MediaQueryListEvent): void => {
     const { playing } = this.getState();
-    const newState: Partial<BhCarouselState> = {
-      modifiedBy: "handleReducedMotionChange",
+    this.setState({
+      action: "reducedMotionChange",
       prefersReducedMotion: matches,
-    };
-    if (matches && playing) {
-      newState.playing = false;
-    }
-    this.setState(newState);
+      ...(matches && playing ? { playing: false } : {}),
+    });
   };
 
   /** Advances carousel one slide. */
   public next(): void {
-    this.goto("next");
+    const { nextIndex } = this.getState();
+    this.setState({
+      ...this.getRelativeIndices(nextIndex),
+      action: "next",
+    });
   }
 
   /** Pauses carousel. */
   public pause(): void {
-    this.setState({ playing: false, modifiedBy: "pause" });
+    this.setState({ playing: false, action: "pause" });
   }
 
   /** Plays carousel. */
   public play(): void {
-    this.setState({ playing: true, modifiedBy: "play" });
+    this.setState({ playing: true, action: "play" });
   }
 
   /** Reverses carousel one slide. */
   public previous(): void {
-    this.goto("previous");
+    const { previousIndex } = this.getState();
+    this.setState({
+      ...this.getRelativeIndices(previousIndex),
+      action: "previous",
+    });
   }
 
   /** Sets/updates UI based on carousel state. */
-  private render(prev: BhCarouselState): void {
-    const state = this.getState();
+  private render(state: BhCarouselState, prev: BhCarouselState): void {
+    if (
+      (prev.enabled && state.action === "enable") ||
+      (!prev.enabled && state.action === "disable")
+    ) {
+      return;
+    }
+
     this.renderNavButtons(state);
     this.renderPlayPauseButton(state);
     this.renderSlides(state, prev);
@@ -499,7 +491,9 @@ export default class BhCarousel {
     playing,
     prefersReducedMotion,
   }: BhCarouselState): void {
-    if (!this.playPauseButton) return;
+    if (!this.playPauseButton) {
+      return;
+    }
     this.playPauseButton.hidden = !enabled;
     this.playPauseButton.disabled = !enabled || prefersReducedMotion;
     if (enabled) {
@@ -514,6 +508,28 @@ export default class BhCarousel {
     }
   }
 
+  /** Sets and removes dataset attributes according to current/prev state. */
+  private syncRelativeIndexAttributes(
+    state: BhCarouselState,
+    prev?: BhCarouselState,
+  ): void {
+    const attributes: Array<[keyof DOMStringMap, keyof BhCarouselState]> = [
+      ["bhcCurrentSlide", "currentIndex"],
+      ["bhcNextSlide", "nextIndex"],
+      ["bhcPreviousSlide", "previousIndex"],
+    ];
+    for (const [dsKey, stateKey] of attributes) {
+      const indexBefore = prev?.[stateKey] as number | undefined;
+      const indexNow = state[stateKey] as number;
+      if (indexBefore !== undefined && indexBefore !== indexNow) {
+        delete this.slides[indexBefore]!.dataset[dsKey];
+      }
+      if (indexNow !== undefined) {
+        this.slides[indexNow]!.dataset[dsKey] = "";
+      }
+    }
+  }
+
   /** Syncs slide itemStateAttribute values from state. */
   private renderSlides(state: BhCarouselState, prev: BhCarouselState): void {
     // Disable transition: clear attribute on all slides.
@@ -521,9 +537,9 @@ export default class BhCarousel {
       this.slides.forEach((slide) =>
         slide.removeAttribute(this.settings.itemStateAttribute),
       );
+      this.syncRelativeIndexAttributes(state, prev);
       return;
     }
-    if (!state.enabled) return;
 
     // Enable transition: full sync across all slides.
     if (!prev.enabled) {
@@ -533,6 +549,7 @@ export default class BhCarousel {
           (index !== state.currentIndex).toString(),
         ),
       );
+      this.syncRelativeIndexAttributes(state, prev);
       return;
     }
 
@@ -546,15 +563,19 @@ export default class BhCarousel {
         this.settings.itemStateAttribute,
         "false",
       );
+      this.syncRelativeIndexAttributes(state, prev);
     }
   }
 
   /** Attaches or detaches DOM listeners on the enabled transition. */
   private renderListeners(state: BhCarouselState, prev: BhCarouselState): void {
-    if (state.enabled === prev.enabled) return;
+    if (state.enabled === prev.enabled) {
+      return;
+    }
     if (state.enabled) {
       this.nextButton.addEventListener("click", this.handleNextClick);
       this.previousButton.addEventListener("click", this.handlePreviousClick);
+      // TODO: should this be attached to the element?
       window.addEventListener("keydown", this.handleKeydown);
       this.reducedMotionQuery.addEventListener(
         "change",
@@ -597,14 +618,20 @@ export default class BhCarousel {
     }
   }
 
-  /** Dispatches play/pause CustomEvents on the playing transition. */
-  private renderTransitionEvents(
-    { playing }: BhCarouselState,
-    prev: BhCarouselState,
-  ): void {
-    if (playing !== prev.playing) {
+  /** Dispatches CustomEvents on various transitions. */
+  private renderTransitionEvents(state: BhCarouselState, prev: BhCarouselState): void {
+    this.el.dispatchEvent(this.createEvent(state));
+
+    if (
+      state.playing !== prev.playing &&
+      state.action !== "play" &&
+      state.action !== "pause"
+    ) {
       this.el.dispatchEvent(
-        this.createEvent({ action: playing ? "play" : "pause" }),
+        this.createEvent({
+          ...state,
+          action: state.playing ? "play" : "pause",
+        })
       );
     }
   }
@@ -614,7 +641,7 @@ export default class BhCarousel {
     if (!this.settings.debug) {
       return;
     }
-    console.debug(`render() method called by ${state.modifiedBy}().`, {
+    console.debug(`render() method called by ${state.action}().`, {
       state,
     });
   }
@@ -622,8 +649,9 @@ export default class BhCarousel {
   /** Sets/updates carousel state. */
   private setState(patch: Partial<BhCarouselState>): void {
     const prev = this.state;
-    this.state = { ...this.state, ...patch };
-    this.render(prev);
+    const state = { ...this.state, ...patch };
+    this.state = state;
+    this.render(state, prev);
   }
 
   /** Validates that an index is within bounds. */

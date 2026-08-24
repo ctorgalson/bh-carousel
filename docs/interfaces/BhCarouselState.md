@@ -10,6 +10,19 @@ An interface for defining the current state of a BhCarousel instance.
 
 ## Properties
 
+### action
+
+> **action**: [`BhCarouselAction`](../type-aliases/BhCarouselAction.md)
+
+The name of the last method to modify the state var. Only exposed for
+debugging purposes.
+
+#### Defined in
+
+[bh-carousel.ts:97](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L97)
+
+---
+
 ### currentIndex
 
 > **currentIndex**: `number`
@@ -18,7 +31,7 @@ The numeric (zero-based) index of the current slide in the carousel.
 
 #### Defined in
 
-[bh-carousel.ts:107](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L107)
+[bh-carousel.ts:98](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L98)
 
 ---
 
@@ -30,7 +43,7 @@ Whether or not carousel interactivity is enabled at all.
 
 #### Defined in
 
-[bh-carousel.ts:108](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L108)
+[bh-carousel.ts:99](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L99)
 
 ---
 
@@ -43,7 +56,7 @@ zero.
 
 #### Defined in
 
-[bh-carousel.ts:109](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L109)
+[bh-carousel.ts:100](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L100)
 
 ---
 
@@ -55,20 +68,19 @@ The numeric (zero-based) index of the last slide in the carousel.
 
 #### Defined in
 
-[bh-carousel.ts:110](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L110)
+[bh-carousel.ts:101](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L101)
 
 ---
 
-### modifiedBy
+### nextIndex
 
-> **modifiedBy**: `string`
+> **nextIndex**: `number`
 
-The name of the last method to modify the state var. Only exposed for
-debugging purposes.
+The numeric (zero-based) index of the next slide in the carousel.
 
 #### Defined in
 
-[bh-carousel.ts:111](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L111)
+[bh-carousel.ts:102](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L102)
 
 ---
 
@@ -80,7 +92,7 @@ Whether or not the carousel is currently auto-playing.
 
 #### Defined in
 
-[bh-carousel.ts:106](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L106)
+[bh-carousel.ts:103](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L103)
 
 ---
 
@@ -94,4 +106,16 @@ returned 'no-preference').
 
 #### Defined in
 
-[bh-carousel.ts:112](https://github.com/ctorgalson/bh-carousel/blob/66a23fa1322f5451769afb44a200d39dc2592d05/src/bh-carousel.ts#L112)
+[bh-carousel.ts:104](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L104)
+
+---
+
+### previousIndex
+
+> **previousIndex**: `number`
+
+The numeric (zero-based) index of the previous slide in the carousel.
+
+#### Defined in
+
+[bh-carousel.ts:105](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L105)
