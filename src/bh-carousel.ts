@@ -227,9 +227,11 @@ export default class BhCarousel {
     nextButton: "[data-bhc-next]",
     playPauseButton: "[data-bhc-play-pause]",
     previousButton: "[data-bhc-previous]",
-    slide: "[aria-roledescription='slide']",
+    slide: "[data-bhc-slide]",
+    slideContainer: "[data-bhc-container]",
   };
   private settings: BhCarouselSettings;
+  private slideContainer: HTMLElement;
   private slides: NodeListOf<HTMLElement>;
   private state!: BhCarouselState;
 
@@ -252,15 +254,25 @@ export default class BhCarousel {
       );
     }
 
-    // Not much to do with no slides...
-    this.slides = this.el.querySelectorAll<HTMLElement>(this.selectors.slide);
-    if (this.slides.length === 0) {
+    // We need to manage the slides' container.
+    const slideContainer = this.el.querySelector<HTMLElement>(this.selectors.slideContainer);
+    if (!(slideContainer instanceof HTMLElement)) {
       throw new Error(
-        "BhCarousel: at least one slide is required to instantiate the carousel.",
+        `BhCarousel: no element matching the selector "${this.selectors.slideContainer}" could be found.`,
       );
     }
+    this.slideContainer = slideContainer;
 
-    // Required elements
+    // We need to manage the slides themselves.
+    const slides = this.slideContainer.querySelectorAll<HTMLElement>(this.selectors.slide);
+    if (slides.length === 0) {
+      throw new Error(
+        `BhCarousel: "${this.selectors.slideContainer}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
+      );
+    }
+    this.slides = slides;
+
+    // We need to manage the Previous and Next buttons.
     const nextButton = this.el.querySelector(this.selectors.nextButton);
     const previousButton = this.el.querySelector(this.selectors.previousButton);
     if (
@@ -268,13 +280,13 @@ export default class BhCarousel {
       !(previousButton instanceof HTMLButtonElement)
     ) {
       throw new Error(
-        "BhCarousel: both [data-bhc-next] and [data-bhc-previous] button elements are required.",
+        `BhCarousel: both "${this.selectors.nextButton}" and "${this.selectors.previousButton}" button elements are required.`,
       );
     }
     this.nextButton = nextButton;
     this.previousButton = previousButton;
 
-    // Optional element
+    // We need to manage the Play/Pause button, though it's not required.
     this.playPauseButton = this.el.querySelector(
       this.selectors.playPauseButton,
     );

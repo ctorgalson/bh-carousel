@@ -14,7 +14,7 @@ const qa = (el: ParentNode, sel: string) => el.querySelectorAll(sel);
 describe("construction throws and results", () => {
   it("when there are no slides", () => {
     const el = buildCarouselDom({ slideCount: 0 });
-    expect(() => new BhCarousel(el)).toThrow(/at least one slide/i);
+    expect(() => new BhCarousel(el)).toThrow(/must contain at least/i);
   });
 
   it("when startingIndex is out of bounds before mutating DOM", () => {

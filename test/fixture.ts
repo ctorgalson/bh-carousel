@@ -1,14 +1,21 @@
 export interface FixtureOptions {
   slideCount?: number;
+  withMandatoryStaticAttrs?: boolean;
   withPlayPauseButton?: boolean;
 }
 
 export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
-  const { slideCount = 5, withPlayPauseButton = true } = options;
+  const {
+    slideCount = 5,
+    withMandatoryStaticAttrs = true,
+    withPlayPauseButton = true,
+  } = options;
 
   const container = document.createElement("div");
   container.setAttribute("aria-label", "Test carousel");
-  container.setAttribute("aria-roledescription", "carousel");
+  if (withMandatoryStaticAttrs) {
+    container.setAttribute("aria-roledescription", "carousel");
+  }
 
   const controls = document.createElement("div");
   if (withPlayPauseButton) {
@@ -37,11 +44,15 @@ export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
 
   const items = document.createElement("div");
   items.setAttribute("aria-live", "off");
+  items.setAttribute("data-bhc-container", "");
   for (let i = 0; i < slideCount; i++) {
     const slide = document.createElement("div");
     slide.setAttribute("aria-label", `${i + 1} of ${slideCount}`);
-    slide.setAttribute("aria-roledescription", "slide");
-    slide.setAttribute("role", "group");
+    slide.setAttribute("data-bhc-slide", "");
+    if (withMandatoryStaticAttrs) {
+      slide.setAttribute("role", "group");
+      slide.setAttribute("aria-roledescription", "slide");
+    }
     items.appendChild(slide);
   }
   container.appendChild(items);
