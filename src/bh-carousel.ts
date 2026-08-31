@@ -224,15 +224,15 @@ export default class BhCarousel {
   private playPauseButton: HTMLButtonElement | null = null;
   private previousButton: HTMLButtonElement;
   private readonly selectors = {
-    carousel: "[aria-roledescription='carousel']",
-    liveRegion: "[aria-live][id]",
     nextButton: "button[data-bhc-next]",
     playPauseButton: "button[data-bhc-play-pause]",
     previousButton: "button[data-bhc-previous]",
-    slide: "[aria-roledescription='slide'][role='group']",
+    slide: "[data-bhc-slide]",
+    slideContainer: "[data-bhc-slide-container][id]",
   };
+  private restorers: (() => void)[] = [];
   private settings: BhCarouselSettings;
-  private liveRegion: HTMLElement;
+  private slideContainer: HTMLElement;
   private slides: NodeListOf<HTMLElement>;
   private state!: BhCarouselState;
 
@@ -245,51 +245,41 @@ export default class BhCarousel {
    *   Optional settings to override class defaults.
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
+    this.carousel = element;
     this.settings = { ...BhCarousel.defaults, ...settings };
 
-    // We need to check out the carousel element itself.
-    const carousel = element;
-    if (!(carousel instanceof HTMLElement) || !carousel.matches(this.selectors.carousel)) {
-      throw new Error(
-        `BhCarousel: no HTMLElement matching "${this.selectors.carousel}" was supplied.`
-      );
-    }
-    this.carousel = carousel;
-
     // We need to manage the slides' live region.
-    const liveRegion = this.carousel.querySelector<HTMLElement>(this.selectors.liveRegion);
-    if (!(liveRegion instanceof HTMLElement) || liveRegion.getAttribute("id") === "") {
+    const slideContainer = this.carousel.querySelector<HTMLElement>(this.selectors.slideContainer);
+    if (!(slideContainer instanceof HTMLElement) || slideContainer.getAttribute("id") === "") {
       throw new Error(
-        `BhCarousel: no element matching the selector "${this.selectors.liveRegion}" with a non-empty id attribute could be found.`,
+        `BhCarousel: no element matching the selector "${this.selectors.slideContainer}" with a non-empty id attribute could be found.`,
       );
     }
-    this.liveRegion = liveRegion;
+    this.slideContainer = slideContainer;
 
     // We need to manage the slides themselves.
-    const slides = this.liveRegion.querySelectorAll<HTMLElement>(this.selectors.slide);
+    const slides = this.slideContainer.querySelectorAll<HTMLElement>(this.selectors.slide);
     if (slides.length === 0) {
       throw new Error(
-        `BhCarousel: "${this.selectors.liveRegion}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
+        `BhCarousel: "${this.selectors.slideContainer}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
       );
     }
     this.slides = slides;
 
     // We need to manage the previous button.
-    const nextButtonSelector = `${this.selectors.nextButton}[aria-controls="${this.liveRegion.id}"]`;
-    const nextButton = this.carousel.querySelector<HTMLButtonElement>(nextButtonSelector);
+    const nextButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.nextButton);
     if (!nextButton) {
       throw new Error(
-        `BhCarousel: "the carousel must contain a "Next" button matching "${nextButtonSelector}".`,
+        `BhCarousel: "the carousel must contain a "Next" button matching "${this.selectors.nextButton}".`,
       );
     }
     this.nextButton = nextButton;
 
     // We need to manage the previous button.
-    const previousButtonSelector = `${this.selectors.previousButton}[aria-controls="${this.liveRegion.id}"]`
-    const previousButton = this.carousel.querySelector<HTMLButtonElement>(previousButtonSelector);
+    const previousButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.previousButton);
     if (!previousButton) {
       throw new Error(
-        `BhCarousel: "the carousel must contain a "Previous" button matching "${previousButtonSelector}".`,
+        `BhCarousel: "the carousel must contain a "Previous" button matching "${this.selectors.previousButton}".`,
       );
     }
     this.previousButton = previousButton;
@@ -496,6 +486,12 @@ export default class BhCarousel {
       return;
     }
 
+    if (prev.enabled && state.action === "disable") {
+      this.restorers.forEach((restore) => restore());
+      this.restorers = [];
+      return;
+    }
+
     this.renderNavButtons(state);
     this.renderPlayPauseButton(state);
     this.renderSlides(state, prev);
@@ -506,8 +502,12 @@ export default class BhCarousel {
   }
 
   /** Syncs previous/next buttons' hidden and disabled attrs from state. */
-  private renderNavButtons({ enabled, playing }: BhCarouselState): void {
+  private renderNavButtons({ action, enabled, playing }: BhCarouselState): void {
     const disabled = !enabled || playing;
+    if (action === "enable") {
+      this.enforceInitialAttributeValue(this.nextButton, "aria-controls", this.slideContainer.id);
+      this.enforceInitialAttributeValue(this.previousButton, "aria-controls", this.slideContainer.id);
+    }
     this.nextButton.hidden = !enabled;
     this.previousButton.hidden = !enabled;
     this.nextButton.disabled = disabled;
@@ -572,12 +572,14 @@ export default class BhCarousel {
 
     // Enable transition: full sync across all slides.
     if (!prev.enabled) {
-      this.slides.forEach((slide, index) =>
+      this.slides.forEach((slide, index) => {
+        this.enforceInitialAttributeValue(slide, "role", "group");
+        this.enforceInitialAttributeValue(slide, "aria-roledescription", "slide");
         slide.setAttribute(
           this.settings.itemStateAttribute,
           (index !== state.currentIndex).toString(),
-        ),
-      );
+        );
+      });
       this.syncRelativeIndexAttributes(state, prev);
       return;
     }
@@ -691,6 +693,17 @@ export default class BhCarousel {
       throw new Error(
         `Index ${index} is out of bounds (${firstIndex} - ${lastIndex})`,
       );
+    }
+  }
+
+  /** Enforces attribute, allowing its value to be reset on disable. */
+  private enforceInitialAttributeValue(el: HTMLElement, name: string, value: string): void {
+    const originalValue = el.getAttribute(name);
+    if (originalValue !== value) {
+      el.setAttribute(name, value);
+      this.restorers.push((): void => originalValue === null
+        ? el.removeAttribute(name)
+        : el.setAttribute(name, originalValue));
     }
   }
 }

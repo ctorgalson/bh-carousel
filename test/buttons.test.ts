@@ -43,7 +43,7 @@ describe("Slideshow pauses when Play/Pause button clicked", () => {
     const btn = q<HTMLButtonElement>(el, "[data-bhc-play-pause]");
 
     btn.click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
   });
@@ -92,7 +92,7 @@ describe("Slideshow resumes when Play/Pause button clicked", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
     q<HTMLButtonElement>(el, "[data-bhc-play-pause]").click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
   });
@@ -122,7 +122,7 @@ describe("Slideshow goes forward when Next button clicked", () => {
     new BhCarousel(el, { automatic: false });
 
     q<HTMLButtonElement>(el, "[data-bhc-next]").click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
     expect(slides[1]!.getAttribute("aria-hidden")).toBe("false");
@@ -135,7 +135,7 @@ describe("Slideshow goes back when Previous button clicked", () => {
     new BhCarousel(el, { automatic: false, startingIndex: 1 });
 
     q<HTMLButtonElement>(el, "[data-bhc-previous]").click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[1]!.getAttribute("aria-hidden")).toBe("true");
@@ -148,7 +148,7 @@ describe("Slideshow wraps to last slide from first on Previous click", () => {
     new BhCarousel(el, { automatic: false });
 
     q<HTMLButtonElement>(el, "[data-bhc-previous]").click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
     expect(slides[slides.length - 1]!.getAttribute("aria-hidden")).toBe(
@@ -163,7 +163,7 @@ describe("Slideshow wraps to first slide from last on Next click", () => {
     new BhCarousel(el, { automatic: false, startingIndex: 4 });
 
     q<HTMLButtonElement>(el, "[data-bhc-next]").click();
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
 
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[slides.length - 1]!.getAttribute("aria-hidden")).toBe(

@@ -37,7 +37,7 @@ describe("Slideshow pauses when P pressed", () => {
 
     press("p");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
   });
 
@@ -80,7 +80,7 @@ describe("Slideshow resumes when P pressed", () => {
 
     press("p");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
   });
 
@@ -112,7 +112,7 @@ describe("Slideshow goes forward when ArrowRight pressed", () => {
 
     press("ArrowRight");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
     expect(slides[1]!.getAttribute("aria-hidden")).toBe("false");
   });
@@ -125,7 +125,7 @@ describe("Slideshow goes back when ArrowLeft pressed", () => {
 
     press("ArrowLeft");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[1]!.getAttribute("aria-hidden")).toBe("true");
   });
@@ -138,7 +138,7 @@ describe("Slideshow wraps to last slide from first on ArrowLeft", () => {
 
     press("ArrowLeft");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
     expect(slides[slides.length - 1]!.getAttribute("aria-hidden")).toBe(
       "false",
@@ -153,7 +153,7 @@ describe("Slideshow wraps to first slide from last on ArrowRight", () => {
 
     press("ArrowRight");
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[slides.length - 1]!.getAttribute("aria-hidden")).toBe(
       "true",

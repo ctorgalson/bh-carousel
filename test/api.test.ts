@@ -47,20 +47,20 @@ describe("getState()", () => {
 });
 
 describe("disable()", () => {
-  it("disables both nav buttons while paused", () => {
+  it("leaves nav buttons in their pre-disable state", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
-    ).toBe(true);
+    ).toBe(false);
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  it("keeps both nav buttons disabled if called while playing", () => {
+  it("leaves nav buttons in their pre-disable state when playing", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: true }); // Default
 
@@ -83,25 +83,25 @@ describe("disable()", () => {
     expect(currentIndex).toBe(0);
   });
 
-  it("disables Play/Pause and removes its aria-label", () => {
+  it("leaves Play/Pause button in its pre-disable state", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     const btn = q<HTMLButtonElement>(el, "[data-bhc-play-pause]");
 
-    expect(btn.disabled).toBe(true);
-    expect(btn.getAttribute("aria-label")).toBeNull();
+    expect(btn.disabled).toBe(false);
+    expect(btn.getAttribute("aria-label")).toBe("Play carousel");
   });
 
-  it("removes the aria-hidden attribute from all slide elements", () => {
+  it("leaves the aria-hidden attribute unchanged on slide elements", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     expect(
-      qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
-    ).toBeNull();
+      qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
+    ).toBe("false");
   });
 });
 
@@ -139,7 +139,7 @@ describe("enable()", () => {
 
     c.enable();
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     for (let i = 1; i < slides.length; i++) {
       expect(slides[i]!.getAttribute("aria-hidden")).toBe("true");
@@ -182,7 +182,7 @@ describe("goto()", () => {
     const { currentIndex } = c.getState();
 
     expect(currentIndex).toBe(3);
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[3]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
   });
