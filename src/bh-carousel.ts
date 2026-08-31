@@ -206,7 +206,7 @@ export interface BhCarouselState {
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
  */
 export default class BhCarousel {
-  private el: HTMLElement;
+  private carousel: HTMLElement;
   private static readonly defaults: BhCarouselSettings = {
     ariaLabelPause: "Pause carousel",
     ariaLabelPlay: "Play carousel",
@@ -221,17 +221,18 @@ export default class BhCarousel {
   private intervalId: number | undefined;
   private reducedMotionQuery: MediaQueryList;
   private nextButton: HTMLButtonElement;
-  private playPauseButton: HTMLButtonElement | null;
+  private playPauseButton: HTMLButtonElement | null = null;
   private previousButton: HTMLButtonElement;
   private readonly selectors = {
-    nextButton: "[data-bhc-next]",
-    playPauseButton: "[data-bhc-play-pause]",
-    previousButton: "[data-bhc-previous]",
-    slide: "[data-bhc-slide]",
-    slideContainer: "[data-bhc-container]",
+    carousel: "[aria-roledescription='carousel']",
+    liveRegion: "[aria-live][id]",
+    nextButton: "button[data-bhc-next]",
+    playPauseButton: "button[data-bhc-play-pause]",
+    previousButton: "button[data-bhc-previous]",
+    slide: "[aria-roledescription='slide'][role='group']",
   };
   private settings: BhCarouselSettings;
-  private slideContainer: HTMLElement;
+  private liveRegion: HTMLElement;
   private slides: NodeListOf<HTMLElement>;
   private state!: BhCarouselState;
 
@@ -244,69 +245,85 @@ export default class BhCarousel {
    *   Optional settings to override class defaults.
    */
   constructor(element: HTMLElement, settings?: Partial<BhCarouselSettings>) {
-    this.el = element;
+    this.settings = { ...BhCarousel.defaults, ...settings };
+
+    // We need to check out the carousel element itself.
+    const carousel = element;
+    if (!(carousel instanceof HTMLElement) || !carousel.matches(this.selectors.carousel)) {
+      throw new Error(
+        `BhCarousel: no HTMLElement matching "${this.selectors.carousel}" was supplied.`
+      );
+    }
+    this.carousel = carousel;
+
+    // We need to manage the slides' live region.
+    const liveRegion = this.carousel.querySelector<HTMLElement>(this.selectors.liveRegion);
+    if (!(liveRegion instanceof HTMLElement) || liveRegion.getAttribute("id") === "") {
+      throw new Error(
+        `BhCarousel: no element matching the selector "${this.selectors.liveRegion}" with a non-empty id attribute could be found.`,
+      );
+    }
+    this.liveRegion = liveRegion;
+
+    // We need to manage the slides themselves.
+    const slides = this.liveRegion.querySelectorAll<HTMLElement>(this.selectors.slide);
+    if (slides.length === 0) {
+      throw new Error(
+        `BhCarousel: "${this.selectors.liveRegion}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
+      );
+    }
+    this.slides = slides;
+
+    // We need to manage the previous button.
+    const nextButtonSelector = `${this.selectors.nextButton}[aria-controls="${this.liveRegion.id}"]`;
+    const nextButton = this.carousel.querySelector<HTMLButtonElement>(nextButtonSelector);
+    if (!nextButton) {
+      throw new Error(
+        `BhCarousel: "the carousel must contain a "Next" button matching "${nextButtonSelector}".`,
+      );
+    }
+    this.nextButton = nextButton;
+
+    // We need to manage the previous button.
+    const previousButtonSelector = `${this.selectors.previousButton}[aria-controls="${this.liveRegion.id}"]`
+    const previousButton = this.carousel.querySelector<HTMLButtonElement>(previousButtonSelector);
+    if (!previousButton) {
+      throw new Error(
+        `BhCarousel: "the carousel must contain a "Previous" button matching "${previousButtonSelector}".`,
+      );
+    }
+    this.previousButton = previousButton;
+
+    // We need to manage the Play/Pause button, but it may not be present.
+    const playPauseButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.playPauseButton);
+    if (playPauseButton) {
+      this.playPauseButton = playPauseButton;
+    }
 
     // We need to verify certain settings.
-    this.settings = { ...BhCarousel.defaults, ...settings };
     if (!/^[a-z][a-z0-9-]*$/.test(this.settings.itemStateAttribute)) {
       throw new Error(
         `BhCarousel: invalid attribute name supplied for settings.itemStateAttribute ("${this.settings.itemStateAttribute}").`,
       );
     }
 
-    // We need to manage the slides' container.
-    const slideContainer = this.el.querySelector<HTMLElement>(this.selectors.slideContainer);
-    if (!(slideContainer instanceof HTMLElement)) {
-      throw new Error(
-        `BhCarousel: no element matching the selector "${this.selectors.slideContainer}" could be found.`,
-      );
-    }
-    this.slideContainer = slideContainer;
+    // Validate startingIndex.
+    const { startingIndex } = this.settings;
+    this.validateSlideIndex(startingIndex);
+    const { nextIndex, previousIndex } = this.getRelativeIndices(startingIndex);
 
-    // We need to manage the slides themselves.
-    const slides = this.slideContainer.querySelectorAll<HTMLElement>(this.selectors.slide);
-    if (slides.length === 0) {
-      throw new Error(
-        `BhCarousel: "${this.selectors.slideContainer}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
-      );
-    }
-    this.slides = slides;
-
-    // We need to manage the Previous and Next buttons.
-    const nextButton = this.el.querySelector(this.selectors.nextButton);
-    const previousButton = this.el.querySelector(this.selectors.previousButton);
-    if (
-      !(nextButton instanceof HTMLButtonElement) ||
-      !(previousButton instanceof HTMLButtonElement)
-    ) {
-      throw new Error(
-        `BhCarousel: both "${this.selectors.nextButton}" and "${this.selectors.previousButton}" button elements are required.`,
-      );
-    }
-    this.nextButton = nextButton;
-    this.previousButton = previousButton;
-
-    // We need to manage the Play/Pause button, though it's not required.
-    this.playPauseButton = this.el.querySelector(
-      this.selectors.playPauseButton,
-    );
-
+    // We need a way to see if the user's prefers-reduced-motion query changes.
     this.reducedMotionQuery = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     );
 
-    const { startingIndex } = this.settings;
-    const { nextIndex, previousIndex } = this.getRelativeIndices(startingIndex);
-    // Validate startingIndex
-    this.validateSlideIndex(startingIndex);
-
     this.state = {
+      action: null,
       currentIndex: startingIndex,
       enabled: false,
       firstIndex: 0,
       lastIndex: this.slides.length - 1,
       nextIndex: nextIndex!,
-      action: null,
       playing: false,
       prefersReducedMotion: this.reducedMotionQuery.matches,
       previousIndex: previousIndex!,
@@ -632,14 +649,14 @@ export default class BhCarousel {
 
   /** Dispatches CustomEvents on various transitions. */
   private renderTransitionEvents(state: BhCarouselState, prev: BhCarouselState): void {
-    this.el.dispatchEvent(this.createEvent(state));
+    this.carousel.dispatchEvent(this.createEvent(state));
 
     if (
       state.playing !== prev.playing &&
       state.action !== "play" &&
       state.action !== "pause"
     ) {
-      this.el.dispatchEvent(
+      this.carousel.dispatchEvent(
         this.createEvent({
           ...state,
           action: state.playing ? "play" : "pause",

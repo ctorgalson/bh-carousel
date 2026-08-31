@@ -36,12 +36,12 @@ describe("construction throws and results", () => {
   it("when Next button is not present", () => {
     const el = buildCarouselDom();
     q<HTMLButtonElement>(el, "[data-bhc-next]").remove();
-    expect(() => new BhCarousel(el)).toThrow(/button elements are required/i);
+    expect(() => new BhCarousel(el)).toThrow(/\"Next\" button matching/i);
   });
 
   it("when Previous button is not present", () => {
     const el = buildCarouselDom();
     q<HTMLButtonElement>(el, "[data-bhc-previous]").remove();
-    expect(() => new BhCarousel(el)).toThrow(/button elements are required/i);
+    expect(() => new BhCarousel(el)).toThrow(/\"Previous\" button matching/i);
   });
 });
