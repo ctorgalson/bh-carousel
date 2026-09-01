@@ -328,10 +328,10 @@ export default class BhCarousel {
       enabled: false,
       firstIndex: 0,
       lastIndex: this.slides.length - 1,
-      nextIndex: nextIndex!,
+      nextIndex,
       playing: false,
       prefersReducedMotion: this.reducedMotionQuery.matches,
-      previousIndex: previousIndex!,
+      previousIndex,
     };
 
     if (this.settings.autoEnable) {
