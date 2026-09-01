@@ -74,13 +74,34 @@ describe("disable()", () => {
   });
 
   it("stops the interval from advancing slides", () => {
-    const el = buildCarouselDom();
+    // slideCount:3 with 5 ticks would leave currentIndex at 2 if the
+    // interval leaked past disable(); default slideCount:5 wraps back
+    // to 0 coincidentally and hides the bug.
+    const el = buildCarouselDom({ slideCount: 3 });
     const c = new BhCarousel(el, { interval: 1000 });
 
     c.disable();
     vi.advanceTimersByTime(5000);
     const { currentIndex } = c.getState();
     expect(currentIndex).toBe(0);
+  });
+
+  it("stops responding to Next button clicks after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    q<HTMLButtonElement>(el, "[data-bhc-next]").click();
+    expect(c.getState().currentIndex).toBe(0);
+  });
+
+  it("stops responding to keydown ArrowRight after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    expect(c.getState().currentIndex).toBe(0);
   });
 
   it("leaves Play/Pause button in its pre-disable state", () => {

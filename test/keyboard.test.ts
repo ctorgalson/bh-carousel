@@ -6,8 +6,8 @@ const q = <T extends Element = HTMLElement>(el: ParentNode, sel: string) =>
   el.querySelector<T>(sel)!;
 const qa = (el: ParentNode, sel: string) => el.querySelectorAll(sel);
 
-const press = (key: string) =>
-  window.dispatchEvent(new KeyboardEvent("keydown", { key }));
+const press = (target: EventTarget, key: string) =>
+  target.dispatchEvent(new KeyboardEvent("keydown", { key }));
 
 beforeEach(() => {
   stubMatchMedia(false);
@@ -24,7 +24,7 @@ describe("Slideshow pauses when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el);
 
-    press("p");
+    press(el, "p");
 
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-play-pause]").dataset.bhcPlaying,
@@ -35,7 +35,7 @@ describe("Slideshow pauses when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el);
 
-    press("p");
+    press(el, "p");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
@@ -45,7 +45,7 @@ describe("Slideshow pauses when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el);
 
-    press("p");
+    press(el, "p");
 
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
@@ -56,7 +56,7 @@ describe("Slideshow pauses when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el);
 
-    press("p");
+    press(el, "p");
 
     expect(q<HTMLButtonElement>(el, "[data-bhc-next]").disabled).toBe(false);
   });
@@ -67,7 +67,7 @@ describe("Slideshow resumes when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("p");
+    press(el, "p");
 
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-play-pause]").dataset.bhcPlaying,
@@ -78,7 +78,7 @@ describe("Slideshow resumes when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("p");
+    press(el, "p");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
@@ -88,7 +88,7 @@ describe("Slideshow resumes when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("p");
+    press(el, "p");
 
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
@@ -99,7 +99,7 @@ describe("Slideshow resumes when P pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("p");
+    press(el, "p");
 
     expect(q<HTMLButtonElement>(el, "[data-bhc-next]").disabled).toBe(true);
   });
@@ -110,7 +110,7 @@ describe("Slideshow goes forward when ArrowRight pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("ArrowRight");
+    press(el, "ArrowRight");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
@@ -123,7 +123,7 @@ describe("Slideshow goes back when ArrowLeft pressed", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false, startingIndex: 1 });
 
-    press("ArrowLeft");
+    press(el, "ArrowLeft");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
@@ -136,7 +136,7 @@ describe("Slideshow wraps to last slide from first on ArrowLeft", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false });
 
-    press("ArrowLeft");
+    press(el, "ArrowLeft");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
@@ -151,7 +151,7 @@ describe("Slideshow wraps to first slide from last on ArrowRight", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { automatic: false, startingIndex: 4 });
 
-    press("ArrowRight");
+    press(el, "ArrowRight");
 
     const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");

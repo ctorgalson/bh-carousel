@@ -160,7 +160,7 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     el.addEventListener("bhcarousel:next", spy as EventListener);
     c.disable();
     c.enable();
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
     const { currentIndex } = c.getState();
     expect(currentIndex).toBe(1);
     expect(spy).toHaveBeenCalledOnce();

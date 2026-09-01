@@ -44,13 +44,17 @@ export type BhCarouselInterval = number;
  * @property {BhCarouselControls} controlType
  *   Whether the carousel uses only buttons for control or buttons and tabs.
  *   Currently has no effect as tab-style navigation hasn't been implemented.
+ * @property {boolean} debug
+ *   When set, logs every event emitted by the carousel to the console.
  * @property {BhCarouselInterval} interval
  *   The interval, in milliseconds, between slides when carousel is playing
  *   automatically.
  * @property {string} itemStateAttribute
  *   The name of the *boolean* attribute to set on active/inactive items.
  *   Defaults to aria-hidden; if set to any other value, take care for the
- *   accessibility of each item.
+ *   accessibility of each item. Must be a valid HTML attribute name beginning
+ *   with a lowercase letters followed by one or more lowercase letters, numbers
+ *   or hyphens.
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
@@ -254,10 +258,7 @@ export default class BhCarousel {
     const slideContainer = this.carousel.querySelector<HTMLElement>(
       this.selectors.slideContainer,
     );
-    if (
-      !(slideContainer instanceof HTMLElement) ||
-      slideContainer.getAttribute("id") === ""
-    ) {
+    if (!(slideContainer instanceof HTMLElement) || slideContainer.id === "") {
       throw new Error(
         `BhCarousel: no container found or id attr was empty (${this.selectors.slideContainer}).`,
       );
@@ -275,7 +276,7 @@ export default class BhCarousel {
     }
     this.slides = slides;
 
-    // We need to manage the previous button.
+    // We need to manage the next button.
     const nextButton = this.carousel.querySelector<HTMLButtonElement>(
       this.selectors.nextButton,
     );
@@ -380,7 +381,7 @@ export default class BhCarousel {
     });
   }
 
-  /** Computes next, prev indices using currentIndex from state/override . */
+  /** Computes next, prev indices using currentIndex from state/override. */
   private getRelativeIndices(
     currentIndex: number,
     lastIndex = this.slides.length - 1,
@@ -398,7 +399,7 @@ export default class BhCarousel {
     return { ...this.state };
   }
 
-  /** Navigates to another by numeric index. */
+  /** Navigates to a slide by numeric index. */
   public goto(newCurrentIndex: number): void {
     const { currentIndex: prevCurrentIndex } = this.getState();
 
@@ -492,14 +493,23 @@ export default class BhCarousel {
 
   /** Sets/updates UI based on carousel state. */
   private render(state: BhCarouselState, prev: BhCarouselState): void {
-    if (
-      (prev.enabled && state.action === "enable") ||
-      (!prev.enabled && state.action === "disable")
-    ) {
+    const isEnableTransition = state.enabled && !prev.enabled;
+    const isDisableTransition = !state.enabled && prev.enabled;
+    const isIdempotentAction =
+      (state.action === "enable" && !isEnableTransition) ||
+      (state.action === "disable" && !isDisableTransition);
+
+    if (isIdempotentAction) {
       return;
     }
 
-    if (prev.enabled && state.action === "disable") {
+    // disable() tears down the machine (interval, listeners) and rolls back
+    // enforced attrs via restorers, but deliberately leaves DOM state
+    // (button hidden/disabled, aria-hidden on slides, aria-live) untouched
+    // so the developer can style/hydrate around it.
+    if (isDisableTransition) {
+      this.renderInterval(state, prev);
+      this.renderListeners(state, prev);
       this.restorers.forEach((restore) => restore());
       this.restorers = [];
       return;
@@ -525,12 +535,10 @@ export default class BhCarousel {
     // Enforce aria-controls on first enable only.
     if (action === "enable") {
       this.enforceInitialAttributeValues(this.nextButton, [
-        "aria-controls",
-        this.slideContainer.id,
+        ["aria-controls", this.slideContainer.id],
       ]);
       this.enforceInitialAttributeValues(this.previousButton, [
-        "aria-controls",
-        this.slideContainer.id,
+        ["aria-controls", this.slideContainer.id],
       ]);
     }
 
@@ -593,33 +601,29 @@ export default class BhCarousel {
       const indexBefore = prev?.[stateKey] as number | undefined;
       const indexNow = state[stateKey] as number;
       if (indexBefore !== undefined && indexBefore !== indexNow) {
-        delete this.slides[indexBefore]!.dataset[dsKey];
+        if (!this.slides[indexBefore]) {
+          return;
+        }
+        delete this.slides[indexBefore].dataset[dsKey];
       }
       if (indexNow !== undefined) {
-        this.slides[indexNow]!.dataset[dsKey] = "";
+        if (!this.slides[indexNow]) {
+          return;
+        }
+        this.slides[indexNow].dataset[dsKey] = "";
       }
     }
   }
 
   /** Syncs slide itemStateAttribute values from state. */
   private renderSlides(state: BhCarouselState, prev: BhCarouselState): void {
-    // Disable transition: clear attribute on all slides.
-    if (!state.enabled && prev.enabled) {
-      this.slides.forEach((slide) =>
-        slide.removeAttribute(this.settings.itemStateAttribute),
-      );
-      this.syncRelativeIndexAttributes(state, prev);
-      return;
-    }
-
     // Enable transition: full sync across all slides.
-    if (!prev.enabled) {
+    if (state.enabled && !prev.enabled) {
       this.slides.forEach((slide, index) => {
-        this.enforceInitialAttributeValues(
-          slide,
+        this.enforceInitialAttributeValues(slide, [
           ["role", "group"],
           ["aria-roledescription", "slide"],
-        );
+        ]);
         slide.setAttribute(
           this.settings.itemStateAttribute,
           (index !== state.currentIndex).toString(),
@@ -631,14 +635,13 @@ export default class BhCarousel {
 
     // Navigation: touch only the two changed slides.
     if (state.currentIndex !== prev.currentIndex) {
-      this.slides[prev.currentIndex]!.setAttribute(
-        this.settings.itemStateAttribute,
-        "true",
-      );
-      this.slides[state.currentIndex]!.setAttribute(
-        this.settings.itemStateAttribute,
-        "false",
-      );
+      const prevSlide = this.slides[prev.currentIndex];
+      const currSlide = this.slides[state.currentIndex];
+      if (!prevSlide || !currSlide) {
+        return;
+      }
+      prevSlide.setAttribute(this.settings.itemStateAttribute, "true");
+      currSlide.setAttribute(this.settings.itemStateAttribute, "false");
       this.syncRelativeIndexAttributes(state, prev);
     }
   }
@@ -651,10 +654,9 @@ export default class BhCarousel {
     const { playing } = state;
 
     // Enforce initial value on first enable.
-    if (!prev.enabled) {
+    if (state.enabled && !prev.enabled) {
       this.enforceInitialAttributeValues(this.slideContainer, [
-        "aria-live",
-        playing ? "off" : "polite",
+        ["aria-live", playing ? "off" : "polite"],
       ]);
     }
 
@@ -674,8 +676,7 @@ export default class BhCarousel {
     if (state.enabled) {
       this.nextButton.addEventListener("click", this.handleNextClick);
       this.previousButton.addEventListener("click", this.handlePreviousClick);
-      // TODO: should this be attached to the element?
-      window.addEventListener("keydown", this.handleKeydown);
+      this.carousel.addEventListener("keydown", this.handleKeydown);
       this.reducedMotionQuery.addEventListener(
         "change",
         this.handleReducedMotionChange,
@@ -690,7 +691,7 @@ export default class BhCarousel {
         "click",
         this.handlePreviousClick,
       );
-      window.removeEventListener("keydown", this.handleKeydown);
+      this.carousel.removeEventListener("keydown", this.handleKeydown);
       this.reducedMotionQuery.removeEventListener(
         "change",
         this.handleReducedMotionChange,
@@ -772,12 +773,13 @@ export default class BhCarousel {
   /** Enforces attributes, allowing them to be reset on disable. */
   private enforceInitialAttributeValues(
     el: HTMLElement,
-    ...pairs: [string, string][]
+    pairs: [string, string][]
   ): void {
     for (const [name, value] of pairs) {
       const originalValue = el.getAttribute(name);
       if (originalValue !== value) {
         el.setAttribute(name, value);
+        // NOTE: restorers run in registration order.
         this.restorers.push((): void =>
           originalValue === null
             ? el.removeAttribute(name)
