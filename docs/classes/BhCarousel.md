@@ -43,11 +43,17 @@ REQUIRED.
         type="button"
       ></button>
     </div>
-    <div aria-live="off" class="bhc__items" id="test-carousel">
+    <div
+      aria-live="off"
+      class="bhc__items"
+      id="test-carousel"
+      data-bhc-slide-container
+    >
       <div
-        aria-label="1 of 5"
+        aria-label="1 of 2"
         aria-roledescription="slide"
         class="bhc__item"
+        data-bhc-slide
         role="group"
       >
         <div class="bhc__image">
@@ -68,9 +74,10 @@ REQUIRED.
       </div>
 
       <div
-        aria-label="2 of 5"
+        aria-label="2 of 2"
         aria-roledescription="slide"
         class="bhc__item"
+        data-bhc-slide
         role="group"
       >
         <div class="bhc__image">
@@ -129,7 +136,7 @@ Optional settings to override class defaults.
 
 #### Defined in
 
-[bh-carousel.ts:244](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L244)
+[bh-carousel.ts:253](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L253)
 
 ## Methods
 
@@ -145,7 +152,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:327](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L327)
+[bh-carousel.ts:360](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L360)
 
 ---
 
@@ -165,7 +172,7 @@ when prefersReducedMotion is true to respect user accessibility preference.
 
 #### Defined in
 
-[bh-carousel.ts:342](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L342)
+[bh-carousel.ts:375](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L375)
 
 ---
 
@@ -181,7 +188,7 @@ Returns the current instance state.
 
 #### Defined in
 
-[bh-carousel.ts:365](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L365)
+[bh-carousel.ts:398](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L398)
 
 ---
 
@@ -189,7 +196,7 @@ Returns the current instance state.
 
 > **goto**(`newCurrentIndex`): `void`
 
-Navigates to another by numeric index.
+Navigates to a slide by numeric index.
 
 #### Parameters
 
@@ -203,7 +210,7 @@ Navigates to another by numeric index.
 
 #### Defined in
 
-[bh-carousel.ts:370](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L370)
+[bh-carousel.ts:403](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L403)
 
 ---
 
@@ -219,7 +226,7 @@ Advances carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:434](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L434)
+[bh-carousel.ts:467](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L467)
 
 ---
 
@@ -235,7 +242,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:443](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L443)
+[bh-carousel.ts:476](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L476)
 
 ---
 
@@ -251,7 +258,7 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:448](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L448)
+[bh-carousel.ts:481](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L481)
 
 ---
 
@@ -267,4 +274,4 @@ Reverses carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:453](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L453)
+[bh-carousel.ts:486](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L486)
