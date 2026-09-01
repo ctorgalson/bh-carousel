@@ -19,13 +19,12 @@ afterEach(() => {
 describe("getState()", () => {
   it("returns correct state values on start", () => {
     const refState = {
-      playing: true,
       currentIndex: 0,
       enabled: true,
       firstIndex: 0,
       lastIndex: 4,
-      action: "enable",
       nextIndex: 1,
+      playing: true,
       prefersReducedMotion: false,
       previousIndex: 4,
     };
@@ -115,14 +114,14 @@ describe("disable()", () => {
     expect(btn.getAttribute("aria-label")).toBe("Play carousel");
   });
 
-  it("leaves the aria-hidden attribute unchanged on slide elements", () => {
+  it("removes the aria-hidden attribute from slide elements", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     expect(
       qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
-    ).toBe("false");
+    ).toBe(null);
   });
 });
 

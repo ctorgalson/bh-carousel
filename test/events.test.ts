@@ -103,17 +103,6 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     expect((spy.mock.calls[0]![0] as CustomEvent).detail.action).toEqual("enable");
   });
 
-  it("no longer emits a bhcarousel:disable event on disable()", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el);
-    const spy = vi.fn();
-    el.addEventListener("bhcarousel:disable", spy as EventListener);
-    c.disable();
-    // disable() now returns early after running restorers;
-    // renderTransitionEvents is not called.
-    expect(spy).not.toHaveBeenCalled();
-  });
-
   it("emits a bhcarousel:goto event on goto()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
@@ -131,17 +120,6 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     el.addEventListener("bhcarousel:goto", spy as EventListener);
     c.goto(0);
     expect(spy).not.toHaveBeenCalledOnce();
-  });
-
-  it("does not emit a 'disable' event regardless (disable short-circuits)", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el);
-    const spy = vi.fn();
-    el.addEventListener("bhcarousel:disable", spy as EventListener);
-    c.disable();
-    c.disable();
-    // disable() returns early; renderTransitionEvents is never called.
-    expect(spy).not.toHaveBeenCalled();
   });
 
   it("does not emit a 'enable' event when already enabled", () => {
