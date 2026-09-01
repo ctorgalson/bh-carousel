@@ -147,11 +147,12 @@ export interface BhCarouselState {
  *         type="button"
  *       ></button>
  *     </div>
- *     <div aria-live="off" class="bhc__items" id="test-carousel">
+ *     <div aria-live="off" class="bhc__items" id="test-carousel" data-bhc-slide-container>
  *       <div
- *         aria-label="1 of 5"
+ *         aria-label="1 of 2"
  *         aria-roledescription="slide"
  *         class="bhc__item"
+ *         data-bhc-slide
  *         role="group"
  *       >
  *         <div class="bhc__image">
@@ -173,9 +174,10 @@ export interface BhCarouselState {
  *       </div>
 
  *       <div
- *         aria-label="2 of 5"
+ *         aria-label="2 of 2"
  *         aria-roledescription="slide"
  *         class="bhc__item"
+ *         data-bhc-slide
  *         role="group"
  *       >
  *         <div class="bhc__image">
@@ -249,43 +251,56 @@ export default class BhCarousel {
     this.settings = { ...BhCarousel.defaults, ...settings };
 
     // We need to manage the slides' live region.
-    const slideContainer = this.carousel.querySelector<HTMLElement>(this.selectors.slideContainer);
-    if (!(slideContainer instanceof HTMLElement) || slideContainer.getAttribute("id") === "") {
+    const slideContainer = this.carousel.querySelector<HTMLElement>(
+      this.selectors.slideContainer,
+    );
+    if (
+      !(slideContainer instanceof HTMLElement) ||
+      slideContainer.getAttribute("id") === ""
+    ) {
       throw new Error(
-        `BhCarousel: no element matching the selector "${this.selectors.slideContainer}" with a non-empty id attribute could be found.`,
+        `BhCarousel: no container found or id attr was empty (${this.selectors.slideContainer}).`,
       );
     }
     this.slideContainer = slideContainer;
 
     // We need to manage the slides themselves.
-    const slides = this.slideContainer.querySelectorAll<HTMLElement>(this.selectors.slide);
+    const slides = this.slideContainer.querySelectorAll<HTMLElement>(
+      this.selectors.slide,
+    );
     if (slides.length === 0) {
       throw new Error(
-        `BhCarousel: "${this.selectors.slideContainer}" must contain at least one "${this.selectors.slide}" to instantiate the carousel.`,
+        `BhCarousel: no slides were found (${this.selectors.slide}).`,
       );
     }
     this.slides = slides;
 
     // We need to manage the previous button.
-    const nextButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.nextButton);
+    const nextButton = this.carousel.querySelector<HTMLButtonElement>(
+      this.selectors.nextButton,
+    );
     if (!nextButton) {
       throw new Error(
-        `BhCarousel: "the carousel must contain a "Next" button matching "${this.selectors.nextButton}".`,
+        `BhCarousel: no "Next" button was found (${this.selectors.nextButton}).`,
       );
     }
     this.nextButton = nextButton;
 
     // We need to manage the previous button.
-    const previousButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.previousButton);
+    const previousButton = this.carousel.querySelector<HTMLButtonElement>(
+      this.selectors.previousButton,
+    );
     if (!previousButton) {
       throw new Error(
-        `BhCarousel: "the carousel must contain a "Previous" button matching "${this.selectors.previousButton}".`,
+        `BhCarousel: no "Previous" button was found (${this.selectors.previousButton}).`,
       );
     }
     this.previousButton = previousButton;
 
     // We need to manage the Play/Pause button, but it may not be present.
-    const playPauseButton = this.carousel.querySelector<HTMLButtonElement>(this.selectors.playPauseButton);
+    const playPauseButton = this.carousel.querySelector<HTMLButtonElement>(
+      this.selectors.playPauseButton,
+    );
     if (playPauseButton) {
       this.playPauseButton = playPauseButton;
     }
@@ -293,7 +308,7 @@ export default class BhCarousel {
     // We need to verify certain settings.
     if (!/^[a-z][a-z0-9-]*$/.test(this.settings.itemStateAttribute)) {
       throw new Error(
-        `BhCarousel: invalid attribute name supplied for settings.itemStateAttribute ("${this.settings.itemStateAttribute}").`,
+        `BhCarousel: invalid itemStateAttribute (${this.settings.itemStateAttribute}).`,
       );
     }
 
@@ -330,9 +345,7 @@ export default class BhCarousel {
    * The 'previous' and 'next' events include currentIndex and previousIndex
    * in the detail. The 'play' and 'pause' events include only the action.
    */
-  private createEvent(
-    detail: BhCarouselState,
-  ): CustomEvent<BhCarouselState> {
+  private createEvent(detail: BhCarouselState): CustomEvent<BhCarouselState> {
     const { action } = detail;
     return new CustomEvent(`bhcarousel:${action}`, {
       bubbles: true,
@@ -370,7 +383,7 @@ export default class BhCarousel {
   /** Computes next, prev indices using currentIndex from state/override . */
   private getRelativeIndices(
     currentIndex: number,
-    lastIndex = this.slides.length - 1
+    lastIndex = this.slides.length - 1,
   ): Pick<BhCarouselState, "currentIndex" | "nextIndex" | "previousIndex"> {
     const firstIndex = 0;
     return {
@@ -503,19 +516,22 @@ export default class BhCarousel {
   }
 
   /** Syncs previous/next buttons' hidden and disabled attrs from state. */
-  private renderNavButtons(state: BhCarouselState, prev: BhCarouselState): void {
+  private renderNavButtons(
+    state: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
     const { action, enabled, playing } = state;
 
     // Enforce aria-controls on first enable only.
     if (action === "enable") {
-      this.enforceInitialAttributeValues(
-        this.nextButton,
-        ["aria-controls", this.slideContainer.id]
-      );
-      this.enforceInitialAttributeValues(
-        this.previousButton,
-        ["aria-controls", this.slideContainer.id]
-      );
+      this.enforceInitialAttributeValues(this.nextButton, [
+        "aria-controls",
+        this.slideContainer.id,
+      ]);
+      this.enforceInitialAttributeValues(this.previousButton, [
+        "aria-controls",
+        this.slideContainer.id,
+      ]);
     }
 
     if (enabled === prev.enabled && playing === prev.playing) {
@@ -530,7 +546,10 @@ export default class BhCarousel {
   }
 
   /** Syncs the optional play/pause button's attrs from state. */
-  private renderPlayPauseButton(state: BhCarouselState, prev: BhCarouselState): void {
+  private renderPlayPauseButton(
+    state: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
     if (!this.playPauseButton) {
       return;
     }
@@ -599,7 +618,7 @@ export default class BhCarousel {
         this.enforceInitialAttributeValues(
           slide,
           ["role", "group"],
-          ["aria-roledescription", "slide"]
+          ["aria-roledescription", "slide"],
         );
         slide.setAttribute(
           this.settings.itemStateAttribute,
@@ -625,15 +644,18 @@ export default class BhCarousel {
   }
 
   /** Syncs the slide container's aria-live attribute from state. */
-  private renderSlideContainer(state: BhCarouselState, prev: BhCarouselState): void {
+  private renderSlideContainer(
+    state: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
     const { playing } = state;
 
     // Enforce initial value on first enable.
     if (!prev.enabled) {
-      this.enforceInitialAttributeValues(
-        this.slideContainer,
-        ["aria-live", playing ? "off" : "polite"]
-      );
+      this.enforceInitialAttributeValues(this.slideContainer, [
+        "aria-live",
+        playing ? "off" : "polite",
+      ]);
     }
 
     // No change in playing — aria-live hasn't changed.
@@ -641,10 +663,7 @@ export default class BhCarousel {
       return;
     }
 
-    this.slideContainer.setAttribute(
-      "aria-live",
-      playing ? "off" : "polite",
-    );
+    this.slideContainer.setAttribute("aria-live", playing ? "off" : "polite");
   }
 
   /** Attaches or detaches DOM listeners on the enabled transition. */
@@ -703,7 +722,10 @@ export default class BhCarousel {
   }
 
   /** Dispatches CustomEvents on various transitions. */
-  private renderTransitionEvents(state: BhCarouselState, prev: BhCarouselState): void {
+  private renderTransitionEvents(
+    state: BhCarouselState,
+    prev: BhCarouselState,
+  ): void {
     this.carousel.dispatchEvent(this.createEvent(state));
 
     if (
@@ -715,7 +737,7 @@ export default class BhCarousel {
         this.createEvent({
           ...state,
           action: state.playing ? "play" : "pause",
-        })
+        }),
       );
     }
   }
@@ -725,9 +747,7 @@ export default class BhCarousel {
     if (!this.settings.debug) {
       return;
     }
-    console.debug(`render() method called by ${state.action}().`, {
-      state,
-    });
+    console.debug(`render() method called on "${state.action}".`, { state });
   }
 
   /** Sets/updates carousel state. */
@@ -744,7 +764,7 @@ export default class BhCarousel {
     const lastIndex = this.slides.length - 1;
     if (index < firstIndex || index > lastIndex) {
       throw new Error(
-        `Index ${index} is out of bounds (${firstIndex} - ${lastIndex})`,
+        `BhCarousel: index ${index} is out of bounds (0-${lastIndex})`,
       );
     }
   }
@@ -758,9 +778,11 @@ export default class BhCarousel {
       const originalValue = el.getAttribute(name);
       if (originalValue !== value) {
         el.setAttribute(name, value);
-        this.restorers.push((): void => originalValue === null
-          ? el.removeAttribute(name)
-          : el.setAttribute(name, originalValue));
+        this.restorers.push((): void =>
+          originalValue === null
+            ? el.removeAttribute(name)
+            : el.setAttribute(name, originalValue),
+        );
       }
     }
   }
