@@ -74,9 +74,6 @@ export interface BhCarouselSettings {
 /**
  * An interface for defining the current state of a BhCarousel instance.
  *
- * @property {string} action
- *   The name of the last method to modify the state var. Only exposed for
- *   debugging purposes.
  * @property {number} currentIndex
  *   The numeric (zero-based) index of the current slide in the carousel.
  * @property {boolean} enabled
@@ -98,7 +95,6 @@ export interface BhCarouselSettings {
  *   The numeric (zero-based) index of the previous slide in the carousel.
  */
 export interface BhCarouselState {
-  action: BhCarouselAction;
   currentIndex: number;
   enabled: boolean;
   firstIndex: number;
