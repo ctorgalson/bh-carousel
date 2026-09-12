@@ -160,3 +160,26 @@ describe("Slideshow wraps to first slide from last on ArrowRight", () => {
     );
   });
 });
+
+describe("Keyboard scoping", () => {
+  it("ignores ArrowRight dispatched outside the carousel", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    press(window, "ArrowRight");
+
+    expect(c.getState().currentIndex).toBe(0);
+  });
+
+  it("only advances the carousel whose element received the keydown", () => {
+    const elA = buildCarouselDom();
+    const elB = buildCarouselDom({ containerId: "slide-container-b" });
+    const a = new BhCarousel(elA, { automatic: false });
+    const b = new BhCarousel(elB, { automatic: false });
+
+    press(elA, "ArrowRight");
+
+    expect(a.getState().currentIndex).toBe(1);
+    expect(b.getState().currentIndex).toBe(0);
+  });
+});
