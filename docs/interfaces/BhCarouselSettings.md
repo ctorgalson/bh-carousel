@@ -19,7 +19,7 @@ Value for the Play/Pause button's aria-label attribute when playing (e.g.
 
 #### Defined in
 
-[bh-carousel.ts:63](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L63)
+[bh-carousel.ts:65](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L65)
 
 ---
 
@@ -32,7 +32,7 @@ Value for the Play/Pause button's aria-label attribute when paused (e.g.
 
 #### Defined in
 
-[bh-carousel.ts:64](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L64)
+[bh-carousel.ts:66](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L66)
 
 ---
 
@@ -45,7 +45,7 @@ useful when it's desirable to make the interactivity responsive.
 
 #### Defined in
 
-[bh-carousel.ts:65](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L65)
+[bh-carousel.ts:67](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L67)
 
 ---
 
@@ -59,7 +59,7 @@ allows it.
 
 #### Defined in
 
-[bh-carousel.ts:66](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L66)
+[bh-carousel.ts:68](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L68)
 
 ---
 
@@ -72,19 +72,7 @@ Currently has no effect as tab-style navigation hasn't been implemented.
 
 #### Defined in
 
-[bh-carousel.ts:67](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L67)
-
----
-
-### debug
-
-> **debug**: `boolean`
-
-When set, logs every event emitted by the carousel to the console.
-
-#### Defined in
-
-[bh-carousel.ts:68](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L68)
+[bh-carousel.ts:69](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L69)
 
 ---
 
@@ -97,7 +85,7 @@ automatically.
 
 #### Defined in
 
-[bh-carousel.ts:69](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L69)
+[bh-carousel.ts:70](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L70)
 
 ---
 
@@ -113,7 +101,7 @@ or hyphens.
 
 #### Defined in
 
-[bh-carousel.ts:70](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L70)
+[bh-carousel.ts:71](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L71)
 
 ---
 
@@ -126,4 +114,18 @@ set this value to 2.
 
 #### Defined in
 
-[bh-carousel.ts:71](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L71)
+[bh-carousel.ts:72](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L72)
+
+---
+
+### wrap
+
+> **wrap**: `boolean`
+
+Whether or not to continue to the first slide when "Next" is clicked on
+the last side/the last slide when "Previous" is clicked on the first
+slide.
+
+#### Defined in
+
+[bh-carousel.ts:73](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L73)

@@ -212,6 +212,7 @@ export interface BhCarouselState {
  * @see https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/#javascriptandcsssourcecode
  */
 export default class BhCarousel {
+  private activeTransition: ViewTransition | undefined;
   private carousel: HTMLElement;
   private static readonly defaults: BhCarouselSettings = {
     ariaLabelPause: "Pause carousel",
@@ -225,10 +226,11 @@ export default class BhCarousel {
     wrap: true,
   };
   private intervalId: number | undefined;
-  private reducedMotionQuery: MediaQueryList;
   private nextButton: HTMLButtonElement;
   private playButton: HTMLButtonElement | null = null;
   private previousButton: HTMLButtonElement;
+  private reducedMotionQuery: MediaQueryList;
+  private restorers: (() => void)[] = [];
   private readonly selectors = {
     nextButton: "button[data-bhc-next]",
     playButton: "button[data-bhc-play-pause]",
@@ -236,7 +238,6 @@ export default class BhCarousel {
     slide: "[data-bhc-slide]",
     slideContainer: "[data-bhc-slide-container][id]",
   };
-  private restorers: (() => void)[] = [];
   private settings: BhCarouselSettings;
   private slideContainer: HTMLElement;
   private slides: NodeListOf<HTMLElement>;
@@ -352,7 +353,6 @@ export default class BhCarousel {
     if (this.state.enabled) {
       return;
     }
-
     this.initAttr(this.nextButton, "aria-controls", this.slideContainer.id);
     this.initAttr(this.previousButton, "aria-controls", this.slideContainer.id);
     this.initAttr(
@@ -385,6 +385,8 @@ export default class BhCarousel {
     if (!this.state.enabled) {
       return;
     }
+    this.activeTransition?.skipTransition();
+    this.activeTransition = undefined;
     this.stopInterval();
     this.detachListeners();
     this.nextButton.hidden = true;
@@ -424,7 +426,7 @@ export default class BhCarousel {
 
   // NAVIGATION AND PLAYBACK
 
-  /** Navigates to next slide. No-op at the last slide when wrap is false. */
+  /** Navigates to next slide. No-op at last slide when wrap is false. */
   public next(): void {
     const { nextIndex } = this.state;
     if (nextIndex === null) {
@@ -433,7 +435,7 @@ export default class BhCarousel {
     this.goto(nextIndex, "next");
   }
 
-  /** Navigates to previous slide. No-op at the first slide when wrap is false. */
+  /** Navigates to previous slide. No-op at first slide when wrap is false. */
   public previous(): void {
     const { previousIndex } = this.state;
     if (previousIndex === null) {
@@ -450,13 +452,12 @@ export default class BhCarousel {
     this.validateSlideIndex(i);
     const prev = this.state;
     this.state = { ...prev, ...this.getRelativeIndices(i) };
-
-    // Stop autoplaying at the end (wrap:false only — nextIndex is null there).
+    // Stop autoplaying at the end when wrap is true.
     if (this.state.nextIndex === null && this.state.playing) {
       this.pause();
     }
     this.syncControls();
-    this.syncSlides(this.state, prev);
+    this.syncSlides(this.state, prev, action);
     this.dispatch(action);
   }
 
@@ -517,17 +518,80 @@ export default class BhCarousel {
     }
   }
 
-  /** Uses state to manage attributes of slides. */
-  private syncSlides(state: BhCarouselState, prev: BhCarouselState): void {
-    this.slides[prev.currentIndex]?.setAttribute(
-      this.settings.itemStateAttribute,
-      "true",
-    );
-    this.slides[state.currentIndex]?.setAttribute(
-      this.settings.itemStateAttribute,
-      "false",
-    );
-    this.syncRelativeIndexAttributes(state, prev);
+  /**
+   * Uses state to manage attributes of slides.
+   *
+   * Wraps the mutation in `document.startViewTransition()` when available,
+   * letting the browser animate between before/after snapshots. Direction
+   * ("forward" | "reverse") is signalled via the transition's `types`
+   * option so CSS can gate keyframes on `:active-view-transition-type()`
+   * (see `.bhc--horizontal` for a worked example). No document-root state
+   * is mutated.
+   *
+   * If a previous transition is still in flight when a new navigation
+   * arrives (e.g. rapid clicks, or an interval shorter than the transition
+   * duration), the previous transition is jumped to its end state and a
+   * fresh one starts. Applies uniformly — autoplay can interrupt itself
+   * the same way user input can.
+   */
+  private syncSlides(
+    state: BhCarouselState,
+    prev: BhCarouselState,
+    action: BhCarouselAction,
+  ): void {
+    const mutate = (): void => {
+      this.slides[prev.currentIndex]?.setAttribute(
+        this.settings.itemStateAttribute,
+        "true",
+      );
+      this.slides[state.currentIndex]?.setAttribute(
+        this.settings.itemStateAttribute,
+        "false",
+      );
+      this.syncRelativeIndexAttributes(state, prev);
+    };
+
+    if (state.prefersReducedMotion || !("startViewTransition" in document)) {
+      mutate();
+      return;
+    }
+
+    const direction = this.directionFor(action, state, prev);
+    this.activeTransition?.skipTransition();
+    const t = document.startViewTransition({
+      update: mutate,
+      types: direction ? [`bhc-${direction}`] : [],
+    });
+    this.activeTransition = t;
+    t.finished.finally(() => {
+      if (this.activeTransition === t) {
+        this.activeTransition = undefined;
+      }
+    });
+  }
+
+  /**
+   * Derives transition direction from the action that triggered it.
+   *
+   * "next" / "previous" have inherent direction. "goto" derives it from the
+   * sign of the index delta. All other actions (enable, etc.) return null —
+   * no direction-dependent CSS should apply.
+   */
+  private directionFor(
+    action: BhCarouselAction,
+    state: BhCarouselState,
+    prev: BhCarouselState,
+  ): "forward" | "reverse" | null {
+    if (action === "next") {
+      return "forward";
+    }
+    if (action === "previous") {
+      return "reverse";
+    }
+    if (action === "goto") {
+      return state.currentIndex > prev.currentIndex ? "forward" : "reverse";
+    }
+    return null;
   }
 
   /** Sets and removes dataset attributes according to current/prev state. */

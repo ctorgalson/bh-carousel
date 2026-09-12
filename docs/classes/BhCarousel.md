@@ -136,7 +136,7 @@ Optional settings to override class defaults.
 
 #### Defined in
 
-[bh-carousel.ts:253](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L253)
+[bh-carousel.ts:254](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L254)
 
 ## Methods
 
@@ -144,7 +144,7 @@ Optional settings to override class defaults.
 
 > **disable**(): `void`
 
-Disables carousel interactivity.
+Disables interactivity, resets DOM to original state (not a guarantee!)
 
 #### Returns
 
@@ -152,7 +152,7 @@ Disables carousel interactivity.
 
 #### Defined in
 
-[bh-carousel.ts:360](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L360)
+[bh-carousel.ts:385](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L385)
 
 ---
 
@@ -172,7 +172,7 @@ when prefersReducedMotion is true to respect user accessibility preference.
 
 #### Defined in
 
-[bh-carousel.ts:375](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L375)
+[bh-carousel.ts:352](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L352)
 
 ---
 
@@ -188,21 +188,25 @@ Returns the current instance state.
 
 #### Defined in
 
-[bh-carousel.ts:398](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L398)
+[bh-carousel.ts:647](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L647)
 
 ---
 
 ### goto()
 
-> **goto**(`newCurrentIndex`): `void`
+> **goto**(`i`, `action`): `void`
 
 Navigates to a slide by numeric index.
 
 #### Parameters
 
-##### newCurrentIndex
+##### i
 
 `number`
+
+##### action
+
+[`BhCarouselAction`](../type-aliases/BhCarouselAction.md) = `"goto"`
 
 #### Returns
 
@@ -210,7 +214,7 @@ Navigates to a slide by numeric index.
 
 #### Defined in
 
-[bh-carousel.ts:403](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L403)
+[bh-carousel.ts:449](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L449)
 
 ---
 
@@ -218,7 +222,7 @@ Navigates to a slide by numeric index.
 
 > **next**(): `void`
 
-Advances carousel one slide.
+Navigates to next slide. No-op at the last slide when wrap is false.
 
 #### Returns
 
@@ -226,7 +230,7 @@ Advances carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:467](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L467)
+[bh-carousel.ts:431](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L431)
 
 ---
 
@@ -234,7 +238,7 @@ Advances carousel one slide.
 
 > **pause**(): `void`
 
-Pauses carousel.
+Pauses automatic playback.
 
 #### Returns
 
@@ -242,7 +246,7 @@ Pauses carousel.
 
 #### Defined in
 
-[bh-carousel.ts:476](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L476)
+[bh-carousel.ts:483](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L483)
 
 ---
 
@@ -250,7 +254,7 @@ Pauses carousel.
 
 > **play**(): `void`
 
-Plays carousel.
+Starts automatic playback, this.state.prefersReducedMotion permitting.
 
 #### Returns
 
@@ -258,7 +262,7 @@ Plays carousel.
 
 #### Defined in
 
-[bh-carousel.ts:481](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L481)
+[bh-carousel.ts:467](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L467)
 
 ---
 
@@ -266,7 +270,7 @@ Plays carousel.
 
 > **previous**(): `void`
 
-Reverses carousel one slide.
+Navigates to previous slide. No-op at the first slide when wrap is false.
 
 #### Returns
 
@@ -274,4 +278,4 @@ Reverses carousel one slide.
 
 #### Defined in
 
-[bh-carousel.ts:486](https://github.com/ctorgalson/bh-carousel/blob/c01896143fad03de42c3826266698584f269cbbe/src/bh-carousel.ts#L486)
+[bh-carousel.ts:440](https://github.com/ctorgalson/bh-carousel/blob/6ca1d9bbfb461c0abdd99ce2a2545300319db514/src/bh-carousel.ts#L440)

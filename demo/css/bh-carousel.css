@@ -17,7 +17,11 @@
 }
 
 .bhc__controls {
+  display: flex;
+  gap: calc(var(--bhc-control-height) / 4);
+  padding: calc(var(--bhc-control-height) / 4);
   position: relative;
+  top: calc(var(--bhc-control-height) * 1.5);
   z-index: 5;
 }
 
@@ -31,8 +35,6 @@
   height: var(--bhc-control-height);
   justify-content: center;
   padding: 0;
-  position: absolute;
-  top: calc(var(--bhc-control-height) / 4);
   width: var(--bhc-control-width);
 }
 
@@ -53,7 +55,7 @@
 }
 
 .bhc__control[data-bhc-play-pause] {
-  left: calc(var(--bhc-control-height) / 4);
+  margin-inline-end: auto;
 }
 
 .bhc__control[data-bhc-play-pause][data-bhc-playing="false"] {
@@ -80,6 +82,18 @@
   width: 100%;
 }
 
+/* --------------------------------------------------------------------------
+ * Baseline slide layout
+ * --------------------------------------------------------------------------
+ * Only the current slide is laid out. Navigation between slides is animated
+ * by the browser's View Transitions API — the JS wraps its DOM mutation in
+ * `document.startViewTransition()` and assigns each slide a unique
+ * `view-transition-name`, so the browser interpolates between old and new
+ * snapshots. With no per-slide keyframes defined, that interpolation is the
+ * browser's default (cross-fade). In non-supporting browsers, or when the
+ * user prefers reduced motion, the swap happens instantly with no animation.
+ * -------------------------------------------------------------------------- */
+
 .bhc__items {
   display: grid;
   overflow: hidden;
@@ -94,33 +108,104 @@
   position: relative;
 }
 
-.bhc__item[data-bhc-current-slide],
-.bhc__item[data-bhc-previous-slide],
-.bhc__item[data-bhc-next-slide] {
-  display: grid;
-  will-change: transform;
-}
-
 .bhc__item[data-bhc-current-slide] {
-  transform: translateX(0);
-  z-index: 2;
+  display: grid;
 }
 
-.bhc__item[data-bhc-previous-slide] {
-  transform: translateX(-100%);
+/* --------------------------------------------------------------------------
+ * Optional: horizontal slide effect
+ * --------------------------------------------------------------------------
+ * Add class `bhc--horizontal` to the carousel root to opt in to a horizontal
+ * slide effect. Only the current slide is laid out (same as baseline). The
+ * slide illusion is authored entirely with view-transition keyframes.
+ *
+ * The current slide gets a `view-transition-name` so the browser snapshots
+ * only it (not the whole document root). Direction is gated via
+ * `:active-view-transition-type()` — the JS passes `bhc-forward` or
+ * `bhc-reverse` in the transition's `types` option:
+ *
+ *   "forward" (next / goto to higher index): old slides out left, new in right
+ *   "reverse" (previous / goto to lower index): old slides out right, new in left
+ *
+ * Pattern-match this to author your own direction-aware effect: pick a
+ * class, give the current slide a unique `view-transition-name`, then
+ * target `:root:active-view-transition-type(bhc-forward)::view-transition-old(<name>)`
+ * (etc.) and define your keyframes.
+ *
+ * NOTE: `view-transition-name` must be document-unique, so this shape
+ * supports one `.bhc--horizontal` carousel per page. Multi-instance would
+ * need JS-assigned unique names per carousel.
+ *
+ * Reduced-motion users don't get animation at all — the JS bypasses
+ * `startViewTransition()` when `prefers-reduced-motion: reduce`, so the
+ * DOM swap happens instantly with no keyframes to run.
+ * -------------------------------------------------------------------------- */
+
+.bhc--horizontal .bhc__item[data-bhc-current-slide] {
+  view-transition-name: bhc-slide;
+}
+
+/* The controls sit visually over the slide area (positioned absolutely
+ * inside a zero-height container). Without their own transition name,
+ * they'd be captured in `root` and occluded by the slide's group pseudo,
+ * which paints on top of root. Naming the container splits it into its
+ * own group, and `z-index` lifts that group above the slide group
+ * (named groups paint in DOM order otherwise, and `.bhc__controls`
+ * precedes `.bhc__items`). */
+.bhc--horizontal .bhc__controls {
+  view-transition-name: bhc-controls;
+}
+
+:root::view-transition-group(bhc-controls) {
   z-index: 1;
 }
 
-.bhc__item[data-bhc-next-slide] {
-  transform: translateX(100%);
-  z-index: 1;
+/* The transition group pseudo is rendered at :root and does NOT clip by
+ * default — without this, the old snapshot translating left and the new
+ * snapshot translating in from the right are both fully visible during
+ * the animation (appearing side by side). Clipping the group to its
+ * target rect restores the intended "in place" slide effect. */
+:root::view-transition-group(bhc-slide) {
+  overflow: hidden;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .bhc__item[data-bhc-current-slide],
-  .bhc__item[data-bhc-previous-slide],
-  .bhc__item[data-bhc-next-slide] {
-    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+:root:active-view-transition-type(bhc-forward)::view-transition-old(bhc-slide) {
+  animation: bhc-slide-out-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-forward)::view-transition-new(bhc-slide) {
+  animation: bhc-slide-in-right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-reverse)::view-transition-old(bhc-slide) {
+  animation: bhc-slide-out-right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-reverse)::view-transition-new(bhc-slide) {
+  animation: bhc-slide-in-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes bhc-slide-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes bhc-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes bhc-slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes bhc-slide-in-left {
+  from {
+    transform: translateX(-100%);
   }
 }
 
