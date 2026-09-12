@@ -66,12 +66,12 @@
     "prettier": "^3.4.2",
     "rollup": "^4.28.1",
     "serve": "^14.2.4",
-    "typedoc": "^0.27.5",
+    "typedoc": "^0.28.20",
     "typedoc-plugin-coverage": "^3.4.0",
     "typedoc-plugin-markdown": "^4.3.3",
     "typedoc-plugin-mdn-links": "^4.0.6",
     "typedoc-plugin-rename-defaults": "^0.7.2",
-    "typescript": "^5.7.2",
+    "typescript": "^5.9.3",
     "vitest": "^4.1.10"
   }
 }
