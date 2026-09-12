@@ -17,8 +17,13 @@ to BYOCSS.
 
 ## Quickstart
 
-The project will provide npm packages once it reaches a more stable condition.
-Until then, you can generate package files with the following commands:
+Install from npm:
+
+```bash
+npm install @bedlamhotel/bh-carousel
+```
+
+Or build from source:
 
 ```bash
 # Clone the repository
