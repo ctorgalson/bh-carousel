@@ -1,21 +1,25 @@
 {
-  "name": "bh-carousel",
+  "name": "@bedlamhotel/bh-carousel",
   "type": "module",
   "version": "0.10.0",
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
+  "bugs": {
+    "url": "https://github.com/ctorgalson/bh-carousel/issues"
+  },
   "license": "GPL-2.0-or-later",
-  "main": "dist/js/bh-carousel.js",
-  "module": "dist/js/bh-carousel.esm.js",
-  "types": "dist/js/bh-carousel.d.ts",
+  "sideEffects": false,
+  "main": "./dist/js/bh-carousel.js",
+  "module": "./dist/js/bh-carousel.esm.js",
+  "types": "./dist/js/bh-carousel.d.ts",
   "exports": {
     ".": {
-      "import": "dist/js/bh-carousel.esm.js",
-      "browser": "dist/js/bh-carousel.js",
-      "require": "dist/js/bh-carousel.cjs",
-      "types": "dist/js/bh-carousel.d.ts"
+      "types": "./dist/js/bh-carousel.d.ts",
+      "import": "./dist/js/bh-carousel.esm.js",
+      "browser": "./dist/js/bh-carousel.js",
+      "require": "./dist/js/bh-carousel.cjs"
     },
-    "./*": "./*"
+    "./css/*": "./dist/css/*"
   },
   "keywords": [
     "carousel",
@@ -26,7 +30,13 @@
   "author": "Christopher Torgalson",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ctorgalson/bh-carousel"
+    "url": "git+https://github.com/ctorgalson/bh-carousel.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "files": [
     "dist/*"
