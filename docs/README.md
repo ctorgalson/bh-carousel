@@ -1,8 +1,8 @@
-**bh-carousel**
+**@bedlamhotel/bh-carousel**
 
 ---
 
-# bh-carousel
+# @bedlamhotel/bh-carousel
 
 ## Classes
 
