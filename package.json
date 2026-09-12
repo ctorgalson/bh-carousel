@@ -1,7 +1,7 @@
 {
   "name": "@bedlamhotel/bh-carousel",
   "type": "module",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
   "bugs": {
