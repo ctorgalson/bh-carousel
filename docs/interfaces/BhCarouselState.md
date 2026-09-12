@@ -6,32 +6,19 @@
 
 # Interface: BhCarouselState
 
+Defined in: [bh-carousel.ts:101](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L101)
+
 An interface for defining the current state of a BhCarousel instance.
 
 ## Properties
-
-### action
-
-> **action**: [`BhCarouselAction`](../type-aliases/BhCarouselAction.md)
-
-The name of the last method to modify the state var. Only exposed for
-debugging purposes.
-
-#### Defined in
-
-[bh-carousel.ts:97](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L97)
-
----
 
 ### currentIndex
 
 > **currentIndex**: `number`
 
+Defined in: [bh-carousel.ts:102](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L102)
+
 The numeric (zero-based) index of the current slide in the carousel.
-
-#### Defined in
-
-[bh-carousel.ts:98](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L98)
 
 ---
 
@@ -39,11 +26,9 @@ The numeric (zero-based) index of the current slide in the carousel.
 
 > **enabled**: `boolean`
 
+Defined in: [bh-carousel.ts:103](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L103)
+
 Whether or not carousel interactivity is enabled at all.
-
-#### Defined in
-
-[bh-carousel.ts:99](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L99)
 
 ---
 
@@ -51,12 +36,10 @@ Whether or not carousel interactivity is enabled at all.
 
 > **firstIndex**: `number`
 
+Defined in: [bh-carousel.ts:104](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L104)
+
 The numeric (zero-based) index of the first slide in the carousel. Always
 zero.
-
-#### Defined in
-
-[bh-carousel.ts:100](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L100)
 
 ---
 
@@ -64,23 +47,20 @@ zero.
 
 > **lastIndex**: `number`
 
+Defined in: [bh-carousel.ts:105](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L105)
+
 The numeric (zero-based) index of the last slide in the carousel.
-
-#### Defined in
-
-[bh-carousel.ts:101](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L101)
 
 ---
 
 ### nextIndex
 
-> **nextIndex**: `number`
+> **nextIndex**: `number` \| `null`
 
-The numeric (zero-based) index of the next slide in the carousel.
+Defined in: [bh-carousel.ts:106](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L106)
 
-#### Defined in
-
-[bh-carousel.ts:102](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L102)
+The numeric (zero-based) index of the next slide in the carousel, or
+null when the carousel is at the last slide and `wrap` is false.
 
 ---
 
@@ -88,11 +68,9 @@ The numeric (zero-based) index of the next slide in the carousel.
 
 > **playing**: `boolean`
 
+Defined in: [bh-carousel.ts:107](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L107)
+
 Whether or not the carousel is currently auto-playing.
-
-#### Defined in
-
-[bh-carousel.ts:103](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L103)
 
 ---
 
@@ -100,22 +78,19 @@ Whether or not the carousel is currently auto-playing.
 
 > **prefersReducedMotion**: `boolean`
 
+Defined in: [bh-carousel.ts:108](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L108)
+
 The current user preference for prefers-reduced-motion (true means that
 a css media query has returned 'reduce', and false means that it has
 returned 'no-preference').
-
-#### Defined in
-
-[bh-carousel.ts:104](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L104)
 
 ---
 
 ### previousIndex
 
-> **previousIndex**: `number`
+> **previousIndex**: `number` \| `null`
 
-The numeric (zero-based) index of the previous slide in the carousel.
+Defined in: [bh-carousel.ts:109](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L109)
 
-#### Defined in
-
-[bh-carousel.ts:105](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L105)
+The numeric (zero-based) index of the previous slide in the carousel,
+or null when the carousel is at the first slide and `wrap` is false.

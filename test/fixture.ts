@@ -1,10 +1,15 @@
 export interface FixtureOptions {
+  containerId?: string;
   slideCount?: number;
   withPlayPauseButton?: boolean;
 }
 
 export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
-  const { slideCount = 5, withPlayPauseButton = true } = options;
+  const {
+    containerId = "slide-container",
+    slideCount = 5,
+    withPlayPauseButton = true,
+  } = options;
 
   const container = document.createElement("div");
   container.setAttribute("aria-label", "Test carousel");
@@ -23,6 +28,7 @@ export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
   previous.type = "button";
   previous.setAttribute("data-bhc-previous", "");
   previous.setAttribute("aria-label", "Previous slide");
+  previous.setAttribute("aria-controls", containerId);
   previous.hidden = true;
   controls.appendChild(previous);
 
@@ -30,6 +36,7 @@ export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
   next.type = "button";
   next.setAttribute("data-bhc-next", "");
   next.setAttribute("aria-label", "Next slide");
+  next.setAttribute("aria-controls", containerId);
   next.hidden = true;
   controls.appendChild(next);
 
@@ -37,11 +44,14 @@ export function buildCarouselDom(options: FixtureOptions = {}): HTMLElement {
 
   const items = document.createElement("div");
   items.setAttribute("aria-live", "off");
+  items.setAttribute("id", containerId);
+  items.setAttribute("data-bhc-slide-container", "");
   for (let i = 0; i < slideCount; i++) {
     const slide = document.createElement("div");
     slide.setAttribute("aria-label", `${i + 1} of ${slideCount}`);
-    slide.setAttribute("aria-roledescription", "slide");
+    slide.setAttribute("data-bhc-slide", "");
     slide.setAttribute("role", "group");
+    slide.setAttribute("aria-roledescription", "slide");
     items.appendChild(slide);
   }
   container.appendChild(items);

@@ -1,21 +1,25 @@
 {
-  "name": "bh-carousel",
+  "name": "@bedlamhotel/bh-carousel",
   "type": "module",
   "version": "0.10.0",
   "description": "An implementation of the WAI ARIA 'Carousel' pattern.",
   "homepage": "https://github.com/ctorgalson/bh-carousel",
+  "bugs": {
+    "url": "https://github.com/ctorgalson/bh-carousel/issues"
+  },
   "license": "GPL-2.0-or-later",
-  "main": "dist/js/bh-carousel.js",
-  "module": "dist/js/bh-carousel.esm.js",
-  "types": "dist/js/bh-carousel.d.ts",
+  "sideEffects": false,
+  "main": "./dist/js/bh-carousel.js",
+  "module": "./dist/js/bh-carousel.esm.js",
+  "types": "./dist/js/bh-carousel.d.ts",
   "exports": {
     ".": {
-      "import": "dist/js/bh-carousel.esm.js",
-      "browser": "dist/js/bh-carousel.js",
-      "require": "dist/js/bh-carousel.cjs",
-      "types": "dist/js/bh-carousel.d.ts"
+      "types": "./dist/js/bh-carousel.d.ts",
+      "import": "./dist/js/bh-carousel.esm.js",
+      "browser": "./dist/js/bh-carousel.js",
+      "require": "./dist/js/bh-carousel.cjs"
     },
-    "./*": "./*"
+    "./css/*": "./dist/css/*"
   },
   "keywords": [
     "carousel",
@@ -26,7 +30,13 @@
   "author": "Christopher Torgalson",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ctorgalson/bh-carousel"
+    "url": "git+https://github.com/ctorgalson/bh-carousel.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=18"
   },
   "files": [
     "dist/*"
@@ -56,7 +66,7 @@
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-terser": "^1.0.0",
     "@rollup/plugin-typescript": "^12.1.1",
-    "@vitest/coverage-v8": "^4.1.10",
+    "@vitest/coverage-v8": "^4.1.11",
     "concurrently": "^9.1.0",
     "cssnano": "^7.0.6",
     "jsdom": "^30.0.1",
@@ -66,12 +76,12 @@
     "prettier": "^3.4.2",
     "rollup": "^4.28.1",
     "serve": "^14.2.4",
-    "typedoc": "^0.27.5",
-    "typedoc-plugin-coverage": "^3.4.0",
-    "typedoc-plugin-markdown": "^4.3.3",
-    "typedoc-plugin-mdn-links": "^4.0.6",
-    "typedoc-plugin-rename-defaults": "^0.7.2",
-    "typescript": "^5.7.2",
-    "vitest": "^4.1.10"
+    "typedoc": "^0.28.20",
+    "typedoc-plugin-coverage": "^4.0.3",
+    "typedoc-plugin-markdown": "^4.13.0",
+    "typedoc-plugin-mdn-links": "^5.1.1",
+    "typedoc-plugin-rename-defaults": "^0.7.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   }
 }

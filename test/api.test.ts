@@ -19,13 +19,12 @@ afterEach(() => {
 describe("getState()", () => {
   it("returns correct state values on start", () => {
     const refState = {
-      playing: true,
       currentIndex: 0,
       enabled: true,
       firstIndex: 0,
       lastIndex: 4,
-      action: "enable",
       nextIndex: 1,
+      playing: true,
       prefersReducedMotion: false,
       previousIndex: 4,
     };
@@ -47,20 +46,20 @@ describe("getState()", () => {
 });
 
 describe("disable()", () => {
-  it("disables both nav buttons while paused", () => {
+  it("leaves nav buttons in their pre-disable state", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-next]").disabled,
-    ).toBe(true);
+    ).toBe(false);
     expect(
       q<HTMLButtonElement>(el, "[data-bhc-previous]").disabled,
-    ).toBe(true);
+    ).toBe(false);
   });
 
-  it("keeps both nav buttons disabled if called while playing", () => {
+  it("leaves nav buttons in their pre-disable state when playing", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: true }); // Default
 
@@ -74,7 +73,10 @@ describe("disable()", () => {
   });
 
   it("stops the interval from advancing slides", () => {
-    const el = buildCarouselDom();
+    // slideCount:3 with 5 ticks would leave currentIndex at 2 if the
+    // interval leaked past disable(); default slideCount:5 wraps back
+    // to 0 coincidentally and hides the bug.
+    const el = buildCarouselDom({ slideCount: 3 });
     const c = new BhCarousel(el, { interval: 1000 });
 
     c.disable();
@@ -83,25 +85,71 @@ describe("disable()", () => {
     expect(currentIndex).toBe(0);
   });
 
-  it("disables Play/Pause and removes its aria-label", () => {
+  it("stops responding to Next button clicks after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    q<HTMLButtonElement>(el, "[data-bhc-next]").click();
+    expect(c.getState().currentIndex).toBe(0);
+  });
+
+  it("stops responding to keydown ArrowRight after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    expect(c.getState().currentIndex).toBe(0);
+  });
+
+  it("leaves Play/Pause button in its pre-disable state", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     const btn = q<HTMLButtonElement>(el, "[data-bhc-play-pause]");
 
-    expect(btn.disabled).toBe(true);
-    expect(btn.getAttribute("aria-label")).toBeNull();
+    expect(btn.disabled).toBe(false);
+    expect(btn.getAttribute("aria-label")).toBe("Play carousel");
   });
 
-  it("removes the aria-hidden attribute from all slide elements", () => {
+  it("removes the aria-hidden attribute from slide elements", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
 
     c.disable();
     expect(
-      qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
-    ).toBeNull();
+      qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
+    ).toBe(null);
+  });
+
+  it("stops responding to Previous button clicks after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false, startingIndex: 2 });
+
+    c.disable();
+    q<HTMLButtonElement>(el, "[data-bhc-previous]").click();
+    expect(c.getState().currentIndex).toBe(2);
+  });
+
+  it("stops responding to Play/Pause button clicks after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    q<HTMLButtonElement>(el, "[data-bhc-play-pause]").click();
+    expect(c.getState().playing).toBe(false);
+  });
+
+  it("stops responding to reduced-motion changes after disable()", () => {
+    const { trigger } = stubMatchMedia(false);
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    trigger(true);
+    expect(c.getState().prefersReducedMotion).toBe(false);
   });
 });
 
@@ -139,7 +187,7 @@ describe("enable()", () => {
 
     c.enable();
 
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("false");
     for (let i = 1; i < slides.length; i++) {
       expect(slides[i]!.getAttribute("aria-hidden")).toBe("true");
@@ -182,7 +230,7 @@ describe("goto()", () => {
     const { currentIndex } = c.getState();
 
     expect(currentIndex).toBe(3);
-    const slides = qa(el, "[aria-roledescription='slide']");
+    const slides = qa(el, "[data-bhc-slide]");
     expect(slides[3]!.getAttribute("aria-hidden")).toBe("false");
     expect(slides[0]!.getAttribute("aria-hidden")).toBe("true");
   });
@@ -284,15 +332,34 @@ describe("play()", () => {
   });
 });
 
-describe("getNextIndex()", () => {
-  it("returns current index + 1", () => {
+describe("slide diff on navigation", () => {
+  it("only mutates itemStateAttribute on the two affected slides", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+    const slides = Array.from(qa(el, "[data-bhc-slide]"));
+    const spies = slides.map((s) => vi.spyOn(s, "setAttribute"));
+
+    c.next();
+
+    const hits = spies.map(
+      (spy) =>
+        spy.mock.calls.filter((args) => args[0] === "aria-hidden").length,
+    );
+    expect(hits.filter((n) => n > 0).length).toBe(2);
+    expect(hits[0]).toBe(1);
+    expect(hits[1]).toBe(1);
+  });
+});
+
+describe("state.nextIndex", () => {
+  it("is current index + 1", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
     const { nextIndex } = c.getState();
     expect(nextIndex).toBe(1);
   });
 
-  it("returns zero when currentIndex === lastIndex", () => {
+  it("wraps to zero when currentIndex === lastIndex", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 4 });
     const { nextIndex } = c.getState();
@@ -300,15 +367,15 @@ describe("getNextIndex()", () => {
   });
 });
 
-describe("getPreviousIndex()", () => {
-  it("returns current index - 1", () => {
+describe("state.previousIndex", () => {
+  it("is current index - 1", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false, startingIndex: 3 });
     const { previousIndex } = c.getState();
     expect(previousIndex).toBe(2);
   });
 
-  it("returns lastIndex when currentIndex === 0", () => {
+  it("wraps to lastIndex when currentIndex === 0", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
     const { previousIndex } = c.getState();

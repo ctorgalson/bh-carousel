@@ -103,16 +103,6 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     expect((spy.mock.calls[0]![0] as CustomEvent).detail.action).toEqual("enable");
   });
 
-  it("emits a bhcarousel:disable event on disable())", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el);
-    const spy = vi.fn();
-    el.addEventListener("bhcarousel:disable", spy as EventListener);
-    c.disable();
-    expect(spy).toHaveBeenCalledOnce();
-    expect((spy.mock.calls[0]![0] as CustomEvent).detail.action).toEqual("disable");
-  });
-
   it("emits a bhcarousel:goto event on goto()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
@@ -132,17 +122,6 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     expect(spy).not.toHaveBeenCalledOnce();
   });
 
-  it("does not emit a 'disable' event when already disabled", () => {
-    const el = buildCarouselDom();
-    const c = new BhCarousel(el);
-    const spy = vi.fn();
-    el.addEventListener("bhcarousel:disable", spy as EventListener);
-    c.disable();
-    c.disable();
-    expect(spy).toHaveBeenCalledOnce();
-    expect((spy.mock.calls[0]![0] as CustomEvent).detail.action).toEqual("disable");
-  });
-
   it("does not emit a 'enable' event when already enabled", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el);
@@ -159,7 +138,7 @@ describe("Slideshow emits bhcarousel:* events on UI changes and public API calls
     el.addEventListener("bhcarousel:next", spy as EventListener);
     c.disable();
     c.enable();
-    window.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
+    el.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowRight" }));
     const { currentIndex } = c.getState();
     expect(currentIndex).toBe(1);
     expect(spy).toHaveBeenCalledOnce();

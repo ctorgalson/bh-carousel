@@ -86,7 +86,7 @@ describe("automatic=true (default)", () => {
     vi.advanceTimersByTime(4000);
 
     expect(
-      qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
+      qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
     ).toBe("true");
   });
 
@@ -124,7 +124,7 @@ describe("automatic=false", () => {
     vi.advanceTimersByTime(6000);
 
     expect(
-      qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
+      qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
     ).toBe("false");
   });
 
@@ -153,7 +153,7 @@ describe("interval=1000", () => {
     vi.advanceTimersByTime(1000);
 
     expect(
-      qa(el, "[aria-roledescription='slide']")[0]!.getAttribute("aria-hidden"),
+      qa(el, "[data-bhc-slide]")[0]!.getAttribute("aria-hidden"),
     ).toBe("true");
   });
 });
@@ -163,7 +163,7 @@ describe("itemStateAttribute='data-hidden'", () => {
     const el = buildCarouselDom();
     new BhCarousel(el, { itemStateAttribute: "data-hidden" });
 
-    expect(qa(el, "[aria-roledescription='slide'][data-hidden]").length).toBe(
+    expect(qa(el, "[data-bhc-slide][data-hidden]").length).toBe(
       5,
     );
   });
@@ -177,7 +177,7 @@ describe("itemStateAttribute='data-hidden'", () => {
     });
 
     expect(
-      qa(el, "[aria-roledescription='slide']")[2]!.getAttribute("data-hidden"),
+      qa(el, "[data-bhc-slide]")[2]!.getAttribute("data-hidden"),
     ).toBe("false");
   });
 });
@@ -188,27 +188,7 @@ describe("startingIndex=2", () => {
     new BhCarousel(el, { automatic: false, startingIndex: 2 });
 
     expect(
-      qa(el, "[aria-roledescription='slide']")[2]!.getAttribute("aria-hidden"),
+      qa(el, "[data-bhc-slide]")[2]!.getAttribute("aria-hidden"),
     ).toBe("false");
-  });
-});
-
-describe("debug", () => {
-  it("runs console.debug() when set", () => {
-    const debugSpy = vi.spyOn(console, "debug");
-    const el = buildCarouselDom();
-    new BhCarousel(el, { automatic: false, debug: true });
-    vi.advanceTimersByTime(2000);
-    expect(debugSpy).toHaveBeenCalled();
-    debugSpy.mockRestore();
-  });
-
-  it("runs no console methods when not set", () => {
-    const debugSpy = vi.spyOn(console, "debug");
-    const el = buildCarouselDom();
-    new BhCarousel(el, { automatic: false });
-    vi.advanceTimersByTime(2000);
-    expect(debugSpy).not.toHaveBeenCalled();
-    debugSpy.mockRestore();
   });
 });

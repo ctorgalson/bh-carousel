@@ -6,6 +6,8 @@
 
 # Class: BhCarousel
 
+Defined in: [bh-carousel.ts:214](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L214)
+
 Creates responsive instance of WAI-ARIA's ("with buttons") Carousel pattern.
 
 Uses data attributes for functionality, making it independent of/usable with
@@ -43,11 +45,17 @@ REQUIRED.
         type="button"
       ></button>
     </div>
-    <div aria-live="off" class="bhc__items" id="test-carousel">
+    <div
+      aria-live="off"
+      class="bhc__items"
+      id="test-carousel"
+      data-bhc-slide-container
+    >
       <div
-        aria-label="1 of 5"
+        aria-label="1 of 2"
         aria-roledescription="slide"
         class="bhc__item"
+        data-bhc-slide
         role="group"
       >
         <div class="bhc__image">
@@ -68,9 +76,10 @@ REQUIRED.
       </div>
 
       <div
-        aria-label="2 of 5"
+        aria-label="2 of 2"
         aria-roledescription="slide"
         class="bhc__item"
+        data-bhc-slide
         role="group"
       >
         <div class="bhc__image">
@@ -103,9 +112,11 @@ https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-1-prev-next/
 
 ## Constructors
 
-### new BhCarousel()
+### Constructor
 
-> **new BhCarousel**(`element`, `settings`?): [`BhCarousel`](BhCarousel.md)
+> **new BhCarousel**(`element`, `settings?`): `BhCarousel`
+
+Defined in: [bh-carousel.ts:254](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L254)
 
 Constructs a new BhCarousel instance.
 
@@ -125,11 +136,7 @@ Optional settings to override class defaults.
 
 #### Returns
 
-[`BhCarousel`](BhCarousel.md)
-
-#### Defined in
-
-[bh-carousel.ts:244](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L244)
+`BhCarousel`
 
 ## Methods
 
@@ -137,21 +144,21 @@ Optional settings to override class defaults.
 
 > **disable**(): `void`
 
-Disables carousel interactivity.
+Defined in: [bh-carousel.ts:384](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L384)
+
+Disables interactivity, resets DOM to original state (not a guarantee!)
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:327](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L327)
 
 ---
 
 ### enable()
 
 > **enable**(): `void`
+
+Defined in: [bh-carousel.ts:352](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L352)
 
 Enables carousel interactivity.
 
@@ -163,15 +170,13 @@ when prefersReducedMotion is true to respect user accessibility preference.
 
 `void`
 
-#### Defined in
-
-[bh-carousel.ts:342](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L342)
-
 ---
 
 ### getState()
 
 > **getState**(): [`Readonly`](https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype)\<[`BhCarouselState`](../interfaces/BhCarouselState.md)\>
+
+Defined in: [bh-carousel.ts:642](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L642)
 
 Returns the current instance state.
 
@@ -179,31 +184,29 @@ Returns the current instance state.
 
 [`Readonly`](https://www.typescriptlang.org/docs/handbook/utility-types.html#readonlytype)\<[`BhCarouselState`](../interfaces/BhCarouselState.md)\>
 
-#### Defined in
-
-[bh-carousel.ts:365](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L365)
-
 ---
 
 ### goto()
 
-> **goto**(`newCurrentIndex`): `void`
+> **goto**(`i`, `action?`): `void`
 
-Navigates to another by numeric index.
+Defined in: [bh-carousel.ts:448](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L448)
+
+Navigates to a slide by numeric index.
 
 #### Parameters
 
-##### newCurrentIndex
+##### i
 
 `number`
+
+##### action?
+
+[`BhCarouselAction`](../type-aliases/BhCarouselAction.md) = `"goto"`
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:370](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L370)
 
 ---
 
@@ -211,15 +214,13 @@ Navigates to another by numeric index.
 
 > **next**(): `void`
 
-Advances carousel one slide.
+Defined in: [bh-carousel.ts:430](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L430)
+
+Navigates to next slide. No-op at last slide when wrap is false.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:434](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L434)
 
 ---
 
@@ -227,15 +228,13 @@ Advances carousel one slide.
 
 > **pause**(): `void`
 
-Pauses carousel.
+Defined in: [bh-carousel.ts:481](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L481)
+
+Pauses automatic playback.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:443](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L443)
 
 ---
 
@@ -243,15 +242,13 @@ Pauses carousel.
 
 > **play**(): `void`
 
-Plays carousel.
+Defined in: [bh-carousel.ts:465](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L465)
+
+Starts automatic playback, this.state.prefersReducedMotion permitting.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:448](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L448)
 
 ---
 
@@ -259,12 +256,10 @@ Plays carousel.
 
 > **previous**(): `void`
 
-Reverses carousel one slide.
+Defined in: [bh-carousel.ts:439](https://github.com/ctorgalson/bh-carousel/blob/ba4149b5cf0fe531748c5768b6ed951cd3f6ba0e/src/bh-carousel.ts#L439)
+
+Navigates to previous slide. No-op at first slide when wrap is false.
 
 #### Returns
 
 `void`
-
-#### Defined in
-
-[bh-carousel.ts:453](https://github.com/ctorgalson/bh-carousel/blob/185291d1413c129fc1d94a56b3c177f6840d1192/src/bh-carousel.ts#L453)
