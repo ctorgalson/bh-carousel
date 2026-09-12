@@ -194,14 +194,14 @@ describe("enable()", () => {
     }
   });
 
-  it("starts autoplay when play/pause button does not exist", () => {
+  it("does not autoplay when the Play/Pause button is absent (WCAG 2.2.2)", () => {
     const el = buildCarouselDom({ withPlayPauseButton: false });
     const c = new BhCarousel(el);
 
     vi.advanceTimersByTime(4000);
     const { currentIndex, playing } = c.getState();
-    expect(playing).toBe(true);
-    expect(currentIndex).toBe(1);
+    expect(playing).toBe(false);
+    expect(currentIndex).toBe(0);
   });
 });
 
