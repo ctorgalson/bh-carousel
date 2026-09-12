@@ -710,7 +710,12 @@ export default class BhCarousel {
 
   /** Returns true if the next enable() will autoplay. */
   private wantsToPlay(): boolean {
-    return this.settings.automatic && this.state.nextIndex !== null;
+    // Autoplay requires a Play/Pause button so users can stop it (WCAG 2.2.2).
+    return (
+      this.settings.automatic &&
+      this.state.nextIndex !== null &&
+      this.playButton !== null
+    );
   }
 
   /** Ensures intervals are cleared on pause/disable. */
