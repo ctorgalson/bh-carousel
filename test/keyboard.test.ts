@@ -162,6 +162,18 @@ describe("Slideshow wraps to first slide from last on ArrowRight", () => {
 });
 
 describe("Keyboard scoping", () => {
+  it("makes the carousel focusable so arrow keys work without a control focused", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    expect(el.getAttribute("tabindex")).toBe("0");
+    el.focus();
+    expect(document.activeElement).toBe(el);
+    press(el, "ArrowRight");
+
+    expect(c.getState().currentIndex).toBe(1);
+  });
+
   it("ignores ArrowRight dispatched outside the carousel", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });

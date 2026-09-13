@@ -142,6 +142,15 @@ describe("disable()", () => {
     expect(c.getState().playing).toBe(false);
   });
 
+  it("removes tabindex from the carousel after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    expect(el.getAttribute("tabindex")).toBe("0");
+    c.disable();
+    expect(el.hasAttribute("tabindex")).toBe(false);
+  });
+
   it("stops responding to reduced-motion changes after disable()", () => {
     const { trigger } = stubMatchMedia(false);
     const el = buildCarouselDom();

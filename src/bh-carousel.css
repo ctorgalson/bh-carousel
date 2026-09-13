@@ -16,12 +16,24 @@
   --bhc-control-width: 50px;
 }
 
+/* The carousel is made focusable (tabindex="0") on enable() so keyboard
+ * users can Tab to it and use arrow keys / P to navigate without first
+ * focusing a control button. */
+.bhc:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.bhc__inner {
+  position: relative;
+}
+
 .bhc__controls {
   display: flex;
   gap: calc(var(--bhc-control-height) / 4);
   padding: calc(var(--bhc-control-height) / 4);
-  position: relative;
-  top: calc(var(--bhc-control-height) * 1.5);
+  position: absolute;
+  top: 0;
   z-index: 5;
 }
 
