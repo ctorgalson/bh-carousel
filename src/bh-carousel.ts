@@ -353,6 +353,9 @@ export default class BhCarousel {
     if (this.state.enabled) {
       return;
     }
+    // Make the carousel itself focusable so keyboard users can Tab to it and
+    // use arrow keys / P without first landing on a control button.
+    this.initAttr(this.carousel, "tabindex", "0");
     this.initAttr(this.nextButton, "aria-controls", this.slideContainer.id);
     this.initAttr(this.previousButton, "aria-controls", this.slideContainer.id);
     this.initAttr(
