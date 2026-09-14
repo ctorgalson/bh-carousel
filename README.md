@@ -11,6 +11,16 @@ for use in browser projects.
 The script is fully independent of any design-system, but that means you have
 to BYOCSS.
 
+## Features
+
+- **Button navigation** — Previous and Next buttons
+- **Keyboard navigation** — Arrow keys to advance, `P` to play/pause
+- **Touch/swipe** — Swipe left/right on the slide area to navigate
+- **Auto-play** — Configurable interval with Play/Pause control
+- **Reduced-motion aware** — Respects `prefers-reduced-motion: reduce`
+- **View Transitions** — Smooth slide animations where supported
+- **Custom events** — `bhcarousel:next`, `bhcarousel:previous`, `bhcarousel:play`, `bhcarousel:pause`, etc.
+
 - Try [the demo](https://ctorgalson.github.io/bh-carousel/)
 - See `demo/` directory for a sample implementation.
 - Find complete typedoc documentation in [the `docs/` directory](docs/).
@@ -38,15 +48,14 @@ npm run build
 
 ## Tests
 
-The project currently includes e2e testing of its
+The project currently includes a full set of e2e tests including
 
 - configuration options (complete for implemented options)
 - Play/Pause, Next, and Previous buttons
 - keyboard navigation
+- touch/swipe navigation
 
-Still to come are tests for the public API of the class.
-
-To run the tests, it's first necessary to clone and install dev packages:
+To run the tests, clone and install the dev packages:
 
 ```bash
 # Clone the repository
@@ -62,7 +71,6 @@ That done,
 - run the tests in the Cypress UI with `npm run test:ui`, or
 - run the tests in the terminal with `./test.sh`
 
-## Planned features
+## Possible future features
 
 - [Tab-style navigation](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/examples/carousel-2-tablist/) in addition to the button-style already implemented,
-- support for use in Node projects
