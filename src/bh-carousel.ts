@@ -395,6 +395,7 @@ export default class BhCarousel {
     }
     this.activeTransition?.skipTransition();
     this.activeTransition = undefined;
+    this.clearPointerTracking();
     this.stopInterval();
     this.detachListeners();
     this.nextButton.hidden = true;
@@ -418,6 +419,9 @@ export default class BhCarousel {
       this.handleReducedMotionChange,
     );
     this.playButton?.addEventListener("click", this.handlePlayClick);
+    if (this.settings.swipe) {
+      this.slideContainer.addEventListener("pointerdown", this.handlePointerDown);
+    }
   }
 
   /** Detaches event listeners from DOM elements. */
@@ -430,6 +434,9 @@ export default class BhCarousel {
       this.handleReducedMotionChange,
     );
     this.playButton?.removeEventListener("click", this.handlePlayClick);
+    if (this.settings.swipe) {
+      this.slideContainer.removeEventListener("pointerdown", this.handlePointerDown);
+    }
   }
 
   // NAVIGATION AND PLAYBACK
