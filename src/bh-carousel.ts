@@ -56,6 +56,8 @@ export type BhCarouselInterval = number;
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
+ * @property {boolean} swipe
+ *   Whether or not touch/swipe navigation is enabled. Defaults to true.
  * @property {boolean} wrap
  *   Whether or not to continue to the first slide when "Next" is clicked on
  *   the last side/the last slide when "Previous" is clicked on the first
@@ -70,6 +72,7 @@ export interface BhCarouselSettings {
   interval: BhCarouselInterval;
   itemStateAttribute: string;
   startingIndex: number;
+  swipe: boolean;
   wrap: boolean;
 }
 
@@ -223,11 +226,13 @@ export default class BhCarousel {
     interval: 4000,
     itemStateAttribute: "aria-hidden",
     startingIndex: 0,
+    swipe: true,
     wrap: true,
   };
   private intervalId: number | undefined;
   private nextButton: HTMLButtonElement;
   private playButton: HTMLButtonElement | null = null;
+  private pointerStart: { x: number; y: number; pointerId: number } | null = null;
   private previousButton: HTMLButtonElement;
   private reducedMotionQuery: MediaQueryList;
   private restorers: (() => void)[] = [];
@@ -390,6 +395,7 @@ export default class BhCarousel {
     }
     this.activeTransition?.skipTransition();
     this.activeTransition = undefined;
+    this.clearPointerTracking();
     this.stopInterval();
     this.detachListeners();
     this.nextButton.hidden = true;
@@ -413,6 +419,9 @@ export default class BhCarousel {
       this.handleReducedMotionChange,
     );
     this.playButton?.addEventListener("click", this.handlePlayClick);
+    if (this.settings.swipe) {
+      this.slideContainer.addEventListener("pointerdown", this.handlePointerDown);
+    }
   }
 
   /** Detaches event listeners from DOM elements. */
@@ -425,6 +434,9 @@ export default class BhCarousel {
       this.handleReducedMotionChange,
     );
     this.playButton?.removeEventListener("click", this.handlePlayClick);
+    if (this.settings.swipe) {
+      this.slideContainer.removeEventListener("pointerdown", this.handlePointerDown);
+    }
   }
 
   // NAVIGATION AND PLAYBACK
@@ -680,6 +692,58 @@ export default class BhCarousel {
 
   /** Handles click events for Previous button. */
   private handlePreviousClick = (): void => this.previous();
+
+  /** Handles pointerdown events for touch/swipe navigation. */
+  private handlePointerDown = (e: PointerEvent): void => {
+    if (e.pointerType !== "touch") {
+      return;
+    }
+    this.pointerStart = { x: e.clientX, y: e.clientY, pointerId: e.pointerId };
+    window.addEventListener("pointerup", this.handlePointerUp);
+    window.addEventListener("pointercancel", this.handlePointerCancel);
+  };
+
+  /** Handles pointerup events for touch/swipe navigation. */
+  private handlePointerUp = (e: PointerEvent): void => {
+    if (e.pointerType !== "touch") {
+      return;
+    }
+    if (this.pointerStart && e.pointerId === this.pointerStart.pointerId) {
+      const dx = e.clientX - this.pointerStart.x;
+      const dy = e.clientY - this.pointerStart.y;
+      this.evaluateSwipe(dx, dy);
+      this.clearPointerTracking();
+    }
+  };
+
+  /** Handles pointercancel events for touch/swipe navigation. */
+  private handlePointerCancel = (e: PointerEvent): void => {
+    if (e.pointerType !== "touch") {
+      return;
+    }
+    if (this.pointerStart && e.pointerId === this.pointerStart.pointerId) {
+      this.clearPointerTracking();
+    }
+  };
+
+  /** Resets pointer tracking state and detaches window listeners. */
+  private clearPointerTracking(): void {
+    this.pointerStart = null;
+    window.removeEventListener("pointerup", this.handlePointerUp);
+    window.removeEventListener("pointercancel", this.handlePointerCancel);
+  }
+
+  /** Evaluates a completed pointer gesture for swipe navigation. */
+  private evaluateSwipe(dx: number, dy: number): void {
+    if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy)) {
+      this.pause();
+      if (dx < 0) {
+        this.next();
+      } else {
+        this.previous();
+      }
+    }
+  }
 
   /** Validates that an index is within bounds. */
   private validateSlideIndex(index: number): void {
