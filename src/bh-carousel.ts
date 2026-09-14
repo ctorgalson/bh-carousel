@@ -712,8 +712,8 @@ export default class BhCarousel {
       const dx = e.clientX - this.pointerStart.x;
       const dy = e.clientY - this.pointerStart.y;
       this.evaluateSwipe(dx, dy);
+      this.clearPointerTracking();
     }
-    this.clearPointerTracking();
   };
 
   /** Handles pointercancel events for touch/swipe navigation. */
