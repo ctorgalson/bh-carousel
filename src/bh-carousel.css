@@ -109,6 +109,7 @@
 .bhc__items {
   display: grid;
   overflow: hidden;
+  touch-action: pan-y;
 }
 
 .bhc__item {
