@@ -56,6 +56,8 @@ export type BhCarouselInterval = number;
  * @property {number} startingIndex
  *   Zero-based index of starting slide. E.g. to start on the third slide,
  *   set this value to 2.
+ * @property {boolean} swipe
+ *   Whether or not touch/swipe navigation is enabled. Defaults to true.
  * @property {boolean} wrap
  *   Whether or not to continue to the first slide when "Next" is clicked on
  *   the last side/the last slide when "Previous" is clicked on the first
@@ -70,6 +72,7 @@ export interface BhCarouselSettings {
   interval: BhCarouselInterval;
   itemStateAttribute: string;
   startingIndex: number;
+  swipe: boolean;
   wrap: boolean;
 }
 
@@ -223,6 +226,7 @@ export default class BhCarousel {
     interval: 4000,
     itemStateAttribute: "aria-hidden",
     startingIndex: 0,
+    swipe: true,
     wrap: true,
   };
   private intervalId: number | undefined;
