@@ -8,7 +8,7 @@
 
 > **BhCarouselInterval** = `number`
 
-Defined in: [bh-carousel.ts:26](https://github.com/ctorgalson/bh-carousel/blob/1b5f4552d6666aa2a41308e09364380d7bfd87f1/src/bh-carousel.ts#L26)
+Defined in: [bh-carousel.ts:26](https://github.com/ctorgalson/bh-carousel/blob/d1b1336e5ea46fb36982b01817a0ef3698aa0942/src/bh-carousel.ts#L26)
 
 A type used to define the acceptable slide-timing range in ms.
 
