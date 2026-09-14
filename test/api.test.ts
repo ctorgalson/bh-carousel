@@ -142,6 +142,23 @@ describe("disable()", () => {
     expect(c.getState().playing).toBe(false);
   });
 
+  it("does not respond to swipe after disable()", () => {
+    const el = buildCarouselDom();
+    const c = new BhCarousel(el, { automatic: false });
+
+    c.disable();
+    const container = el.querySelector("[data-bhc-slide-container]")!;
+    container.dispatchEvent(new PointerEvent("pointerdown", {
+      pointerId: 1, pointerType: "touch", clientX: 200, clientY: 100,
+      isPrimary: true, bubbles: true,
+    }));
+    window.dispatchEvent(new PointerEvent("pointerup", {
+      pointerId: 1, pointerType: "touch", clientX: 100, clientY: 100,
+      isPrimary: true, bubbles: true,
+    }));
+    expect(c.getState().currentIndex).toBe(0);
+  });
+
   it("removes tabindex from the carousel after disable()", () => {
     const el = buildCarouselDom();
     const c = new BhCarousel(el, { automatic: false });
