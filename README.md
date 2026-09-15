@@ -4,12 +4,11 @@
 [![Tests](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/test.yml)
 [![Deploy static content to Pages](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml/badge.svg)](https://github.com/ctorgalson/bh-carousel/actions/workflows/static.yml)
 
-This project provides a markup-independent javascript implementation of the WAI
+This project provides a markup-independent JavaScript implementation of the WAI
 ARIA [Carousel pattern](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/)
-for use in browser projects.
-
-The script is fully independent of any design-system, but that means you have
-to BYOCSS.
+for use in browser projects. The library ships a minimal functional stylesheet
+(three rules: slide stacking, overflow clipping, touch-action). Presentation
+is the consumer's job — `demo/css/bh-carousel-demo.css` is a worked reference.
 
 ## Features
 
@@ -20,6 +19,43 @@ to BYOCSS.
 - **Reduced-motion aware** — Respects `prefers-reduced-motion: reduce`
 - **View Transitions** — Smooth slide animations where supported
 - **Custom events** — `bhcarousel:next`, `bhcarousel:previous`, `bhcarousel:play`, `bhcarousel:pause`, etc.
+
+## Styling
+
+The library ships a minimal functional stylesheet (`dist/css/bh-carousel.css` /
+`dist/css/bh-carousel.min.css`) with three data-attribute rules:
+
+- `[data-bhc-slide-container]` — grid stacking, overflow clipping, touch-action
+- `[data-bhc-slide]` — hide non-current slides
+- `[data-bhc-slide][data-bhc-current-slide]` — show the current slide
+
+Presentation is the consumer's job. `demo/css/bh-carousel-demo.css` is a
+worked reference showing control chrome, view-transition animation, and
+responsive image/caption layout.
+
+**Button markup.** The three control buttons (`data-bhc-next`,
+`data-bhc-previous`, `data-bhc-play-pause`) are icon-only and get their
+accessible names from `aria-label`:
+
+- **Play/Pause** — the library manages `aria-label`, swapping between
+  `settings.ariaLabelPlay` and `settings.ariaLabelPause` based on playback
+  state. It also writes `data-bhc-playing="true"|"false"` on the button,
+  which consumers can use to style state changes (e.g. swapping between
+  play/pause icon children).
+- **Next/Previous** — the consumer sets `aria-label` in markup; the library
+  leaves it alone.
+
+**Recommended icon pattern.** Use inline `<svg>` children with
+`aria-hidden="true" focusable="false"` so `aria-label` remains the sole
+accessible name. For Play/Pause, use two child SVGs with class names
+`play` and `pause`, toggled by CSS on `[data-bhc-playing]`:
+
+```css
+.bhc__control[data-bhc-playing="true"] .play { display: none; }
+.bhc__control[data-bhc-playing="false"] .pause { display: none; }
+```
+
+See the demo for a worked example.
 
 - Try [the demo](https://ctorgalson.github.io/bh-carousel/)
 - See `demo/` directory for a sample implementation.

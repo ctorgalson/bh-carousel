@@ -1,0 +1,274 @@
+/**
+ * BH Carousel — Demo Presentation
+ *
+ * This stylesheet is a reference implementation of the BEM-classed
+ * visual presentation for the carousel. It is NOT shipped to consumers;
+ * it lives only in `demo/`. See `src/bh-carousel.css` for the minimum
+ * functional CSS the library ships.
+ *
+ * The library's functional stylesheet (loaded first in the demo) handles:
+ * - slide stacking (one slide visible at a time)
+ * - overflow clipping on the slide container
+ * - touch-action for swipe
+ *
+ * Everything here — controls chrome, focus outlines, icon sizing,
+ * caption/image treatment, view-transition animation, responsive
+ * breakpoints — is opinionated presentation you can replace.
+ */
+
+:root {
+  --bhc-control-background-color: #fff;
+  --bhc-control-border-radius: calc(var(--bhc-control-width) / 2);
+  --bhc-control-color: #000;
+  --bhc-control-height: 50px;
+  --bhc-control-width: 50px;
+}
+
+/* The carousel is made focusable (tabindex="0") on enable() so keyboard
+ * users can Tab to it and use arrow keys / P to navigate without first
+ * focusing a control button. */
+.bhc:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.bhc__inner {
+  position: relative;
+}
+
+.bhc__controls {
+  display: flex;
+  gap: calc(var(--bhc-control-height) / 4);
+  padding: calc(var(--bhc-control-height) / 4);
+  position: absolute;
+  top: 0;
+  z-index: 5;
+}
+
+.bhc__control {
+  align-items: center;
+  background-color: var(--bhc-control-background-color);
+  border: 3px solid var(--bhc-control-color);
+  border-radius: var(--bhc-control-border-radius);
+  color: var(--bhc-control-color);
+  display: flex;
+  height: var(--bhc-control-height);
+  justify-content: center;
+  padding: 0;
+  width: var(--bhc-control-width);
+}
+
+.bhc__control[hidden] {
+  display: none;
+}
+
+.bhc__control[data-bhc-playing="true"] .play {
+  display: none;
+}
+
+.bhc__control[data-bhc-playing="false"] .pause {
+  display: none;
+}
+
+.bhc__control[disabled] {
+  opacity: 60%;
+}
+
+.bhc__control[data-bhc-play-pause] {
+  margin-inline-end: auto;
+}
+
+.bhc__control[data-bhc-next] {
+  right: calc(var(--bhc-control-height) / 4);
+}
+
+.bhc__control[data-bhc-previous] {
+  right: calc((var(--bhc-control-height) * 1.5));
+}
+
+.bhc__control svg {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+ * Baseline slide layout
+ * --------------------------------------------------------------------------
+ * Only the current slide is laid out. Navigation between slides is animated
+ * by the browser's View Transitions API — the JS wraps its DOM mutation in
+ * `document.startViewTransition()` and assigns each slide a unique
+ * `view-transition-name`, so the browser interpolates between old and new
+ * snapshots. With no per-slide keyframes defined, that interpolation is the
+ * browser's default (cross-fade). In non-supporting browsers, or when the
+ * user prefers reduced motion, the swap happens instantly with no animation.
+ * -------------------------------------------------------------------------- */
+
+.bhc__items {
+  display: grid;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+
+.bhc__item {
+  background: #fff;
+  display: none;
+  grid-area: 1 / 1;
+  grid-template-rows: auto 10em;
+  width: 100%;
+  position: relative;
+}
+
+.bhc__item[data-bhc-current-slide] {
+  display: grid;
+}
+
+/* --------------------------------------------------------------------------
+ * Optional: horizontal slide effect
+ * --------------------------------------------------------------------------
+ * Add class `bhc--horizontal` to the carousel root to opt in to a horizontal
+ * slide effect. Only the current slide is laid out (same as baseline). The
+ * slide illusion is authored entirely with view-transition keyframes.
+ *
+ * The current slide gets a `view-transition-name` so the browser snapshots
+ * only it (not the whole document root). Direction is gated via
+ * `:active-view-transition-type()` — the JS passes `bhc-forward` or
+ * `bhc-reverse` in the transition's `types` option:
+ *
+ *   "forward" (next / goto to higher index): old slides out left, new in right
+ *   "reverse" (previous / goto to lower index): old slides out right, new in left
+ *
+ * Pattern-match this to author your own direction-aware effect: pick a
+ * class, give the current slide a unique `view-transition-name`, then
+ * target `:root:active-view-transition-type(bhc-forward)::view-transition-old(<name>)`
+ * (etc.) and define your keyframes.
+ *
+ * NOTE: `view-transition-name` must be document-unique, so this shape
+ * supports one `.bhc--horizontal` carousel per page. Multi-instance would
+ * need JS-assigned unique names per carousel.
+ *
+ * Reduced-motion users don't get animation at all — the JS bypasses
+ * `startViewTransition()` when `prefers-reduced-motion: reduce`, so the
+ * DOM swap happens instantly with no keyframes to run.
+ * -------------------------------------------------------------------------- */
+
+.bhc--horizontal .bhc__item[data-bhc-current-slide] {
+  view-transition-name: bhc-slide;
+}
+
+/* The controls sit visually over the slide area (positioned absolutely
+ * inside a zero-height container). Without their own transition name,
+ * they'd be captured in `root` and occluded by the slide's group pseudo,
+ * which paints on top of root. Naming the container splits it into its
+ * own group, and `z-index` lifts that group above the slide group
+ * (named groups paint in DOM order otherwise, and `.bhc__controls`
+ * precedes `.bhc__items`). */
+.bhc--horizontal .bhc__controls {
+  view-transition-name: bhc-controls;
+}
+
+:root::view-transition-group(bhc-controls) {
+  z-index: 1;
+}
+
+/* The transition group pseudo is rendered at :root and does NOT clip by
+ * default — without this, the old snapshot translating left and the new
+ * snapshot translating in from the right are both fully visible during
+ * the animation (appearing side by side). Clipping the group to its
+ * target rect restores the intended "in place" slide effect. */
+:root::view-transition-group(bhc-slide) {
+  overflow: hidden;
+}
+
+:root:active-view-transition-type(bhc-forward)::view-transition-old(bhc-slide) {
+  animation: bhc-slide-out-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-forward)::view-transition-new(bhc-slide) {
+  animation: bhc-slide-in-right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-reverse)::view-transition-old(bhc-slide) {
+  animation: bhc-slide-out-right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+:root:active-view-transition-type(bhc-reverse)::view-transition-new(bhc-slide) {
+  animation: bhc-slide-in-left 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+@keyframes bhc-slide-out-left {
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes bhc-slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes bhc-slide-out-right {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes bhc-slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+}
+
+.bhc__item a {
+  display: block;
+}
+
+.bhc__image img {
+  aspect-ratio: 4 / 3;
+  display: block;
+  object-fit: cover;
+  width: 100%;
+}
+
+.bhc__caption {
+  padding: 0 1em 1em;
+}
+
+.bhc__caption p {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+@media screen and (min-width: 768px) {
+  .bhc__image img {
+    aspect-ratio: 16 / 9;
+  }
+
+  .bhc__item {
+    grid-template-rows: auto 8em;
+  }
+
+  .bhc__item p {
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .bhc {
+    margin-inline: auto;
+    max-width: 1140px;
+  }
+
+  .bhc__image img {
+    aspect-ratio: auto;
+    max-height: 40vh;
+    min-height: 300px;
+  }
+
+  .bhc__caption {
+    max-width: 768px;
+  }
+}
