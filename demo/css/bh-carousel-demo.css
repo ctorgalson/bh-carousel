@@ -104,21 +104,21 @@
  * user prefers reduced motion, the swap happens instantly with no animation.
  * -------------------------------------------------------------------------- */
 
-.bhc__items {
-  display: grid;
-  overflow: hidden;
-  touch-action: pan-y;
-}
+/* The library stylesheet already provides:
+ *   [data-bhc-slide-container] { display: grid; overflow: hidden; touch-action: pan-y; }
+ *   [data-bhc-slide]           { display: none; grid-area: 1 / 1; }
+ *   [data-bhc-slide][data-bhc-current-slide] { display: block; }
+ * Only presentational overrides live below. */
 
 .bhc__item {
   background: #fff;
-  display: none;
-  grid-area: 1 / 1;
   grid-template-rows: auto 10em;
   width: 100%;
   position: relative;
 }
 
+/* Upgrade the current slide's display mode from block (library default) to
+ * grid so `grid-template-rows` above can lay out image + caption. */
 .bhc__item[data-bhc-current-slide] {
   display: grid;
 }

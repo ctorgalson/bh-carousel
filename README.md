@@ -57,6 +57,41 @@ accessible name. For Play/Pause, use two child SVGs with class names
 
 See the demo for a worked example.
 
+**Minimum-presentation layer.** Because control buttons are icon-only, they
+need at least a button reset and an SVG size to be visible and clickable —
+without those, native `<button>` chrome hides the icons behind default
+borders and 16px SVG intrinsic sizing. `demo/index.html` puts these three
+rules in an inline `<style>` block *outside* the toggle-able demo
+stylesheet, so the buttons remain usable when demo styling is switched
+off:
+
+```css
+[data-bhc-next],
+[data-bhc-previous],
+[data-bhc-play-pause] {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+[data-bhc-next] svg,
+[data-bhc-previous] svg,
+[data-bhc-play-pause] svg {
+  display: block;
+  height: 48px;
+  width: 48px;
+}
+
+[data-bhc-playing="true"] .play,
+[data-bhc-playing="false"] .pause {
+  display: none;
+}
+```
+
+Adopt or replace these rules as needed — they are not part of the library
+stylesheet and consumers can freely ignore them.
+
 - Try [the demo](https://ctorgalson.github.io/bh-carousel/)
 - See `demo/` directory for a sample implementation.
 - Find complete typedoc documentation in [the `docs/` directory](docs/).
