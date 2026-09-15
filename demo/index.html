@@ -16,13 +16,42 @@
         margin-inline: auto;
         max-width: 1024px;
       }
+
+      [data-bhc-next],
+      [data-bhc-previous],
+      [data-bhc-play-pause] {
+        background: none;
+        border: 0;
+        color: #000;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      [data-bhc-next] svg,
+      [data-bhc-previous] svg,
+      [data-bhc-play-pause] svg {
+        display: block;
+        height: 48px;
+        width: 48px;
+      }
+
+      [data-bhc-playing="true"] .play,
+      [data-bhc-playing="false"] .pause {
+        display: none;
+      }
     </style>
+    <link rel="stylesheet" href="./css/bh-carousel-demo.css" data-demo-styles />
   </head>
 
   <body>
     <main>
       <section>
         <h1>BH Carousel Demo</h1>
+
+        <label>
+          <input type="checkbox" data-demo-styles-toggle checked />
+          Demo styles
+        </label>
 
         <div
           aria-label="Test carousel"
@@ -36,7 +65,10 @@
                 data-bhc-play-pause
                 hidden
                 type="button"
-              ></button>
+              >
+                <svg class="play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5l-6 4.5z"/></svg>
+                <svg class="pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+              </button>
 
               <button
                 aria-controls="test-carousel"
@@ -45,7 +77,9 @@
                 data-bhc-previous
                 hidden
                 type="button"
-              ></button>
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10S17.52 2 12 2S2 6.48 2 12zm10-1h4v2h-4v3l-4-4l4-4v3z"/></svg>
+              </button>
 
               <button
                 aria-controls="test-carousel"
@@ -54,7 +88,9 @@
                 data-bhc-next
                 hidden
                 type="button"
-              ></button>
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12s4.48 10 10 10s10-4.48 10-10zm-10 1H8v-2h4V8l4 4l-4 4v-3z"/></svg>
+              </button>
             </div>
             <div aria-live="off" class="bhc__items" id="test-carousel" data-bhc-slide-container>
               <div
@@ -187,6 +223,11 @@
     </main>
 
     <script src="./js/bh-carousel.min.js"></script>
+    <script>
+      const demoLink = document.querySelector('link[data-demo-styles]');
+      const demoToggle = document.querySelector('[data-demo-styles-toggle]');
+      demoToggle.addEventListener('change', () => { demoLink.disabled = !demoToggle.checked; });
+    </script>
     <script src="./js/query2config.js"></script>
     <script>
       window.carousels = window.carousels || [];

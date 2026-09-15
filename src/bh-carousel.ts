@@ -134,7 +134,12 @@ export interface BhCarouselState {
  *         data-bhc-play-pause
  *         hidden
  *         type="button"
- *       ></button>
+ *       >
+ *         <!-- Play icon SVG here -->
+ *         <svg class="play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="..."/></svg>
+ *         <!-- Pause icon SVG here -->
+ *         <svg class="pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="..."/></svg>
+ *       </button>
 
  *       <button
  *         aria-controls="test-carousel"
@@ -143,7 +148,10 @@ export interface BhCarouselState {
  *         data-bhc-previous
  *         hidden
  *         type="button"
- *       ></button>
+ *       >
+ *         <!-- Previous icon SVG here -->
+ *         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="..."/></svg>
+ *       </button>
 
  *       <button
  *         aria-controls="test-carousel"
@@ -152,7 +160,10 @@ export interface BhCarouselState {
  *         data-bhc-next
  *         hidden
  *         type="button"
- *       ></button>
+ *       >
+ *         <!-- Next icon SVG here -->
+ *         <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="..."/></svg>
+ *       </button>
  *     </div>
  *     <div aria-live="off" class="bhc__items" id="test-carousel" data-bhc-slide-container>
  *       <div
