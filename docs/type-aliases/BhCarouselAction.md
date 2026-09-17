@@ -8,6 +8,6 @@
 
 > **BhCarouselAction** = `"constructor"` \| `"disable"` \| `"enable"` \| `"goto"` \| `"reducedMotionChange"` \| `"next"` \| `"pause"` \| `"play"` \| `"previous"` \| `null`
 
-Defined in: [bh-carousel.ts:4](https://github.com/ctorgalson/bh-carousel/blob/9e4611302092332096a8c70acd5aa958041fcc9e/src/bh-carousel.ts#L4)
+Defined in: [bh-carousel.ts:4](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L4)
 
 A type used to define the 'actions' that the library's events can report.
