@@ -6,7 +6,7 @@
 
 # Interface: BhCarouselSettings
 
-Defined in: [bh-carousel.ts:66](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L66)
+Defined in: [bh-carousel.ts:66](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L66)
 
 An interface defining acceptable settings parameters for BhCarousel objects.
 
@@ -16,7 +16,7 @@ An interface defining acceptable settings parameters for BhCarousel objects.
 
 > **ariaLabelPause**: `string`
 
-Defined in: [bh-carousel.ts:67](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L67)
+Defined in: [bh-carousel.ts:67](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L67)
 
 Value for the Play/Pause button's aria-label attribute when playing (e.g.
 "Pause carousel").
@@ -27,7 +27,7 @@ Value for the Play/Pause button's aria-label attribute when playing (e.g.
 
 > **ariaLabelPlay**: `string`
 
-Defined in: [bh-carousel.ts:68](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L68)
+Defined in: [bh-carousel.ts:68](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L68)
 
 Value for the Play/Pause button's aria-label attribute when paused (e.g.
 "Play carousel").
@@ -38,7 +38,7 @@ Value for the Play/Pause button's aria-label attribute when paused (e.g.
 
 > **autoEnable**: `boolean`
 
-Defined in: [bh-carousel.ts:69](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L69)
+Defined in: [bh-carousel.ts:69](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L69)
 
 Whether or not to automatically enable carousel interactivity. Sometimes
 useful when it's desirable to make the interactivity responsive.
@@ -49,7 +49,7 @@ useful when it's desirable to make the interactivity responsive.
 
 > **automatic**: `boolean`
 
-Defined in: [bh-carousel.ts:70](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L70)
+Defined in: [bh-carousel.ts:70](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L70)
 
 Whether or not to auto-play the carousel on initialization. This setting
 is only guaranteed to be honoured if the user's prefers-reduced-motion
@@ -61,7 +61,7 @@ allows it.
 
 > **controlType**: [`BhCarouselControls`](../type-aliases/BhCarouselControls.md)
 
-Defined in: [bh-carousel.ts:71](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L71)
+Defined in: [bh-carousel.ts:71](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L71)
 
 Whether the carousel uses only buttons for control or buttons and tabs.
 Currently has no effect as tab-style navigation hasn't been implemented.
@@ -72,7 +72,7 @@ Currently has no effect as tab-style navigation hasn't been implemented.
 
 > **interval**: `number`
 
-Defined in: [bh-carousel.ts:72](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L72)
+Defined in: [bh-carousel.ts:72](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L72)
 
 The interval, in milliseconds, between slides when carousel is playing
 automatically.
@@ -83,7 +83,7 @@ automatically.
 
 > **itemStateAttribute**: `string`
 
-Defined in: [bh-carousel.ts:73](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L73)
+Defined in: [bh-carousel.ts:73](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L73)
 
 The name of the _boolean_ attribute to set on active/inactive items.
 Defaults to aria-hidden; if set to any other value, take care for the
@@ -97,7 +97,7 @@ or hyphens.
 
 > **startingIndex**: `number`
 
-Defined in: [bh-carousel.ts:74](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L74)
+Defined in: [bh-carousel.ts:74](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L74)
 
 Zero-based index of starting slide. E.g. to start on the third slide,
 set this value to 2.
@@ -108,7 +108,7 @@ set this value to 2.
 
 > **swipe**: `boolean`
 
-Defined in: [bh-carousel.ts:75](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L75)
+Defined in: [bh-carousel.ts:75](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L75)
 
 Whether or not touch/swipe navigation is enabled. Defaults to true.
 
@@ -118,7 +118,7 @@ Whether or not touch/swipe navigation is enabled. Defaults to true.
 
 > **wrap**: `boolean`
 
-Defined in: [bh-carousel.ts:76](https://github.com/ctorgalson/bh-carousel/blob/8aeda1159fba3cdb69aa8553b89c16e04f3a444f/src/bh-carousel.ts#L76)
+Defined in: [bh-carousel.ts:76](https://github.com/ctorgalson/bh-carousel/blob/72bdba983637c63eb1537843e68f8a639fab74d6/src/bh-carousel.ts#L76)
 
 Whether or not to continue to the first slide when "Next" is clicked on
 the last side/the last slide when "Previous" is clicked on the first
